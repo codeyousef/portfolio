@@ -39,3 +39,12 @@ nb-configuration.xml
 /.quarkus/cli/plugins/
 # TLS Certificates
 .certs/
+/terraform/terraform.tfvars
+/src/main/resources/META-INF/resources/.well-known/publickey.pem
+/src/main/resources/publicKey.pem
+/terraform/variables.tf
+/src/main/resources/privateKey.pem
+/terraform/main.tf
+/jwt-setup.sh
+/azure-pipelines.yml
+/docker-compose.yml

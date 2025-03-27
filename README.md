@@ -1,57 +1,128 @@
-# portfolio
+# Portfolio - Quarkus Kotlin with Azure Infrastructure
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+This project is a modern portfolio website built with Quarkus and Kotlin, deployed to Azure with a multi-environment setup (development, test, production).
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+## Azure Infrastructure Setup
 
-## Running the application in dev mode
+This project uses Terraform to provision and manage the following Azure resources:
 
-You can run your application in dev mode that enables live coding using:
+- **App Services**: Hosting the Quarkus application on `yousef.code` (production), `test.yousef.code` (test), and `dev.yousef.code` (development)
+- **PostgreSQL Servers**: Database for each environment
+- **Key Vaults**: Managing secrets and JWT certificates
+- **Storage Accounts**: For storing assets and blobs
 
-```shell script
-./gradlew quarkusDev
+### Setting Up Azure Environment
+
+Before deploying to Azure, you need to:
+
+1. Configure your Azure CLI:
+   ```shell
+   az login
+   az account set --subscription "Your-Subscription-ID"
+   ```
+
+2. Navigate to the Terraform directory and initialize:
+   ```shell
+   cd terraform
+   terraform init
+   ```
+
+3. Apply the Terraform configuration:
+   ```shell
+   terraform plan -out=tfplan
+   terraform apply tfplan
+   ```
+
+4. Set up JWT certificates for each environment:
+   ```shell
+   ./jwt-setup.sh dev
+   ./jwt-setup.sh test
+   ./jwt-setup.sh prod
+   ```
+
+## CI/CD Pipeline
+
+The project includes an Azure DevOps pipeline configuration in `azure-pipelines.yml` which:
+
+- Builds the application
+- Runs tests
+- Deploys to the appropriate environment based on the branch
+- Configures custom domains and SSL
+
+## Local Development
+
+### Running in Dev Mode
+
+For local development, a Docker Compose setup is provided:
+
+1. Start the PostgreSQL database:
+   ```shell
+   docker-compose up -d
+   ```
+
+2. Generate JWT certificates for development:
+   ```shell
+   docker-compose --profile setup up jwt-generator
+   ```
+
+3. Run the application in dev mode:
+   ```shell
+   ./gradlew quarkusDev
+   ```
+
+The application will be available at <http://localhost:8080/> with a Dev UI at <http://localhost:8080/q/dev/>.
+
+### Database Management
+
+An optional pgAdmin interface is available:
+
+```shell
+docker-compose --profile dev-tools up -d
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+Access pgAdmin at <http://localhost:5050/> with:
+- Email: admin@admin.com
+- Password: admin
 
-## Packaging and running the application
+## Packaging and Deployment
 
-The application can be packaged using:
+### Creating a JAR
 
-```shell script
+```shell
 ./gradlew build
 ```
 
-It produces the `quarkus-run.jar` file in the `build/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `build/quarkus-app/lib/` directory.
+This produces the `quarkus-run.jar` file in the `build/quarkus-app/` directory.
 
-The application is now runnable using `java -jar build/quarkus-app/quarkus-run.jar`.
+### Building an Über-JAR
 
-If you want to build an _über-jar_, execute the following command:
-
-```shell script
+```shell
 ./gradlew build -Dquarkus.package.jar.type=uber-jar
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar build/*-runner.jar`.
+### Creating a Native Executable
 
-## Creating a native executable
-
-You can create a native executable using:
-
-```shell script
+```shell
 ./gradlew build -Dquarkus.native.enabled=true
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+Or using a container:
 
-```shell script
+```shell
 ./gradlew build -Dquarkus.native.enabled=true -Dquarkus.native.container-build=true
 ```
 
-You can then execute your native executable with: `./build/portfolio-1.0.0-SNAPSHOT-runner`
+## Azure Extensions Used
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/gradle-tooling>.
+- **Quarkus Azure Key Vault**: Manages JWT certificates and secrets
+- **Quarkus Azure App Configuration**: Centralized configuration management
+- **Quarkus Azure Storage Blob**: Storage for portfolio assets
+
+## Security
+
+- JWT Authentication for admin access
+- SSL/TLS for all environments
+- Managed identities for secure Azure service access
 
 ## Related Guides
 
@@ -65,17 +136,3 @@ If you want to learn more about building native executables, please consult <htt
 - WebSockets ([guide](https://quarkus.io/guides/websockets)): WebSocket communication channel support
 - SmallRye JWT ([guide](https://quarkus.io/guides/security-jwt)): Secure your applications with JSON Web Token
 - Quarkus Support Azure Storage Blob ([guide](https://docs.quarkiverse.io/quarkus-azure-services/dev/quarkus-azure-storage-blob.html)): Quarkus Support for Azure Storage Blob
-
-## Provided Code
-
-### REST
-
-Easily start your REST Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
-
-### WebSockets
-
-WebSocket communication channel starter code
-
-[Related guide section...](https://quarkus.io/guides/websockets)

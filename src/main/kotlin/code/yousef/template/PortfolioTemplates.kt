@@ -1,0 +1,71 @@
+package code.yousef.template
+
+import code.yousef.model.Project
+import io.quarkus.qute.Location
+import io.quarkus.qute.Template
+import io.quarkus.qute.TemplateInstance
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.inject.Inject
+import kotlinx.html.*
+import kotlinx.html.stream.appendHTML
+import java.io.StringWriter
+
+@ApplicationScoped
+class PortfolioTemplates {
+
+    @Location("base-layout.html")
+    @Inject
+    lateinit var baseTemplate: Template
+
+    /**
+     * Builds the home page using Kotlin HTML DSL and wraps it in a Qute template
+     */
+    fun buildHomePage(projects: List<Project>): TemplateInstance {
+        // Generate the HTML content using Kotlin DSL
+        val contentHtml = buildHomeContent(projects)
+
+        // Use Qute template for the base layout
+        return baseTemplate
+            .data("title", "Portfolio - Projects")
+            .data("content", contentHtml)
+    }
+
+    /**
+     * Builds the home page content using Kotlin HTML DSL
+     */
+    private fun buildHomeContent(projects: List<Project>): String {
+        val writer = StringWriter()
+        writer.appendHTML().section(classes = "hero") {
+            h2 { +"Featured Projects" }
+            div(classes = "projects-container") {
+                // Add projects directly since we already have them
+                unsafe { +buildProjectsSection(projects) }
+            }
+        }
+        return writer.toString()
+    }
+
+    /**
+     * Builds the projects section using Kotlin HTML DSL
+     */
+    fun buildProjectsSection(projects: List<Project>): String {
+        val writer = StringWriter()
+        writer.appendHTML().div(classes = "projects-container") {
+            projects.forEach { project ->
+                div(classes = "project-card") {
+                    // Add HTMX attributes
+                    attributes["hx-get"] = "/api/projects/${project.id}"
+                    attributes["hx-trigger"] = "click"
+                    attributes["hx-target"] = "#project-detail"
+                    attributes["hx-swap"] = "innerHTML"
+
+                    h3 { +project.title }
+                    p { +project.description }
+
+                    // Add any other project fields your original implementation used
+                }
+            }
+        }
+        return writer.toString()
+    }
+}
