@@ -53,16 +53,43 @@ class PortfolioTemplates {
         writer.appendHTML().div(classes = "projects-container") {
             projects.forEach { project ->
                 div(classes = "project-card") {
-                    // Add HTMX attributes
+                    // Preserve HTMX attributes for dynamic loading
                     attributes["hx-get"] = "/api/projects/${project.id}"
                     attributes["hx-trigger"] = "click"
                     attributes["hx-target"] = "#project-detail"
                     attributes["hx-swap"] = "innerHTML"
 
-                    h3 { +project.title }
-                    p { +project.description }
+                    div(classes = "card-inner") {
+                        // Front side
+                        div(classes = "card-front glass-morphic") {
+                            h3(classes = "glowing-text") { +project.title }
+                            p { +project.description }
 
-                    // Add any other project fields your original implementation used
+                            // Tech stack pills
+                            div(classes = "tech-stack") {
+                                project.technologies.forEach { tech ->
+                                    span(classes = "tech-pill") { +tech }
+                                }
+                            }
+                        }
+
+                        // Back side with 3D model
+                        div(classes = "card-back glass-morphic") {
+                            div(classes = "model-container") {
+                                // Container for 3D model
+                                attributes["data-model-url"] = project.modelUrl
+                            }
+
+                            div(classes = "project-links") {
+                                a(href = project.githubUrl, classes = "btn neon-btn", target = "_blank") {
+                                    +"View Code"
+                                }
+                                a(href = project.demoUrl, classes = "btn neon-btn", target = "_blank") {
+                                    +"Live Demo"
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
