@@ -9,25 +9,108 @@ class StylesheetGenerator {
 
     fun generateStyles(): String {
         return CssBuilder().apply {
-            // Color variables
+            // ULTRA VIBRANT cyberpunk color palette
             rule(":root") {
-                put("--deep-space-blue", "#0a0a14")
-                put("--cyber-cyan", "#00f7ff")
-                put("--neon-pink", "#ff2a6d")
-                put("--bg-dark", "#020024")
-                put("--bg-mid", "#090979")
+                put("--theme-transition", "all 0.3s ease")
+                
+                // Dark theme (default)
+                put("--base", "#000000")              // Black base
+                put("--cyber-cyan", "#00ffff")        // Electric cyan
+                put("--neon-pink", "#ff00ff")         // Hot pink
+                put("--neon-purple", "#9900ff")       // Bright purple
+                put("--neon-green", "#00ff00")        // Electric green
+                put("--neon-orange", "#ff6600")       // Bright orange
+                put("--neon-blue", "#0066ff")         // Electric blue
+                put("--neon-yellow", "#ffff00")       // Electric yellow
+                put("--gradient-start", "#000000")    // Dark start
+                put("--gradient-end", "#220044")      // Deep purple end
+                put("--text", "#ffffff")              // White text
+                put("--surface", "rgba(0, 0, 0, 0.7)")// Dark surface
+                put("--glass-border", "rgba(0, 255, 255, 0.5)") // Bright border
+                put("--glow-intensity", "15px")       // Strong glow
+            }
+            
+            // Light theme
+            rule("[data-theme='light']") {
+                put("--base", "#ffffff")              // White base
+                put("--cyber-cyan", "#00bbff")        // Blue for light mode
+                put("--neon-pink", "#ff0066")         // Pink for light mode
+                put("--neon-purple", "#8800cc")       // Purple for light mode
+                put("--neon-green", "#00cc00")        // Green for light mode
+                put("--neon-orange", "#ff5500")       // Orange for light mode
+                put("--neon-blue", "#0055ff")         // Blue for light mode
+                put("--neon-yellow", "#ffcc00")       // Yellow for light mode
+                put("--gradient-start", "#ffffff")    // White start
+                put("--gradient-end", "#e6e6ff")      // Light purple end
+                put("--text", "#000000")              // Black text
+                put("--surface", "rgba(255, 255, 255, 0.8)") // Light surface
+                put("--glass-border", "rgba(0, 170, 255, 0.5)") // Blue border
+                put("--glow-intensity", "10px")       // Subtler glow
             }
 
-            // Global styles
+            // Global styles with fixed scrolling
             body {
                 margin = Margin(0.px)
                 padding = Padding(0.px)
                 fontFamily = "'Space Grotesk', sans-serif"
-                backgroundColor = Color("var(--deep-space-blue)")
-                color = Color.white
+                background = "radial-gradient(circle, var(--gradient-start), var(--gradient-end))"
+                color = Color("var(--text)")
                 position = Position.relative
                 overflow = Overflow.auto
+                height = LinearDimension.auto
                 minHeight = 100.vh
+                transition = Transitions().apply {
+                    this += Transition("all", 0.3.s, Timing.ease)
+                }
+            }
+
+            // Theme toggle switch
+            rule(".theme-toggle") {
+                position = Position.fixed
+                top = 20.px
+                right = 20.px
+                zIndex = 1000
+                width = 50.px
+                height = 50.px
+                borderRadius = 50.pct
+                backgroundColor = Color("var(--surface)")
+                border = Border(2.px, BorderStyle.solid, Color("var(--glass-border)"))
+                display = Display.flex
+                alignItems = Align.center
+                justifyContent = JustifyContent.center
+                cursor = Cursor.pointer
+                boxShadow = BoxShadows().apply {
+                    this += BoxShadow(color = Color("var(--cyber-cyan)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 10.px)
+                }
+                transition = Transitions().apply {
+                    this += Transition("all", 0.3.s, Timing.ease)
+                }
+            }
+            
+            rule(".theme-toggle:hover") {
+                transform {
+                    scale(1.1)
+                }
+                boxShadow = BoxShadows().apply {
+                    this += BoxShadow(color = Color("var(--neon-pink)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 15.px)
+                }
+            }
+            
+            rule(".theme-toggle svg") {
+                width = 24.px
+                height = 24.px
+                put("fill", "var(--text)")
+                transition = Transitions().apply {
+                    this += Transition("transform", 0.5.s, Timing.easeInOut)
+                }
+            }
+            
+            rule("[data-theme='light'] .theme-toggle .moon") {
+                display = Display.none
+            }
+            
+            rule(":not([data-theme='light']) .theme-toggle .sun") {
+                display = Display.none
             }
 
             // Canvas background
@@ -41,107 +124,144 @@ class StylesheetGenerator {
                 pointerEvents = PointerEvents.none
             }
 
-            // Header styles
+            // Header with glass effect
             header {
                 padding = Padding(16.px)
-                position = Position.relative
-                zIndex = 10
-
-                "h1" {
-                    fontSize = 3.rem
+                position = Position.sticky
+                top = 0.px
+                zIndex = 100
+                backdropFilter = "blur(12px)"
+                backgroundColor = Color("var(--surface)")
+                borderBottom = Border(2.px, BorderStyle.solid, Color("var(--glass-border)"))
+                boxShadow = BoxShadows().apply {
+                    this += BoxShadow(color = Color("var(--cyber-cyan)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 15.px)
+                }
+                display = Display.flex
+                justifyContent = JustifyContent.spaceBetween
+                alignItems = Align.center
+                transition = Transitions().apply {
+                    this += Transition("all", 0.3.s, Timing.ease)
                 }
             }
 
-            // Glowing Text
+            // Glowing Text - much brighter
             rule(".glowing-text") {
                 textShadow = TextShadows().apply {
-                    this += TextShadow(color = Color("var(--cyber-cyan)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 12.px)
+                    this += TextShadow(color = Color("var(--cyber-cyan)"), offsetX = 0.px, offsetY = 0.px, blurRadius = LinearDimension("var(--glow-intensity)"))
+                }
+                transition = Transitions().apply {
+                    this += Transition("text-shadow", 0.3.s, Timing.ease)
                 }
             }
 
+            // Navigation
             nav {
                 ul {
                     display = Display.flex
                     listStyleType = ListStyleType.none
                     padding = Padding(0.px)
+                    margin = Margin(0.px)
+                    gap = 20.px
                 }
+                
                 li {
-                    marginRight = 16.px
+                    position = Position.relative
                 }
+                
                 a {
-                    color = Color.white
+                    color = Color("var(--text)")
                     textDecoration = TextDecoration.none
+                    fontSize = 1.2.rem
+                    fontWeight = FontWeight.w500
+                    padding = Padding(8.px, 12.px)
                     transition = Transitions().apply {
-                        this += Transition(property = "all", duration = 0.3.s, timing = Timing.ease)
+                        this += Transition("all", 0.3.s, Timing.ease)
                     }
-
-                    hover {
-                        color = Color("var(--cyber-cyan)")
-                        textShadow = TextShadows().apply {
-                            this += TextShadow(color = Color("var(--cyber-cyan)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 8.px)
+                    position = Position.relative
+                    
+                    before {
+                        content = QuotedString("")
+                        position = Position.absolute
+                        bottom = 0.px
+                        left = 0.px
+                        width = 0.pct
+                        height = 2.px
+                        backgroundColor = Color("var(--neon-pink)")
+                        transition = Transitions().apply {
+                            this += Transition("width", 0.3.s, Timing.ease)
                         }
                     }
                 }
+                
+                rule("nav a:hover") {
+                    color = Color("var(--neon-pink)")
+                    textShadow = TextShadows().apply {
+                        this += TextShadow(color = Color("var(--neon-pink)"), offsetX = 0.px, offsetY = 0.px, blurRadius = LinearDimension("var(--glow-intensity)"))
+                    }
+                }
+                
+                rule("nav a:hover::before") {
+                    width = 100.pct
+                }
             }
 
-            // Glass container
+            // Improved Glass Container
             rule(".glass-container") {
                 backdropFilter = "blur(12px)"
-                backgroundColor = Color("rgba(10, 10, 20, 0.5)")
+                backgroundColor = Color("var(--surface)")
                 borderRadius = 10.px
-                padding = Padding(20.px)
+                padding = Padding(30.px)
                 margin = Margin(20.px, LinearDimension.auto)
-                border = Border(1.px, BorderStyle.solid, Color("rgba(0, 247, 255, 0.3)"))
+                marginBottom = 80.px
+                border = Border(2.px, BorderStyle.solid, Color("var(--glass-border)"))
                 boxShadow = BoxShadows().apply {
-                    this += BoxShadow(color = Color("rgba(0, 247, 255, 0.2)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 20.px)
+                    this += BoxShadow(color = Color("var(--cyber-cyan)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 20.px)
                 }
-                overflow = Overflow.visible
-                maxHeight = LinearDimension.none
                 maxWidth = 1200.px
-                width = 100.pct
+                width = 90.pct
+                transition = Transitions().apply {
+                    this += Transition("all", 0.3.s, Timing.ease)
+                }
             }
 
-            // Glass morphic elements
+            // Glass Morphic elements
             rule(".glass-morphic") {
                 backdropFilter = "blur(12px)"
-                backgroundColor = Color("rgba(10, 10, 20, 0.3)")
+                backgroundColor = Color("var(--surface)")
                 borderRadius = 8.px
-                border = Border(1.px, BorderStyle.solid, Color("rgba(0, 247, 255, 0.2)"))
+                border = Border(2.px, BorderStyle.solid, Color("var(--glass-border)"))
                 transition = Transitions().apply {
-                    this += Transition(property = "all", duration = 0.4.s, timing = Timing.ease)
+                    this += Transition("all", 0.4.s, Timing.ease)
+                }
+                boxShadow = BoxShadows().apply {
+                    this += BoxShadow(color = Color("var(--cyber-cyan)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 10.px)
                 }
             }
+            
+            rule(".glass-morphic:hover") {
+                boxShadow = BoxShadows().apply {
+                    this += BoxShadow(color = Color("var(--neon-pink)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 15.px)
+                }
+                borderColor = Color("var(--neon-pink)")
+            }
 
-            // Projects styles
+            // Projects container - improved grid
             rule(".projects-container") {
                 display = Display.grid
-                gridTemplateColumns = GridTemplateColumns("repeat(3, 1fr)")
+                gridTemplateColumns = GridTemplateColumns("repeat(auto-fill, minmax(300px, 1fr))")
                 gap = 30.px
-                padding = Padding(20.px)
-                marginBottom = 60.px
+                padding = Padding(20.px, 0.px)
                 width = 100.pct
             }
-            
-            media("(max-width: 1024px)") {
-                rule(".projects-container") {
-                    gridTemplateColumns = GridTemplateColumns("repeat(2, 1fr)")
-                }
-            }
-            
-            media("(max-width: 768px)") {
-                rule(".projects-container") {
-                    gridTemplateColumns = GridTemplateColumns("1fr")
-                }
-            }
 
+            // Project Cards with 3D flip effect
             rule(".project-card") {
                 position = Position.relative
-                height = 300.px
+                height = 350.px
                 transform {
                     perspective(1000.px)
                 }
-                minWidth = 250.px
-
+                
                 hover {
                     "& .card-inner" {
                         transform { rotateY(180.deg) }
@@ -154,7 +274,7 @@ class StylesheetGenerator {
                 height = 100.pct
                 position = Position.relative
                 transition = Transitions().apply {
-                    this += Transition(property = "transform", duration = 0.4.s, timing = Timing.ease)
+                    this += Transition("transform", 0.4.s, Timing.ease)
                 }
                 put("transform-style", "preserve-3d")
             }
@@ -167,32 +287,31 @@ class StylesheetGenerator {
                 padding = Padding(20.px)
                 borderRadius = 8.px
                 backdropFilter = "blur(12px)"
-                backgroundColor = Color("rgba(10, 10, 20, 0.5)")
-                border = Border(1.px, BorderStyle.solid, Color("rgba(0, 247, 255, 0.3)"))
+                backgroundColor = Color("var(--surface)")
+                border = Border(2.px, BorderStyle.solid, Color("var(--glass-border)"))
                 boxSizing = BoxSizing.borderBox
                 overflow = Overflow.hidden
+                boxShadow = BoxShadows().apply {
+                    this += BoxShadow(color = Color("var(--cyber-cyan)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 10.px)
+                }
+                transition = Transitions().apply {
+                    this += Transition("all", 0.3.s, Timing.ease)
+                }
             }
 
-            rule(".card-front") {
-                "h3" {
-                    color = Color.white
-                    textShadow = TextShadows().apply {
-                        this += TextShadow(color = Color("var(--cyber-cyan)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 12.px)
-                    }
-                    marginTop = 0.px
-                    marginBottom = 10.px
-                    fontSize = 1.4.rem
+            rule(".card-front h3") {
+                textShadow = TextShadows().apply {
+                    this += TextShadow(color = Color("var(--cyber-cyan)"), offsetX = 0.px, offsetY = 0.px, blurRadius = LinearDimension("var(--glow-intensity)"))
                 }
-                
-                "p" {
-                    fontSize = 0.9.rem
-                    overflow = Overflow.hidden
-                    textOverflow = TextOverflow.ellipsis
-                    put("display", "-webkit-box")
-                    put("-webkit-line-clamp", "3")
-                    put("-webkit-box-orient", "vertical")
-                    marginBottom = 10.px
-                }
+                fontSize = 1.8.rem
+                marginTop = 0.px
+                marginBottom = 15.px
+            }
+            
+            rule(".card-front p") {
+                fontSize = 1.rem
+                lineHeight = LineHeight("1.6")
+                marginBottom = 15.px
             }
 
             rule(".card-back") {
@@ -201,80 +320,351 @@ class StylesheetGenerator {
                 flexDirection = FlexDirection.column
                 justifyContent = JustifyContent.center
                 alignItems = Align.center
+                backgroundColor = Color("var(--surface)")
             }
 
-            // 3D model container
+            // 3D model container 
             rule(".model-container") {
                 width = 100.pct
-                height = 150.px
-                margin = Margin(0.px, 0.px, 15.px, 0.px)
+                height = 180.px
+                marginBottom = 20.px
+                backgroundColor = Color("var(--base)")
+                border = Border(1.px, BorderStyle.solid, Color("var(--cyber-cyan)"))
+                borderRadius = 6.px
+                overflow = Overflow.hidden
+                boxShadow = BoxShadows().apply {
+                    this += BoxShadow(color = Color("var(--cyber-cyan)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 10.px)
+                }
             }
-            
-            // Technology pills/tags styling
+
+            // Tech stack styling
             rule(".tech-stack") {
                 display = Display.flex
                 flexWrap = FlexWrap.wrap
-                gap = 8.px
-                marginTop = 12.px
-                overflowY = Overflow.auto
-                maxHeight = 70.px
-                paddingRight = 5.px
-            }
-            
-            rule(".tech-pill") {
-                display = Display.inlineBlock
-                backgroundColor = Color("rgba(0, 247, 255, 0.15)")
-                color = Color("var(--cyber-cyan)")
-                padding = Padding(4.px, 10.px)
-                borderRadius = 20.px
-                fontSize = 0.8.rem
-                border = Border(1.px, BorderStyle.solid, Color("rgba(0, 247, 255, 0.3)"))
-                boxShadow = BoxShadows().apply {
-                    this += BoxShadow(color = Color("rgba(0, 247, 255, 0.1)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 5.px)
-                }
-                transition = Transitions().apply {
-                    this += Transition(property = "all", duration = 0.3.s, timing = Timing.ease)
-                }
-            }
-            
-            rule(".tech-pill:hover") {
-                backgroundColor = Color("rgba(0, 247, 255, 0.25)")
-                boxShadow = BoxShadows().apply {
-                    this += BoxShadow(color = Color("rgba(0, 247, 255, 0.3)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 8.px)
-                }
-            }
-            
-            // Project links styling
-            rule(".project-links") {
-                display = Display.flex
                 gap = 10.px
                 marginTop = 15.px
+                marginBottom = 15.px
             }
-            
-            rule(".neon-btn") {
+
+            rule(".tech-pill") {
                 display = Display.inlineBlock
-                backgroundColor = Color("rgba(10, 10, 20, 0.7)")
+                padding = Padding(6.px, 12.px)
+                background = "color-mix(in srgb, var(--cyber-cyan) 20%, transparent)"
+                borderRadius = 20.px
+                fontSize = 0.9.rem
+                fontWeight = FontWeight.w500
                 color = Color("var(--cyber-cyan)")
-                padding = Padding(8.px, 16.px)
-                borderRadius = 5.px
-                textDecoration = TextDecoration.none
-                border = Border(1.px, BorderStyle.solid, Color("var(--cyber-cyan)"))
-                textAlign = TextAlign.center
+                border = Border(2.px, BorderStyle.solid, Color("color-mix(in srgb, var(--cyber-cyan) 50%, transparent)"))
                 transition = Transitions().apply {
-                    this += Transition(property = "all", duration = 0.3.s, timing = Timing.ease)
+                    this += Transition("all", 0.3.s, Timing.ease)
                 }
                 boxShadow = BoxShadows().apply {
-                    this += BoxShadow(color = Color("rgba(0, 247, 255, 0.1)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 5.px)
+                    this += BoxShadow(color = Color("color-mix(in srgb, var(--cyber-cyan) 30%, transparent)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 5.px)
                 }
             }
-            
-            rule(".neon-btn:hover") {
-                backgroundColor = Color("rgba(0, 247, 255, 0.2)")
+
+            rule(".tech-pill:hover") {
+                background = "color-mix(in srgb, var(--neon-pink) 20%, transparent)"
+                color = Color("var(--neon-pink)")
+                borderColor = Color("var(--neon-pink)")
+                transform {  
+                    translateY((-5).px)
+                    scale(1.05)
+                }
                 boxShadow = BoxShadows().apply {
-                    this += BoxShadow(color = Color("rgba(0, 247, 255, 0.4)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 10.px)
+                    this += BoxShadow(color = Color("var(--neon-pink)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 10.px)
+                }
+            }
+
+            // Project links
+            rule(".project-links") {
+                display = Display.flex
+                gap = 15.px
+                marginTop = 20.px
+                width = 100.pct
+                justifyContent = JustifyContent.center
+            }
+
+            rule(".btn") {
+                display = Display.inlineBlock
+                padding = Padding(10.px, 20.px)
+                fontSize = 1.1.rem
+                fontWeight = FontWeight.w500
+                letterSpacing = 1.px
+                textAlign = TextAlign.center
+                borderRadius = 30.px
+                textDecoration = TextDecoration.none
+                transition = Transitions().apply {
+                    this += Transition("all", 0.3.s, Timing.ease)
+                }
+            }
+
+            rule(".neon-btn") {
+                color = Color("var(--cyber-cyan)")
+                backgroundColor = Color("var(--base)")
+                border = Border(2.px, BorderStyle.solid, Color("var(--cyber-cyan)"))
+                boxShadow = BoxShadows().apply {
+                    this += BoxShadow(color = Color("var(--cyber-cyan)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 10.px)
+                }
+                position = Position.relative
+                overflow = Overflow.hidden
+                zIndex = 1
+            }
+            
+            rule(".neon-btn::before") {
+                content = QuotedString("")
+                position = Position.absolute
+                top = 0.px
+                left = (-100).pct
+                width = 100.pct
+                height = 100.pct
+                background = "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)"
+                zIndex = -1
+                transition = Transitions().apply {
+                    this += Transition("left", 0.5.s, Timing.ease)
+                }
+            }
+
+            rule(".neon-btn:hover") {
+                color = Color("var(--neon-pink)")
+                backgroundColor = Color("var(--base)")
+                borderColor = Color("var(--neon-pink)")
+                boxShadow = BoxShadows().apply {
+                    this += BoxShadow(color = Color("var(--neon-pink)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 15.px)
                 }
                 transform {
-                    translateY(-2.px)
+                    translateY((-5).px)
+                }
+            }
+            
+            rule(".neon-btn:hover::before") {
+                left = 100.pct
+            }
+
+            // Footer
+            footer {
+                padding = Padding(20.px)
+                textAlign = TextAlign.center
+                backdropFilter = "blur(12px)"
+                backgroundColor = Color("var(--surface)")
+                borderTop = Border(2.px, BorderStyle.solid, Color("var(--glass-border)"))
+                boxShadow = BoxShadows().apply {
+                    this += BoxShadow(color = Color("var(--cyber-cyan)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 15.px)
+                }
+                position = Position.relative
+                zIndex = 10
+                transition = Transitions().apply {
+                    this += Transition("all", 0.3.s, Timing.ease)
+                }
+            }
+
+            // Floating terminal container
+            rule(".terminal-container") {
+                position = Position.relative
+                width = 100.pct
+                maxWidth = 700.px
+                height = 250.px
+                margin = Margin(0.px, LinearDimension.auto, 50.px, LinearDimension.auto)
+                backdropFilter = "blur(12px)"
+                backgroundColor = Color("var(--surface)")
+                border = Border(2.px, BorderStyle.solid, Color("var(--cyber-cyan)"))
+                borderRadius = 10.px
+                boxShadow = BoxShadows().apply {
+                    this += BoxShadow(color = Color("var(--cyber-cyan)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 20.px)
+                }
+                overflow = Overflow.hidden
+                transition = Transitions().apply {
+                    this += Transition("all", 0.3.s, Timing.ease)
+                }
+            }
+
+            // Skills matrix container
+            rule(".skills-matrix") {
+                position = Position.relative
+                width = 100.pct
+                height = 500.px
+                margin = Margin(50.px, 0.px)
+                border = Border(2.px, BorderStyle.solid, Color("var(--cyber-cyan)"))
+                backgroundColor = Color("var(--surface)")
+                borderRadius = 10.px
+                overflow = Overflow.hidden
+                boxShadow = BoxShadows().apply {
+                    this += BoxShadow(color = Color("var(--cyber-cyan)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 20.px)
+                }
+                transition = Transitions().apply {
+                    this += Transition("all", 0.3.s, Timing.ease)
+                }
+            }
+            
+            // Section styling
+            rule("section") {
+                marginBottom = 60.px
+            }
+            
+            rule("section h2") {
+                fontSize = 2.5.rem
+                marginBottom = 20.px
+                position = Position.relative
+                display = Display.inlineBlock
+            }
+            
+            rule("section h2::after") {
+                content = QuotedString("")
+                position = Position.absolute
+                bottom = (-10).px
+                left = 0.px
+                width = 100.pct
+                height = 3.px
+                background = "linear-gradient(90deg, var(--cyber-cyan), var(--neon-pink))"
+                borderRadius = 3.px
+            }
+
+            // Content divider
+            rule(".content-divider") {
+                width = 100.pct
+                height = 2.px
+                margin = Margin(40.px, 0.px)
+                position = Position.relative
+                background = "linear-gradient(90deg, transparent, var(--cyber-cyan), var(--neon-pink), transparent)"
+            }
+
+            // Holographic Menu
+            rule(".holographic-menu") {
+                position = Position.fixed
+                bottom = 30.px
+                left = 50.pct
+                transform {
+                    translateX((-50).pct)
+                }
+                display = Display.flex
+                gap = 20.px
+                zIndex = 1000
+                backdropFilter = "blur(12px)"
+                backgroundColor = Color("var(--surface)")
+                padding = Padding(12.px, 25.px)
+                borderRadius = 40.px
+                border = Border(2.px, BorderStyle.solid, Color("var(--glass-border)"))
+                boxShadow = BoxShadows().apply {
+                    this += BoxShadow(color = Color("var(--cyber-cyan)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 20.px)
+                }
+                transition = Transitions().apply {
+                    this += Transition("all", 0.3.s, Timing.ease)
+                }
+            }
+
+            rule(".menu-icon") {
+                width = 45.px
+                height = 45.px
+                borderRadius = 50.pct
+                display = Display.flex
+                alignItems = Align.center
+                justifyContent = JustifyContent.center
+                backgroundColor = Color("var(--base)")
+                border = Border(2.px, BorderStyle.solid, Color("var(--cyber-cyan)"))
+                boxShadow = BoxShadows().apply {
+                    this += BoxShadow(color = Color("rgba(var(--cyber-cyan-rgb), 0.5)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 10.px)
+                }
+                cursor = Cursor.pointer
+                transition = Transitions().apply {
+                    this += Transition("all", 0.3.s, Timing.ease)
+                }
+            }
+            
+            rule(".menu-icon svg") {
+                width = 24.px
+                height = 24.px
+                put("stroke", "var(--cyber-cyan)")
+                transition = Transitions().apply {
+                    this += Transition("all", 0.3.s, Timing.ease)
+                }
+            }
+
+            rule(".menu-icon:hover") {
+                backgroundColor = Color("rgba(0, 255, 255, 0.2)")
+                borderColor = Color("var(--neon-pink)")
+                transform {
+                    translateY((-8).px)
+                    rotate(5.deg)
+                }
+                boxShadow = BoxShadows().apply {
+                    this += BoxShadow(color = Color("var(--neon-pink)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 15.px)
+                }
+            }
+            
+            rule(".menu-icon:hover svg") {
+                put("stroke", "var(--neon-pink)")
+            }
+            
+            // Contact section
+            rule(".contact-container") {
+                display = Display.flex
+                flexDirection = FlexDirection.column
+                gap = 20.px
+                maxWidth = 600.px
+                margin = Margin(30.px, LinearDimension.auto)
+                padding = Padding(30.px)
+            }
+            
+            rule(".contact-item") {
+                display = Display.flex
+                alignItems = Align.center
+                padding = Padding(15.px)
+                backgroundColor = Color("var(--surface)")
+                borderRadius = 10.px
+                border = Border(2.px, BorderStyle.solid, Color("rgba(var(--cyber-cyan-rgb), 0.5)"))
+                transition = Transitions().apply {
+                    this += Transition("all", 0.3.s, Timing.ease)
+                }
+            }
+            
+            rule(".contact-item:hover") {
+                transform {
+                    translateX(10.px)
+                }
+                borderColor = Color("var(--neon-pink)")
+                boxShadow = BoxShadows().apply {
+                    this += BoxShadow(color = Color("var(--neon-pink)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 15.px)
+                }
+            }
+            
+            rule(".contact-icon") {
+                fontSize = 1.8.rem
+                marginRight = 15.px
+            }
+            
+            rule(".contact-item a") {
+                color = Color("var(--cyber-cyan)")
+                textDecoration = TextDecoration.none
+                fontSize = 1.1.rem
+                transition = Transitions().apply {
+                    this += Transition("all", 0.3.s, Timing.ease)
+                }
+            }
+            
+            rule(".contact-item:hover a") {
+                color = Color("var(--neon-pink)")
+            }
+
+            // Media queries for responsive design
+            media("(max-width: 768px)") {
+                rule(".projects-container") {
+                    gridTemplateColumns = GridTemplateColumns("1fr")
+                }
+
+                rule(".holographic-menu .menu-icon") {
+                    width = 56.px
+                    height = 56.px
+                }
+                
+                rule(".theme-toggle") {
+                    top = 80.px
+                }
+                
+                rule("header") {
+                    flexDirection = FlexDirection.column
+                    alignItems = Align.center
+                    padding = Padding(20.px, 10.px)
+                    gap = 15.px
                 }
             }
         }.toString()

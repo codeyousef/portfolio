@@ -26,27 +26,99 @@ class PortfolioTemplates {
 
         // Use Qute template for the base layout
         return baseTemplate
-            .data("title", "Portfolio - Projects")
+            .data("title", "Sci-Fi Cyberwave Portfolio")
             .data("content", contentHtml)
     }
 
     /**
-     * Builds the home page content using Kotlin HTML DSL
+     * Builds the home page content using Kotlin HTML DSL with Sci-Fi Cyberwave theme
      */
     private fun buildHomeContent(projectEntities: List<ProjectEntity>): String {
         val writer = StringWriter()
-        writer.appendHTML().section(classes = "hero") {
-            h2 { +"Featured Projects" }
-            div(classes = "projects-container") {
-                // Add projects directly since we already have them
-                unsafe { +buildProjectsSection(projectEntities) }
+        writer.appendHTML().div {
+            // Hero section with intro
+            section(classes = "hero") {
+                id = "home"
+                h2(classes = "glowing-text") { +"Welcome to My Cyberwave Portfolio" }
+                p { 
+                    +"I'm a software developer specializing in Kotlin, Quarkus, and modern web technologies. " 
+                    +"Explore my digital space inspired by NEOM's The Line with immersive 3D elements."
+                }
+                
+                // Add floating terminal UI element (will be populated by Three.js)
+                div(classes = "terminal-container") {
+                    id = "terminal-container"
+                }
+            }
+            
+            // Content divider with light effect
+            div(classes = "content-divider")
+            
+            // Projects section with 3D flip cards
+            section(classes = "projects-section") {
+                id = "projects"
+                h2(classes = "glowing-text") { +"Featured Projects" }
+                p {
+                    +"Hover over the cards to reveal 3D models and project details. These glass-morphic panels "
+                    +"showcase my work with interactive elements."
+                }
+                
+                div(classes = "projects-container") {
+                    // Add projects directly since we already have them
+                    unsafe { +buildProjectsSection(projectEntities) }
+                }
+            }
+            
+            // Content divider
+            div(classes = "content-divider")
+            
+            // Skills section with 3D force-directed graph
+            section(classes = "skills-section") {
+                id = "skills"
+                h2(classes = "glowing-text") { +"Skills Matrix" }
+                p {
+                    +"This interactive 3D graph visualizes my skills and their relationships. "
+                    +"The nodes represent technologies I work with, rendered with liquid metal PBR materials."
+                }
+                
+                // Add skills matrix container (will be populated by skills-graph.js)
+                div(classes = "skills-matrix") {
+                    id = "skills-matrix"
+                }
+            }
+            
+            // Content divider
+            div(classes = "content-divider")
+            
+            // Contact section
+            section(classes = "contact-section") {
+                id = "contact"
+                h2(classes = "glowing-text") { +"Contact" }
+                p {
+                    +"Interested in collaborating on a project? Reach out through the channels below."
+                }
+                
+                div(classes = "contact-container glass-morphic") {
+                    div(classes = "contact-item") {
+                        span(classes = "contact-icon") { +"📧" }
+                        a(href = "mailto:contact@example.com") { +"contact@example.com" }
+                    }
+                    div(classes = "contact-item") {
+                        span(classes = "contact-icon") { +"🔗" }
+                        a(href = "https://github.com/yourusername", target = "_blank") { +"GitHub" }
+                    }
+                    div(classes = "contact-item") {
+                        span(classes = "contact-icon") { +"💼" }
+                        a(href = "https://linkedin.com/in/yourusername", target = "_blank") { +"LinkedIn" }
+                    }
+                }
             }
         }
         return writer.toString()
     }
 
     /**
-     * Builds the projects section using Kotlin HTML DSL
+     * Builds the projects section using Kotlin HTML DSL with glass-morphic cards as specified
      */
     fun buildProjectsSection(projectEntities: List<ProjectEntity>): String {
         val writer = StringWriter()
@@ -60,7 +132,7 @@ class PortfolioTemplates {
                     attributes["hx-swap"] = "innerHTML"
 
                     div(classes = "card-inner") {
-                        // Front side
+                        // Front side with glowing text as specified
                         div(classes = "card-front glass-morphic") {
                             h3(classes = "glowing-text") { +project.title }
                             p { +project.description }
@@ -73,7 +145,7 @@ class PortfolioTemplates {
                             }
                         }
 
-                        // Back side with 3D model
+                        // Back side with 3D model as specified
                         div(classes = "card-back glass-morphic") {
                             div(classes = "model-container") {
                                 // Container for 3D model

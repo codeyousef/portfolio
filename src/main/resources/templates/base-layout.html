@@ -4,26 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{title}</title>
-  <!-- Add Space Grotesk font -->
+  <!-- Space Grotesk font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap">
   <link rel="stylesheet" href="/css/styles.css">
-  <!-- Libraries -->
+  <!-- Libraries - Using a single Three.js version that works -->
   <script src="https://unpkg.com/htmx.org@1.9.6"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.150.1/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.min.js"></script>
-  <script defer src="/js/3d-background.js"></script>
+  
+  <!-- Load our scripts at the end of body instead -->
 </head>
 <body>
 <!-- 3D Canvas Background -->
 <canvas id="bg-canvas"></canvas>
 
+<!-- Parallax layers for depth -->
+<div class="parallax-layer-1"></div>
+<div class="parallax-layer-2"></div>
+<div class="parallax-layer-3"></div>
+<div class="parallax-layer-4"></div>
+<div class="parallax-layer-5"></div>
+
+<!-- Theme Toggle Button -->
+<button class="theme-toggle" id="theme-toggle">
+  <svg class="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3a1 1 0 011 1v1a1 1 0 01-2 0V4a1 1 0 011-1zm0 15a1 1 0 011 1v1a1 1 0 01-2 0v-1a1 1 0 011-1zm9-9a1 1 0 01-1 1h-1a1 1 0 010-2h1a1 1 0 011 1zM4 12a1 1 0 01-1 1H2a1 1 0 010-2h1a1 1 0 011 1zm15.7-6.3a1 1 0 01-1.4 0l-.7-.7a1 1 0 011.4-1.4l.7.7a1 1 0 010 1.4zM5.3 18.7a1 1 0 01-1.4 0l-.7-.7a1 1 0 011.4-1.4l.7.7a1 1 0 010 1.4zM5.3 5.3a1 1 0 010-1.4l.7-.7a1 1 0 011.4 1.4l-.7.7a1 1 0 01-1.4 0zm12.8 12.8a1 1 0 010 1.4l-.7.7a1 1 0 11-1.4-1.4l.7-.7a1 1 0 011.4 0zM12 6a6 6 0 100 12 6 6 0 000-12z"/></svg>
+  <svg class="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3a9 9 0 108.9 7.6 5.4 5.4 0 01-9.8-3.1c0-2.3 1.4-4.2 3.5-5A9 9 0 0012 3z"/></svg>
+</button>
+
 <header>
-  <h1 class="glowing-text">My Portfolio</h1>
+  <h1 class="glowing-text">CYBERPUNK PORTFOLIO</h1>
   <nav>
     <ul>
       <li><a href="/">Home</a></li>
+      <li><a href="/projects">Projects</a></li>
       <li><a href="/blog">Blog</a></li>
       <li><a href="/contact">Contact</a></li>
     </ul>
@@ -31,16 +44,496 @@
 </header>
 
 <main class="glass-container">
+  <!-- Terminal container for the floating 3D terminal -->
+  <div class="terminal-container" id="terminal-container"></div>
+  
   {#if content??}
   {content.safe}
   {/if}
 
   <!-- Project detail container for HTMX to target -->
   <div id="project-detail" class="glass-morphic"></div>
+  
+  <!-- Skills matrix container for 3D force-directed graph -->
+  <div class="skills-matrix" id="skills-matrix"></div>
 </main>
 
+<!-- Holographic Circular Menu -->
+<div class="holographic-menu">
+  <div class="menu-icon" data-section="home">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+  </div>
+  <div class="menu-icon" data-section="projects">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+  </div>
+  <div class="menu-icon" data-section="blog">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+  </div>
+  <div class="menu-icon" data-section="contact">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+  </div>
+</div>
+
 <footer>
-  <p>© 2023 My Portfolio</p>
+  <p>© 2025 Cyberpunk Portfolio</p>
 </footer>
+
+<!-- Theme toggle and parallax effects -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    
+    // Check for saved theme preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      document.body.setAttribute('data-theme', 'light');
+    }
+    
+    // Theme toggle button
+    themeToggle.addEventListener('click', function() {
+      if (document.body.getAttribute('data-theme') === 'light') {
+        document.body.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.body.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+      }
+    });
+    
+    // Parallax effect for layers
+    const parallaxElements = document.querySelectorAll('.parallax-layer-1, .parallax-layer-2, .parallax-layer-5');
+    
+    window.addEventListener('scroll', function() {
+      const scrollY = window.scrollY;
+      
+      parallaxElements.forEach(function(element, index) {
+        const speed = 0.1 * (index + 1);
+        element.style.transform = 'translateY(' + (scrollY * speed) + 'px)';
+      });
+    });
+    
+    // Smooth scrolling for menu icons
+    document.querySelectorAll('.menu-icon').forEach(function(icon) {
+      icon.addEventListener('click', function() {
+        const sectionId = icon.getAttribute('data-section');
+        const target = document.querySelector('section[id="' + sectionId + '"]') || 
+                      document.querySelector('#' + sectionId) || 
+                      document.querySelector('[data-section="' + sectionId + '"]');
+        
+        if (target) {
+          window.scrollTo({
+            top: target.offsetTop - 100,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+    
+    // Add particle trail to menu icons on hover
+    document.querySelectorAll('.menu-icon').forEach(function(icon) {
+      icon.addEventListener('mouseenter', function() {
+        // Create particle effect
+        for (let i = 0; i < 10; i++) {
+          const particle = document.createElement('div');
+          particle.classList.add('menu-particle');
+          particle.style.position = 'absolute';
+          particle.style.width = '4px';
+          particle.style.height = '4px';
+          particle.style.backgroundColor = '#00ffff';
+          particle.style.borderRadius = '50%';
+          particle.style.pointerEvents = 'none';
+          
+          document.body.appendChild(particle);
+          
+          const startX = icon.offsetLeft + icon.offsetWidth / 2;
+          const startY = icon.offsetTop + icon.offsetHeight / 2;
+          
+          particle.style.left = startX + 'px';
+          particle.style.top = startY + 'px';
+          particle.style.opacity = '1';
+          
+          // Random movement animation
+          const angle = Math.random() * Math.PI * 2;
+          const distance = Math.random() * 50;
+          const endX = startX + Math.cos(angle) * distance;
+          const endY = startY + Math.sin(angle) * distance;
+          
+          setTimeout(function() {
+            particle.style.transition = 'all 1s ease-out';
+            particle.style.left = endX + 'px';
+            particle.style.top = endY + 'px';
+            particle.style.opacity = '0';
+            
+            // Remove particle after animation
+            setTimeout(function() {
+              if (particle.parentNode) {
+                document.body.removeChild(particle);
+              }
+            }, 1000);
+          }, 10);
+        }
+      });
+    });
+  });
+</script>
+
+<!-- Simplified background effect -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Basic Three.js setup for background
+    const canvas = document.getElementById('bg-canvas');
+    if (!canvas) return;
+    
+    // Get theme
+    const isDarkTheme = !document.body.hasAttribute('data-theme') || 
+                        document.body.getAttribute('data-theme') !== 'light';
+    
+    // Colors
+    const colors = {
+      dark: {
+        base: 0x000000,
+        cyberCyan: 0x00ffff,
+        neonPink: 0xff00ff
+      },
+      light: {
+        base: 0xffffff,
+        cyberCyan: 0x00bbff,
+        neonPink: 0xff0066
+      }
+    };
+    
+    const currentColors = isDarkTheme ? colors.dark : colors.light;
+    
+    // Scene setup
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(currentColors.base);
+    
+    // Camera
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 30;
+    
+    // Renderer
+    const renderer = new THREE.WebGLRenderer({
+      canvas: canvas,
+      antialias: true,
+      alpha: true
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    
+    // Grid
+    const gridGeometry = new THREE.PlaneGeometry(200, 200, 20, 20);
+    const gridMaterial = new THREE.MeshBasicMaterial({
+      color: currentColors.cyberCyan,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.3
+    });
+    
+    const grid = new THREE.Mesh(gridGeometry, gridMaterial);
+    grid.rotation.x = -Math.PI / 2;
+    grid.position.y = -30;
+    scene.add(grid);
+    
+    // Stars
+    const starsGeometry = new THREE.BufferGeometry();
+    const starsMaterial = new THREE.PointsMaterial({
+      color: 0xffffff,
+      size: 0.2
+    });
+    
+    const starsVertices = [];
+    for (let i = 0; i < 2000; i++) {
+      const x = (Math.random() - 0.5) * 1000;
+      const y = (Math.random() - 0.5) * 500;
+      const z = (Math.random() - 0.5) * 1000;
+      starsVertices.push(x, y, z);
+    }
+    
+    starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsVertices, 3));
+    const stars = new THREE.Points(starsGeometry, starsMaterial);
+    scene.add(stars);
+    
+    // Add light
+    const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+    scene.add(ambientLight);
+    
+    const directionalLight = new THREE.DirectionalLight(currentColors.cyberCyan, 1);
+    directionalLight.position.set(0, 50, 30);
+    scene.add(directionalLight);
+    
+    // Animation
+    let time = 0;
+    let mouseX = 0, mouseY = 0;
+    let windowHalfX = window.innerWidth / 2;
+    let windowHalfY = window.innerHeight / 2;
+    
+    function animate() {
+      requestAnimationFrame(animate);
+      
+      time += 0.01;
+      
+      // Animate grid wave effect
+      const positions = grid.geometry.attributes.position.array;
+      
+      for (let i = 0; i < positions.length; i += 3) {
+        const x = grid.geometry.attributes.position.array[i];
+        const z = grid.geometry.attributes.position.array[i + 2];
+        
+        positions[i + 1] = Math.sin(x * 0.05 + time) * Math.sin(z * 0.05 + time) * 3;
+      }
+      
+      grid.geometry.attributes.position.needsUpdate = true;
+      
+      // Smooth camera movement
+      camera.position.x += (mouseX - camera.position.x) * 0.05;
+      camera.position.y += (-mouseY - camera.position.y) * 0.05;
+      camera.lookAt(scene.position);
+      
+      renderer.render(scene, camera);
+    }
+    
+    // Mouse movement
+    document.addEventListener('mousemove', function(event) {
+      mouseX = (event.clientX - windowHalfX) / 100;
+      mouseY = (event.clientY - windowHalfY) / 100;
+    });
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+      windowHalfX = window.innerWidth / 2;
+      windowHalfY = window.innerHeight / 2;
+      
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+    
+    // Handle theme changes
+    document.getElementById('theme-toggle').addEventListener('click', function() {
+      setTimeout(function() {
+        const isDark = !document.body.hasAttribute('data-theme') || 
+                       document.body.getAttribute('data-theme') !== 'light';
+        
+        const newColors = isDark ? colors.dark : colors.light;
+        
+        scene.background = new THREE.Color(newColors.base);
+        grid.material.color.set(newColors.cyberCyan);
+        directionalLight.color.set(newColors.cyberCyan);
+      }, 100);
+    });
+    
+    animate();
+  });
+</script>
+
+<!-- Simplified skills matrix -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const skillsMatrix = document.getElementById('skills-matrix');
+    if (!skillsMatrix) return;
+    
+    // Get theme
+    const isDarkTheme = !document.body.hasAttribute('data-theme') || 
+                        document.body.getAttribute('data-theme') !== 'light';
+    
+    // Colors
+    const colors = {
+      dark: {
+        base: 0x000000,
+        cyberCyan: 0x00ffff,
+        neonPink: 0xff00ff,
+        neonPurple: 0x9900ff,
+        neonGreen: 0x00ff00,
+        neonOrange: 0xff6600
+      },
+      light: {
+        base: 0xffffff,
+        cyberCyan: 0x00bbff,
+        neonPink: 0xff0066,
+        neonPurple: 0x8800cc,
+        neonGreen: 0x00cc00,
+        neonOrange: 0xff5500
+      }
+    };
+    
+    const currentColors = isDarkTheme ? colors.dark : colors.light;
+    
+    // Scene
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(currentColors.base);
+    
+    // Camera
+    const camera = new THREE.PerspectiveCamera(75, skillsMatrix.clientWidth / skillsMatrix.clientHeight, 0.1, 1000);
+    camera.position.z = 150;
+    
+    // Renderer
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true
+    });
+    renderer.setSize(skillsMatrix.clientWidth, skillsMatrix.clientHeight);
+    skillsMatrix.appendChild(renderer.domElement);
+    
+    // Light
+    const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+    scene.add(ambientLight);
+    
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(1, 1, 1);
+    scene.add(directionalLight);
+    
+    // Skills categories
+    const categories = {
+      language: { name: "Languages", color: currentColors.cyberCyan },
+      framework: { name: "Frameworks", color: currentColors.neonPink },
+      frontend: { name: "Frontend", color: currentColors.neonGreen },
+      database: { name: "Database", color: currentColors.neonOrange },
+      devops: { name: "DevOps", color: currentColors.neonPurple }
+    };
+    
+    // Create spheres for each category
+    const spheres = [];
+    let angle = 0;
+    const radius = 50;
+    
+    for (const key in categories) {
+      const category = categories[key];
+      
+      // Create sphere
+      const geometry = new THREE.SphereGeometry(10, 32, 32);
+      const material = new THREE.MeshStandardMaterial({
+        color: category.color,
+        metalness: 0.9,
+        roughness: 0.2,
+        emissive: category.color,
+        emissiveIntensity: 0.3
+      });
+      
+      const sphere = new THREE.Mesh(geometry, material);
+      
+      // Position in a circle
+      const x = Math.cos(angle) * radius;
+      const z = Math.sin(angle) * radius;
+      sphere.position.set(x, 0, z);
+      
+      scene.add(sphere);
+      spheres.push(sphere);
+      
+      angle += Math.PI * 2 / Object.keys(categories).length;
+    }
+    
+    // Create 3D lines connecting the spheres
+    for (let i = 0; i < spheres.length; i++) {
+      for (let j = i + 1; j < spheres.length; j++) {
+        const points = [];
+        points.push(spheres[i].position);
+        points.push(spheres[j].position);
+        
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+        const material = new THREE.LineBasicMaterial({
+          color: currentColors.cyberCyan,
+          transparent: true,
+          opacity: 0.5
+        });
+        
+        const line = new THREE.Line(geometry, material);
+        scene.add(line);
+      }
+    }
+    
+    // Animation
+    let time = 0;
+    
+    function animate() {
+      requestAnimationFrame(animate);
+      
+      time += 0.01;
+      
+      // Rotate the spheres
+      spheres.forEach((sphere, i) => {
+        const angle = time * 0.2 + i * Math.PI * 2 / spheres.length;
+        sphere.position.x = Math.cos(angle) * radius;
+        sphere.position.z = Math.sin(angle) * radius;
+        sphere.position.y = Math.sin(time * 0.5 + i) * 10;
+        
+        // Pulse the size
+        const scale = 1 + Math.sin(time * 0.5 + i * 0.5) * 0.1;
+        sphere.scale.set(scale, scale, scale);
+      });
+      
+      // Update lines
+      scene.children.forEach(child => {
+        if (child instanceof THREE.Line) {
+          scene.remove(child);
+        }
+      });
+      
+      // Recreate lines
+      for (let i = 0; i < spheres.length; i++) {
+        for (let j = i + 1; j < spheres.length; j++) {
+          const points = [];
+          points.push(spheres[i].position.clone());
+          points.push(spheres[j].position.clone());
+          
+          const geometry = new THREE.BufferGeometry().setFromPoints(points);
+          const material = new THREE.LineBasicMaterial({
+            color: currentColors.cyberCyan,
+            transparent: true,
+            opacity: 0.3 + Math.sin(time + i + j) * 0.2
+          });
+          
+          const line = new THREE.Line(geometry, material);
+          scene.add(line);
+        }
+      }
+      
+      // Rotate camera
+      camera.position.x = Math.sin(time * 0.1) * 200;
+      camera.position.z = Math.cos(time * 0.1) * 200;
+      camera.lookAt(0, 0, 0);
+      
+      renderer.render(scene, camera);
+    }
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+      camera.aspect = skillsMatrix.clientWidth / skillsMatrix.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(skillsMatrix.clientWidth, skillsMatrix.clientHeight);
+    });
+    
+    // Handle theme changes
+    document.getElementById('theme-toggle').addEventListener('click', function() {
+      setTimeout(function() {
+        const isDark = !document.body.hasAttribute('data-theme') || 
+                     document.body.getAttribute('data-theme') !== 'light';
+        
+        const newColors = isDark ? colors.dark : colors.light;
+        
+        scene.background = new THREE.Color(newColors.base);
+        
+        // Update sphere colors
+        let i = 0;
+        for (const key in categories) {
+          categories[key].color = [newColors.cyberCyan, newColors.neonPink, 
+                                 newColors.neonGreen, newColors.neonOrange, 
+                                 newColors.neonPurple][i % 5];
+          
+          if (i < spheres.length) {
+            spheres[i].material.color.set(categories[key].color);
+            spheres[i].material.emissive.set(categories[key].color);
+          }
+          
+          i++;
+        }
+      }, 100);
+    });
+    
+    animate();
+  });
+</script>
 </body>
 </html>
