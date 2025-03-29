@@ -11,6 +11,7 @@ import jakarta.ws.rs.core.Cookie
 import jakarta.ws.rs.core.Response
 import jakarta.ws.rs.ext.Provider
 import java.net.URI
+import kotlinx.coroutines.runBlocking
 
 @Provider
 @ApplicationScoped
@@ -22,30 +23,30 @@ class AuthenticationFilter : ContainerRequestFilter {
 
     override fun filter(requestContext: ContainerRequestContext) {
         val path = requestContext.uriInfo.path
-        
+
         // Skip authentication for public paths and the login page itself
         if (isPublicPath(path)) {
             return
         }
-        
+
         // Check for session cookie
         val cookies = requestContext.cookies
         val sessionCookie: Cookie? = cookies["session"]
-        
+
         if (sessionCookie == null) {
             abortWithRedirect(requestContext)
             return
         }
-        
+
         // Validate username from cookie (basic approach)
         val username = sessionCookie.value
-        val user = userService.getUserByUsername(username).await().indefinitely()
-        
+        val user = runBlocking {
+            userService.getUserByUsername(username)
+        }
+
         if (user == null) {
             abortWithRedirect(requestContext)
         }
-        
-        // At this point, the user is authenticated
     }
     
     private fun isPublicPath(path: String): Boolean {

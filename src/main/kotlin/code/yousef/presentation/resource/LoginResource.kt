@@ -1,10 +1,10 @@
 package code.yousef.presentation.resource
 
 import code.yousef.application.service.UserService
+import code.yousef.presentation.dto.request.AuthRequest
 import io.quarkus.qute.Location
 import io.quarkus.qute.Template
 import io.quarkus.qute.TemplateInstance
-import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.RequestScoped
 import jakarta.inject.Inject
 import jakarta.ws.rs.*
@@ -33,45 +33,45 @@ class LoginResource {
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_HTML)
-    fun login(
+    suspend fun login(
         @FormParam("username") username: String,
         @FormParam("password") password: String
-    ): Uni<Response> {
-        return userService.authenticate(username, password)
-            .onItem().transform { user ->
-                if (user != null) {
-                    // Create a session cookie
-                    val sessionCookie = NewCookie.Builder("session")
-                        .value(username)
-                        .path("/")
-                        .maxAge(3600) // 1 hour
-                        .httpOnly(true)
-                        .build()
+    ): Response {
+        val request = AuthRequest(username, password)
+        val user = userService.authenticate(request)
 
-                    Response.seeOther(URI.create("/admin/dashboard"))
-                        .cookie(sessionCookie)
-                        .build()
-                } else {
-                    Response.seeOther(URI.create("/login?error=Invalid+username+or+password"))
-                        .build()
-                }
-            }
+        return if (user != null) {
+            // Create a session cookie
+            val sessionCookie = NewCookie.Builder("session")
+                .value(username)
+                .path("/")
+                .maxAge(3600) // 1 hour
+                .httpOnly(true)
+                .build()
+
+            Response.seeOther(URI.create("/admin/dashboard"))
+                .cookie(sessionCookie)
+                .build()
+        } else {
+            Response.seeOther(URI.create("/login?error=Invalid+username+or+password"))
+                .build()
+        }
     }
+}
 
-    @GET
-    @Path("/logout")
-    @Produces(MediaType.TEXT_HTML)
-    fun logout(): Response {
-        // Clear the session cookie
-        val clearedCookie = NewCookie.Builder("session")
-            .value("")
-            .path("/")
-            .maxAge(0)
-            .httpOnly(true)
-            .build()
+@GET
+@Path("/logout")
+@Produces(MediaType.TEXT_HTML)
+fun logout(): Response {
+    // Clear the session cookie
+    val clearedCookie = NewCookie.Builder("session")
+        .value("")
+        .path("/")
+        .maxAge(0)
+        .httpOnly(true)
+        .build()
 
-        return Response.seeOther(URI.create("/login"))
-            .cookie(clearedCookie)
-            .build()
-    }
+    return Response.seeOther(URI.create("/login"))
+        .cookie(clearedCookie)
+        .build()
 }
