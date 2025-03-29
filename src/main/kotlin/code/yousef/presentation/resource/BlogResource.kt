@@ -39,17 +39,17 @@ class BlogResource {
     suspend fun getBlogPage(
         @QueryParam("page") @DefaultValue("0") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int
-    ): TemplateInstance {
+    ): String? {
         val blogs = getBlogsUseCase.getPublishedBlogs(page, size).blogs
-        return blogTemplates.buildBlogPage(blogs, page, size)
+        return blogTemplates.buildBlogPage(blogs, page, size).render()
     }
 
     @GET
     @Path("/{slug}")
     @Produces(MediaType.TEXT_HTML)
-    suspend fun getBlogPostBySlug(@PathParam("slug") slug: String): TemplateInstance {
+    suspend fun getBlogPostBySlug(@PathParam("slug") slug: String): String? {
         val blog = getBlogsUseCase.getBlogBySlug(slug)
-        return blogTemplates.buildBlogPostPage(blog)
+        return blogTemplates.buildBlogPostPage(blog).render()
     }
 
     // Admin API endpoints

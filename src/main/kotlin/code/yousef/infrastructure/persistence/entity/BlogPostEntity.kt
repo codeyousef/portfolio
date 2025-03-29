@@ -1,13 +1,14 @@
 package code.yousef.infrastructure.persistence.entity
 
-import io.quarkus.hibernate.reactive.panache.PanacheEntityBase
+import io.quarkus.hibernate.reactive.panache.kotlin.PanacheEntityBase
 import jakarta.persistence.*
 import java.time.LocalDateTime
 import java.util.*
 
 @Entity
 @Table(name = "blog_posts")
-class BlogPostEntity : PanacheEntityBase() {
+class BlogPostEntity : PanacheEntityBase {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     var id: UUID? = null
@@ -17,7 +18,6 @@ class BlogPostEntity : PanacheEntityBase() {
     @Column(length = 500)
     lateinit var summary: String
 
-    @Lob
     @Column(columnDefinition = "TEXT")
     lateinit var content: String
 

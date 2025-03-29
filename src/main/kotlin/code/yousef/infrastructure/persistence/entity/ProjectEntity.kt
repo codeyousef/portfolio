@@ -1,12 +1,13 @@
 package code.yousef.infrastructure.persistence.entity
 
 import io.quarkus.hibernate.reactive.panache.PanacheEntity
+import io.quarkus.hibernate.reactive.panache.kotlin.PanacheEntityBase
 import java.time.LocalDateTime
 import jakarta.persistence.*
 import java.util.UUID
 
 @Entity
-class ProjectEntity : PanacheEntity() {
+class ProjectEntity : PanacheEntityBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -16,8 +17,8 @@ class ProjectEntity : PanacheEntity() {
     lateinit var description: String
     lateinit var imageUrl: String
     lateinit var modelUrl: String
-    
-    @ElementCollection
+
+    @ElementCollection(fetch = FetchType.EAGER)
     lateinit var technologies: List<String>
     
     lateinit var githubUrl: String

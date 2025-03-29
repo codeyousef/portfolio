@@ -8,25 +8,35 @@ import io.quarkus.runtime.StartupEvent
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.enterprise.event.Observes
 import jakarta.inject.Inject
+import kotlinx.coroutines.runBlocking
+import org.hibernate.reactive.mutiny.Mutiny.SessionFactory
 import org.jboss.logging.Logger
 
 @ApplicationScoped
 class DataInitializer @Inject constructor(
     private val userService: UserService,
     private val blogService: BlogService,
-    private val projectService: ProjectService
+    private val projectService: ProjectService,
+    val sessionFactory: SessionFactory
 ) {
     private val logger = Logger.getLogger(DataInitializer::class.java)
 
-    suspend fun init(@Observes event: StartupEvent) {
+    fun init(@Observes event: StartupEvent) {
         logger.info("Initializing database with placeholder data...")
 
-        // Initialize data in sequence
-        initUsers()
-        initProjects()
-        initBlogPosts()
+        // Use runBlocking to bridge non-suspending context to suspending functions
+        runBlocking {
+            try {
+                // Initialize data in sequence
+                initUsers()
+                initProjects()
+                initBlogPosts()
 
-        logger.info("Database initialization completed")
+                logger.info("Database initialization completed")
+            } catch (e: Exception) {
+                logger.error("Error during database initialization", e)
+            }
+        }
     }
 
     private suspend fun initUsers() {

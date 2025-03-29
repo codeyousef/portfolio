@@ -2,6 +2,7 @@ package code.yousef.infrastructure.persistence.repository
 
 import code.yousef.domain.model.BlogPost
 import code.yousef.domain.repository.BlogRepo
+import code.yousef.infrastructure.persistence.entity.BlogPostEntity
 import code.yousef.infrastructure.persistence.mapper.BlogPostMapper
 import io.quarkus.hibernate.reactive.panache.kotlin.PanacheRepositoryBase
 import io.smallrye.mutiny.coroutines.awaitSuspending
@@ -14,58 +15,69 @@ import java.util.*
 class BlogRepoImpl @Inject constructor(
     private val sessionFactory: SessionFactory,
     private val blogPostMapper: BlogPostMapper
-) : PanacheRepositoryBase<BlogPost, UUID>, BlogRepo {
+) : PanacheRepositoryBase<BlogPostEntity, UUID>, BlogRepo {
 
     override suspend fun findBlogById(id: UUID): BlogPost? {
-        return sessionFactory.withSession {
+        val entity = sessionFactory.withSession {
             findById(id)
         }.awaitSuspending()
+        return entity?.let { blogPostMapper.toDomain(it) }
     }
 
-
     override suspend fun findBySlug(slug: String): BlogPost? {
-        return sessionFactory.withSession {
+        val entity = sessionFactory.withSession {
             find("slug = ?1 AND published = true", slug).firstResult()
         }.awaitSuspending()
+        return entity?.let { blogPostMapper.toDomain(it) }
     }
 
     override suspend fun findPublishedBlogs(page: Int, size: Int): List<BlogPost> {
-        return sessionFactory.withSession {
+        val entities = sessionFactory.withSession {
             find("published = true ORDER BY publishDate DESC")
                 .page(page, size)
                 .list()
         }.awaitSuspending()
+        return entities.map { blogPostMapper.toDomain(it) }
     }
 
     override suspend fun findByTag(tag: String, page: Int, size: Int): List<BlogPost> {
-        return sessionFactory.withSession {
+        val entities = sessionFactory.withSession {
             find("published = true AND ?1 MEMBER OF tags ORDER BY publishDate DESC", tag)
                 .page(page, size)
                 .list()
         }.awaitSuspending()
+        return entities.map { blogPostMapper.toDomain(it) }
     }
 
     override suspend fun saveBlog(blog: BlogPost): BlogPost {
-        if (blog.id != null) {
-            val existingPost = sessionFactory.withSession {
+        val entity = if (blog.id != null) {
+            val existingEntity = sessionFactory.withSession {
                 findById(blog.id)
             }.awaitSuspending()
-            blogPostMapper.updateEntity(blogPostMapper.toEntity(existingPost), blog)
+
+            if (existingEntity != null) {
+                blogPostMapper.updateEntity(existingEntity, blog)
+            } else {
+                blogPostMapper.toEntity(blog)
+            }
         } else {
             blogPostMapper.toEntity(blog)
         }
 
-        return sessionFactory.withSession { session ->
+        val savedEntity = sessionFactory.withSession { session ->
             session.withTransaction {
-                persistAndFlush(blog)
+                persistAndFlush(entity)
             }
         }.awaitSuspending()
+
+        return blogPostMapper.toDomain(savedEntity)
     }
 
     override suspend fun getAllBlogs(): List<BlogPost> {
-        return sessionFactory.withSession {
+        val entities = sessionFactory.withSession {
             findAll().list()
         }.awaitSuspending()
+        return entities.map { blogPostMapper.toDomain(it) }
     }
 
     override suspend fun deleteBlog(id: UUID): Boolean {

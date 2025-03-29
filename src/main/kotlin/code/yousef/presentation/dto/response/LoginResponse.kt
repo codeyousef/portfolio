@@ -1,4 +1,4 @@
-package code.yousef.infrastructure.security
+package code.yousef.presentation.dto.response
 
 import code.yousef.infrastructure.persistence.entity.UserEntity
 
