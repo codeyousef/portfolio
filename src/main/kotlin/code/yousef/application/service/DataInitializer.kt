@@ -1,6 +1,7 @@
 package code.yousef.application.service
 
 import code.yousef.infrastructure.persistence.entity.UserRole
+import code.yousef.presentation.dto.request.CreateUpdateBlogRequest
 import code.yousef.presentation.dto.request.CreateUpdateProjectRequest
 import code.yousef.presentation.dto.request.CreateUpdateUserRequest
 import io.quarkus.runtime.StartupEvent
@@ -23,7 +24,7 @@ class DataInitializer @Inject constructor(
         // Initialize data in sequence
         initUsers()
         initProjects()
-//        initBlogPosts()
+        initBlogPosts()
 
         logger.info("Database initialization completed")
     }
@@ -84,42 +85,60 @@ class DataInitializer @Inject constructor(
         }
     }
 
-//    private fun initBlogPosts() {
-//        try {
-//            val blogCount = blogService.getAllBlogPosts().size
-//            if (blogCount == 0) {
-//                logger.info("Creating blog posts...")
-//
-//                for (i in 1..10) {
-//                    val blogPost = BlogPost().apply {
-//                        title = "Blog Post $i"
-//                        summary = "This is a summary of blog post $i, showing a brief overview of the content."
-//                        content = """
-//                            # Blog Post $i
-//
-//                            This is the content of blog post $i. It contains multiple paragraphs of placeholder text.
-//
-//                            ## Section 1
-//
-//                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl eget ultricies tincidunt.
-//
-//                            ## Section 2
-//
-//                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.
-//                        """.trimIndent()
-//                        imageUrl = "/images/blog$i.jpg"
-//                        tags = listOf("Kotlin", "Web Development", "Tutorial", "Tag $i")
-//                        createdAt = LocalDateTime.now().minusDays((10 - i).toLong())
-//                        updatedAt = LocalDateTime.now().minusDays((10 - i).toLong())
-//                        publishDate = LocalDateTime.now().minusDays((10 - i).toLong())
-//                        published = true
-//                        slug = "blog-post-$i"
-//                    }
-//                    blogService.createBlogPost(blogPost)
-//                }
-//            }
-//        } catch (e: Exception) {
-//            logger.error("Error initializing blog posts", e)
-//        }
-//    }
+    private suspend fun initBlogPosts() {
+        try {
+            val blogs = blogService.getAllBlogs()
+            if (blogs.isEmpty()) {
+                logger.info("Creating blog posts...")
+
+                val blogTopics = listOf(
+                    "Getting Started with Quarkus",
+                    "Building Reactive Applications with Kotlin",
+                    "Three.js Portfolio Design Guide",
+                    "Modern Web Development Techniques",
+                    "Implementing JWT Authentication in Quarkus"
+                )
+
+                for (i in blogTopics.indices) {
+                    val title = blogTopics[i]
+                    val blogRequest = CreateUpdateBlogRequest(
+                        title = title,
+                        summary = "A comprehensive guide to ${title.lowercase()}. Learn the fundamentals and best practices.",
+                        content = """
+                            # $title
+                            
+                            This is the content of the blog post about ${title.lowercase()}. It contains multiple paragraphs of information.
+                            
+                            ## Introduction
+                            
+                            The introduction covers the basic concepts and explains why this topic is important.
+                            
+                            ## Main Concepts
+                            
+                            This section goes into detail about the main concepts and techniques.
+                            
+                            ## Code Examples
+                            
+                            ```kotlin
+                            fun example() {
+                                println("This is a code example for $title")
+                            }
+                            ```
+                            
+                            ## Conclusion
+                            
+                            Summary of what we've learned and next steps.
+                        """.trimIndent(),
+                        imageUrl = "/images/blog${i + 1}.jpg",
+                        tags = listOf("Kotlin", "Web Development", "Tutorial", "Quarkus"),
+                        published = i < 4, // First 4 are published
+                        slug = null // Let it be auto-generated
+                    )
+                    blogService.createBlog(blogRequest)
+                }
+            }
+        } catch (e: Exception) {
+            logger.error("Error initializing blog posts", e)
+        }
+    }
 }

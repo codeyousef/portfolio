@@ -1,8 +1,9 @@
 package code.yousef.application.service
 
 import code.yousef.domain.model.Project
-import code.yousef.infrastructure.persistence.entity.BlogPost
+import code.yousef.infrastructure.persistence.entity.BlogPostEntity
 import code.yousef.infrastructure.persistence.entity.ProjectEntity
+import code.yousef.infrastructure.persistence.mapper.BlogPostMapper
 import code.yousef.infrastructure.persistence.mapper.ProjectMapper
 import code.yousef.infrastructure.template.AdminTemplates
 import code.yousef.infrastructure.template.BlogTemplates
@@ -18,7 +19,8 @@ class TemplateService @Inject constructor(
     var blogService: BlogService,
     var portfolioTemplates: PortfolioTemplates,
     var blogTemplates: BlogTemplates,
-    val projectMapper: ProjectMapper
+    val projectMapper: ProjectMapper,
+    val blogPostMapper: BlogPostMapper
 ) {
 
     suspend fun renderHomePage(): TemplateInstance {
@@ -32,23 +34,25 @@ class TemplateService @Inject constructor(
         return portfolioTemplates.buildProjectsSection(projectEntities)
     }
 
-    fun renderBlogPage(page: Int = 0, size: Int = 9): Uni<TemplateInstance> {
-        return blogService.getPublishedBlogPosts(page, size)
-            .onItem().transform { posts ->
-                blogTemplates.buildBlogPage(posts, page, size)
-            }
+    suspend fun renderBlogPage(page: Int = 0, size: Int = 9): TemplateInstance {
+        val blogPosts = blogService.getPublishedBlogs(page, size)
+        val blogResponse = blogPosts.map { blogPost -> blogPostMapper.toResponse(blogPost) }
+
+        return blogTemplates.buildBlogPage(blogResponse, page, size)
+
     }
 
-    fun renderBlogPostPage(slug: String): Uni<TemplateInstance> {
-        return blogService.getBlogPostBySlug(slug)
-            .onItem().transform { post ->
-                if (post != null) {
-                    blogTemplates.buildBlogPostPage(post)
-                } else {
-                    // Handle not found case - could return a 404 template
-                    blogTemplates.buildNotFoundPage()
-                }
-            }
+    suspend fun renderBlogPostPage(slug: String): TemplateInstance {
+        val post = blogService.getBlogBySlug(slug)
+        val postBlogResponse = post?.let { blogPostMapper.toResponse(it) }
+
+        return if (post != null) {
+            blogTemplates.buildBlogPostPage(postBlogResponse)
+        } else {
+            // Handle not found case - could return a 404 template
+            blogTemplates.buildNotFoundPage()
+        }
+
     }
 
     // Admin pages - keeping original implementation for now
@@ -67,18 +71,19 @@ class TemplateService @Inject constructor(
 
     }
 
-    fun renderAdminBlogPosts(): Uni<String> {
-        return blogService.getAllBlogPosts()
-            .onItem().transform { posts ->
-                AdminTemplates.buildBlogPostsPage(posts).toString()
-            }
+    suspend fun renderAdminBlogPosts(): StringBuilder {
+        val blogPosts = blogService.getAllBlogs()
+        val blogPostEntities = blogPosts.map { blogPost -> blogPostMapper.toEntity(blogPost) }
+
+        return AdminTemplates.buildBlogPostsPage(blogPostEntities)
+
     }
 
     fun renderProjectForm(projectEntity: ProjectEntity? = null): StringBuilder {
         return AdminTemplates.buildProjectForm(projectEntity)
     }
 
-    fun renderBlogPostForm(blogPost: BlogPost? = null): StringBuilder {
-        return AdminTemplates.buildBlogPostForm(blogPost)
+    fun renderBlogPostForm(blogPostEntity: BlogPostEntity? = null): StringBuilder {
+        return AdminTemplates.buildBlogPostForm(blogPostEntity)
     }
 }

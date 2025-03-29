@@ -1,67 +1,61 @@
 package code.yousef.application.service
 
-import code.yousef.infrastructure.persistence.entity.BlogPost
-import code.yousef.domain.repository.BlogPostRepo
-import io.smallrye.mutiny.Uni
+import code.yousef.domain.model.BlogPost
+import code.yousef.infrastructure.persistence.mapper.BlogPostMapper
+import code.yousef.infrastructure.persistence.repository.BlogRepoImpl
+import code.yousef.presentation.dto.request.CreateUpdateBlogRequest
+import code.yousef.presentation.dto.response.BlogResponse
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
+import java.util.*
 
 @ApplicationScoped
-class BlogService {
-    
-    @Inject
-    lateinit var blogPostRepo: BlogPostRepo
-    
-    fun getAllBlogPosts(): Uni<List<BlogPost>> {
-        return blogPostRepo.listAll()
+class BlogService @Inject constructor(
+    private val blogRepo: BlogRepoImpl,
+    private val blogMapper: BlogPostMapper
+) {
+    suspend fun getAllBlogs(): List<BlogPost> {
+        return blogRepo.getAllBlogs()
     }
-    
-    fun getPublishedBlogPosts(page: Int, size: Int): Uni<List<BlogPost>> {
-        return blogPostRepo.findPublishedPosts(page, size)
+
+    suspend fun getPublishedBlogs(page: Int, size: Int): List<BlogPost> {
+        return blogRepo.findPublishedBlogs(page, size)
     }
-    
-    fun getBlogPostById(id: Long): Uni<BlogPost> {
-        return blogPostRepo.findById(id)
+
+    suspend fun getBlogById(id: UUID): BlogPost? {
+        return blogRepo.findBlogById(id)
     }
-    
-    fun getBlogPostBySlug(slug: String): Uni<BlogPost?> {
-        return blogPostRepo.findBySlug(slug)
+
+    suspend fun getBlogBySlug(slug: String): BlogPost? {
+        return blogRepo.findBySlug(slug)
     }
-    
-    fun getBlogPostsByTag(tag: String, page: Int, size: Int): Uni<List<BlogPost>> {
-        return blogPostRepo.findByTag(tag, page, size)
+
+    suspend fun getBlogsByTag(tag: String, page: Int, size: Int): List<BlogPost> {
+        return blogRepo.findByTag(tag, page, size)
     }
-    
-    fun createBlogPost(blogPost: BlogPost): Uni<BlogPost> {
-        if (blogPost.slug.isBlank()) {
-            blogPost.slug = blogPostRepo.generateSlug(blogPost.title)
-        }
-        
-        return blogPostRepo.saveBlogPost(blogPost)
+
+    suspend fun createBlog(request: CreateUpdateBlogRequest): BlogPost {
+        val blog = blogMapper.toDomain(request, null, blogRepo)
+        return blogRepo.saveBlog(blog)
     }
-    
-    fun updateBlogPost(id: Long, updatedBlogPost: BlogPost): Uni<BlogPost> {
-        return blogPostRepo.findById(id)
-            .onItem().ifNotNull().transformToUni { existingPost ->
-                existingPost.title = updatedBlogPost.title
-                existingPost.summary = updatedBlogPost.summary
-                existingPost.content = updatedBlogPost.content
-                existingPost.imageUrl = updatedBlogPost.imageUrl
-                existingPost.tags = updatedBlogPost.tags
-                existingPost.published = updatedBlogPost.published
-                
-                if (existingPost.slug != updatedBlogPost.slug && updatedBlogPost.slug.isNotBlank()) {
-                    existingPost.slug = updatedBlogPost.slug
-                } else if (existingPost.title != updatedBlogPost.title) {
-                    // Generate new slug if title changed
-                    existingPost.slug = blogPostRepo.generateSlug(updatedBlogPost.title)
-                }
-                
-                blogPostRepo.saveBlogPost(existingPost)
-            }
+
+    suspend fun updateBlog(id: UUID, request: CreateUpdateBlogRequest): BlogPost? {
+        val existingBlog = blogRepo.findBlogById(id) ?: return null
+        val updatedBlog = blogMapper.toDomain(request, existingBlog, blogRepo)
+        return blogRepo.saveBlog(updatedBlog)
     }
-    
-    fun deleteBlogPost(id: Long): Uni<Boolean> {
-        return blogPostRepo.deleteById(id)
+
+    suspend fun togglePublished(id: UUID): BlogPost? {
+        val blog = blogRepo.findBlogById(id) ?: return null
+        val updatedBlog = blog.withUpdatedFields(published = !blog.published)
+        return blogRepo.saveBlog(updatedBlog)
+    }
+
+    suspend fun deleteBlog(id: UUID): Boolean {
+        return blogRepo.deleteBlog(id)
+    }
+
+    fun toResponse(blog: BlogPost): BlogResponse {
+        return blogMapper.toResponse(blog)
     }
 }

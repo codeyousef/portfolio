@@ -1,6 +1,6 @@
 package code.yousef.infrastructure.template
 
-import code.yousef.infrastructure.persistence.entity.BlogPost
+import code.yousef.infrastructure.persistence.entity.BlogPostEntity
 import code.yousef.infrastructure.persistence.entity.ProjectEntity
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
@@ -269,7 +269,7 @@ object AdminTemplates {
         }
     }
 
-    fun buildBlogPostsPage(posts: List<BlogPost>): StringBuilder = StringBuilder().appendHTML().html {
+    fun buildBlogPostsPage(posts: List<BlogPostEntity>): StringBuilder = StringBuilder().appendHTML().html {
         head {
             meta(charset = "utf-8")
             meta(name = "viewport", content = "width=device-width, initial-scale=1.0")
@@ -561,11 +561,12 @@ object AdminTemplates {
             }.toString()
         }
     }
-    fun buildBlogPostForm(blogPost: BlogPost? = null): StringBuilder = StringBuilder().appendHTML().html {
+
+    fun buildBlogPostForm(blogPostEntity: BlogPostEntity? = null): StringBuilder = StringBuilder().appendHTML().html {
         head {
             meta(charset = "utf-8")
             meta(name = "viewport", content = "width=device-width, initial-scale=1.0")
-            title("${if (blogPost == null) "New" else "Edit"} Blog Post - Admin")
+            title("${if (blogPostEntity == null) "New" else "Edit"} Blog Post - Admin")
 
             // Fonts
             link(
@@ -617,13 +618,13 @@ object AdminTemplates {
                     // Content
                     div("admin-content") {
                         div("admin-header") {
-                            h2 { +"${if (blogPost == null) "New" else "Edit"} Blog Post" }
+                            h2 { +"${if (blogPostEntity == null) "New" else "Edit"} Blog Post" }
                         }
 
                         div("admin-card") {
                             form("admin-form") {
-                                attributes["hx-${if (blogPost == null) "post" else "put"}"] =
-                                    if (blogPost == null) "/admin/blog" else "/admin/blog/${blogPost.id}"
+                                attributes["hx-${if (blogPostEntity == null) "post" else "put"}"] =
+                                    if (blogPostEntity == null) "/admin/blog" else "/admin/blog/${blogPostEntity.id}"
                                 attributes["hx-redirect"] = "/admin/blog"
 
                                 div("form-group") {
@@ -631,8 +632,8 @@ object AdminTemplates {
                                     input(type = InputType.text, name = "title") {
                                         required = true
                                         classes = setOf("admin-input")
-                                        if (blogPost != null) {
-                                            value = blogPost.title
+                                        if (blogPostEntity != null) {
+                                            value = blogPostEntity.title
                                         }
                                     }
                                 }
@@ -642,8 +643,8 @@ object AdminTemplates {
                                     input(type = InputType.text, name = "slug") {
                                         classes = setOf("admin-input")
                                         placeholder = "auto-generated-if-empty"
-                                        if (blogPost != null) {
-                                            value = blogPost.slug
+                                        if (blogPostEntity != null) {
+                                            value = blogPostEntity.slug
                                         }
                                     }
                                 }
@@ -655,8 +656,8 @@ object AdminTemplates {
                                         required = true
                                         classes = setOf("admin-textarea")
                                         attributes["maxlength"] = "500"
-                                        if (blogPost != null) {
-                                            +blogPost.summary
+                                        if (blogPostEntity != null) {
+                                            +blogPostEntity.summary
                                         }
                                     }
                                 }
@@ -667,8 +668,8 @@ object AdminTemplates {
                                         name = "content"
                                         required = true
                                         classes = setOf("admin-textarea", "content-editor")
-                                        if (blogPost != null) {
-                                            +blogPost.content
+                                        if (blogPostEntity != null) {
+                                            +blogPostEntity.content
                                         }
                                     }
                                 }
@@ -678,8 +679,8 @@ object AdminTemplates {
                                     input(type = InputType.text, name = "tags") {
                                         required = true
                                         classes = setOf("admin-input")
-                                        if (blogPost != null) {
-                                            value = blogPost.tags.joinToString(", ")
+                                        if (blogPostEntity != null) {
+                                            value = blogPostEntity.tags.joinToString(", ")
                                         }
                                     }
                                 }
@@ -689,8 +690,8 @@ object AdminTemplates {
                                     input(type = InputType.text, name = "imageUrl") {
                                         required = true
                                         classes = setOf("admin-input")
-                                        if (blogPost != null) {
-                                            value = blogPost.imageUrl
+                                        if (blogPostEntity != null) {
+                                            value = blogPostEntity.imageUrl
                                         }
                                     }
                                 }
@@ -698,7 +699,7 @@ object AdminTemplates {
                                 div("form-group checkbox-group") {
                                     input(type = InputType.checkBox, name = "published") {
                                         id = "published"
-                                        if (blogPost != null && blogPost.published) {
+                                        if (blogPostEntity != null && blogPostEntity.published) {
                                             checked = true
                                         }
                                     }
