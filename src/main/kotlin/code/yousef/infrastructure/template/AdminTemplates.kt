@@ -1,7 +1,7 @@
 package code.yousef.infrastructure.template
 
 import code.yousef.infrastructure.persistence.entity.BlogPost
-import code.yousef.infrastructure.persistence.entity.Project
+import code.yousef.infrastructure.persistence.entity.ProjectEntity
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
 
@@ -160,7 +160,7 @@ object AdminTemplates {
         }.toString()
     }
 
-    fun buildProjectsPage(projects: List<Project>): StringBuilder = StringBuilder().appendHTML().html {
+    fun buildProjectsPage(projectEntities: List<ProjectEntity>): StringBuilder = StringBuilder().appendHTML().html {
         head {
             meta(charset = "utf-8")
             meta(name = "viewport", content = "width=device-width, initial-scale=1.0")
@@ -234,7 +234,7 @@ object AdminTemplates {
                                     }
                                 }
                                 tbody {
-                                    projects.forEach { project ->
+                                    projectEntities.forEach { project ->
                                         tr {
                                             td { +project.title }
                                             td { +project.technologies.joinToString(", ") }
@@ -389,11 +389,11 @@ object AdminTemplates {
         }
     }
 
-    fun buildProjectForm(project: Project? = null): StringBuilder = StringBuilder().appendHTML().html {
+    fun buildProjectForm(projectEntity: ProjectEntity? = null): StringBuilder = StringBuilder().appendHTML().html {
         head {
             meta(charset = "utf-8")
             meta(name = "viewport", content = "width=device-width, initial-scale=1.0")
-            title("${if (project == null) "New" else "Edit"} Project - Admin")
+            title("${if (projectEntity == null) "New" else "Edit"} Project - Admin")
 
             // Fonts
             link(
@@ -445,13 +445,13 @@ object AdminTemplates {
                     // Content
                     div("admin-content") {
                         div("admin-header") {
-                            h2 { +"${if (project == null) "New" else "Edit"} Project" }
+                            h2 { +"${if (projectEntity == null) "New" else "Edit"} Project" }
                         }
 
                         div("admin-card") {
                             form("admin-form") {
-                                attributes["hx-${if (project == null) "post" else "put"}"] =
-                                    if (project == null) "/admin/projects" else "/admin/projects/${project.id}"
+                                attributes["hx-${if (projectEntity == null) "post" else "put"}"] =
+                                    if (projectEntity == null) "/admin/projects" else "/admin/projects/${projectEntity.id}"
                                 attributes["hx-redirect"] = "/admin/projects"
 
                                 div("form-group") {
@@ -459,8 +459,8 @@ object AdminTemplates {
                                     input(type = InputType.text, name = "title") {
                                         required = true
                                         classes = setOf("admin-input")
-                                        if (project != null) {
-                                            value = project.title
+                                        if (projectEntity != null) {
+                                            value = projectEntity.title
                                         }
                                     }
                                 }
@@ -471,8 +471,8 @@ object AdminTemplates {
                                         name = "description"
                                         required = true
                                         classes = setOf("admin-textarea")
-                                        if (project != null) {
-                                            +project.description
+                                        if (projectEntity != null) {
+                                            +projectEntity.description
                                         }
                                     }
                                 }
@@ -482,8 +482,8 @@ object AdminTemplates {
                                     input(type = InputType.text, name = "technologies") {
                                         required = true
                                         classes = setOf("admin-input")
-                                        if (project != null) {
-                                            value = project.technologies.joinToString(", ")
+                                        if (projectEntity != null) {
+                                            value = projectEntity.technologies.joinToString(", ")
                                         }
                                     }
                                 }
@@ -493,8 +493,8 @@ object AdminTemplates {
                                     input(type = InputType.text, name = "imageUrl") {
                                         required = true
                                         classes = setOf("admin-input")
-                                        if (project != null) {
-                                            value = project.imageUrl
+                                        if (projectEntity != null) {
+                                            value = projectEntity.imageUrl
                                         }
                                     }
                                 }
@@ -504,8 +504,8 @@ object AdminTemplates {
                                     input(type = InputType.text, name = "modelUrl") {
                                         required = true
                                         classes = setOf("admin-input")
-                                        if (project != null) {
-                                            value = project.modelUrl
+                                        if (projectEntity != null) {
+                                            value = projectEntity.modelUrl
                                         }
                                     }
                                 }
@@ -515,8 +515,8 @@ object AdminTemplates {
                                     input(type = InputType.text, name = "githubUrl") {
                                         required = true
                                         classes = setOf("admin-input")
-                                        if (project != null) {
-                                            value = project.githubUrl
+                                        if (projectEntity != null) {
+                                            value = projectEntity.githubUrl
                                         }
                                     }
                                 }
@@ -526,8 +526,8 @@ object AdminTemplates {
                                     input(type = InputType.text, name = "demoUrl") {
                                         required = true
                                         classes = setOf("admin-input")
-                                        if (project != null) {
-                                            value = project.demoUrl
+                                        if (projectEntity != null) {
+                                            value = projectEntity.demoUrl
                                         }
                                     }
                                 }
@@ -535,7 +535,7 @@ object AdminTemplates {
                                 div("form-group checkbox-group") {
                                     input(type = InputType.checkBox, name = "featured") {
                                         id = "featured"
-                                        if (project != null && project.featured) {
+                                        if (projectEntity != null && projectEntity.featured) {
                                             checked = true
                                         }
                                     }

@@ -4,6 +4,8 @@ import code.yousef.domain.model.User
 import code.yousef.domain.repository.UserRepo
 import code.yousef.infrastructure.persistence.entity.UserEntity
 import code.yousef.infrastructure.persistence.mapper.UserMapper
+import code.yousef.presentation.dto.request.CreateUpdateUserRequest
+import code.yousef.presentation.dto.response.UserResponse
 import io.quarkus.hibernate.reactive.panache.kotlin.PanacheRepositoryBase
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import jakarta.enterprise.context.ApplicationScoped
@@ -38,16 +40,18 @@ class UserRepoImpl @Inject constructor(
         return user?.let { userMapper.toDomain(it) }
     }
 
-    override suspend fun saveUser(user: User): User {
+    override suspend fun saveUser(createUpdateUserRequest: CreateUpdateUserRequest): User {
+        val domainUser = userMapper.toDomain(createUpdateUserRequest)
         val savedUser = sessionFactory.withSession { session ->
             session.withTransaction {
-                persistAndFlush(userMapper.toEntity(user))
+                persistAndFlush(userMapper.toEntity(domainUser))
             }
         }.awaitSuspending()
         return userMapper.toDomain(savedUser)
     }
 
     override suspend fun updateLastLogin(user: User): User {
+
         val updatedUser = user.withUpdatedLoginTime()
         val savedUser = sessionFactory.withSession { session ->
             session.withTransaction {
@@ -65,13 +69,28 @@ class UserRepoImpl @Inject constructor(
     }
 
     override suspend fun deleteUser(id: UUID): Boolean {
-        val deletedUser = sessionFactory.withSession { session ->
+        return sessionFactory.withSession { session ->
             session.withTransaction {
                 deleteById(id)
             }
         }.awaitSuspending()
-        return true
     }
 
+    suspend fun toDomain(request: CreateUpdateUserRequest, existingUser: User? = null): User? {
+        return findUserByEmail(request.email ?: existingUser?.email ?: "")
+    }
+
+    // From User domain model to UserResponse
+    fun toResponse(user: User): UserResponse {
+        return UserResponse(
+            id = user.id ?: UUID.randomUUID(), // Default for null ID
+            username = user.username,
+            name = user.name,
+            email = user.email,
+            role = user.role,
+            createdAt = user.createdAt.toString(),
+            lastLogin = user.lastLogin.toString()
+        )
+    }
 
 }

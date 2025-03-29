@@ -1,28 +1,13 @@
 package code.yousef.domain.repository
 
-import code.yousef.infrastructure.persistence.entity.Project
-import io.quarkus.hibernate.reactive.panache.PanacheRepository
-import io.smallrye.mutiny.Uni
-import jakarta.enterprise.context.ApplicationScoped
-import org.hibernate.reactive.mutiny.Mutiny.SessionFactory
-import java.time.LocalDateTime
+import code.yousef.domain.model.Project
+import java.util.*
 
-@ApplicationScoped
-class ProjectRepo(private val sessionFactory: SessionFactory) : PanacheRepository<Project> {
-
-    fun findFeaturedProjects(): Uni<List<Project>> {
-        return sessionFactory.withSession { list("featured = true ORDER BY createdAt DESC") }
-    }
-
-    fun saveProject(project: Project): Uni<Project> {
-        val now = LocalDateTime.now()
-
-        if (project.id == null) {
-            project.createdAt = now
-        }
-
-        project.updatedAt = now
-
-        return sessionFactory.withSession { persistAndFlush(project) }
-    }
+interface ProjectRepo {
+    suspend fun findProjectById(id: UUID): Project?
+    suspend fun findFeaturedProjects(): List<Project>
+    suspend fun saveProject(project: Project): Project
+    suspend fun getAllProjects(): List<Project>
+    suspend fun deleteProject(id: UUID): Boolean
+    suspend fun findByTechnology(technology: String): List<Project>
 }

@@ -3,9 +3,15 @@ package code.yousef.infrastructure.persistence.entity
 import io.quarkus.hibernate.reactive.panache.PanacheEntity
 import java.time.LocalDateTime
 import jakarta.persistence.*
+import java.util.UUID
 
 @Entity
-class Project : PanacheEntity() {
+class ProjectEntity : PanacheEntity() {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    var id: UUID? = null
+
     lateinit var title: String
     lateinit var description: String
     lateinit var imageUrl: String

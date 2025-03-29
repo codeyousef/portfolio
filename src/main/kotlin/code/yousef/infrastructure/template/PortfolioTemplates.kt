@@ -1,6 +1,6 @@
 package code.yousef.infrastructure.template
 
-import code.yousef.infrastructure.persistence.entity.Project
+import code.yousef.infrastructure.persistence.entity.ProjectEntity
 import io.quarkus.qute.Location
 import io.quarkus.qute.Template
 import io.quarkus.qute.TemplateInstance
@@ -20,9 +20,9 @@ class PortfolioTemplates {
     /**
      * Builds the home page using Kotlin HTML DSL and wraps it in a Qute template
      */
-    fun buildHomePage(projects: List<Project>): TemplateInstance {
+    fun buildHomePage(projectEntities: List<ProjectEntity>): TemplateInstance {
         // Generate the HTML content using Kotlin DSL
-        val contentHtml = buildHomeContent(projects)
+        val contentHtml = buildHomeContent(projectEntities)
 
         // Use Qute template for the base layout
         return baseTemplate
@@ -33,13 +33,13 @@ class PortfolioTemplates {
     /**
      * Builds the home page content using Kotlin HTML DSL
      */
-    private fun buildHomeContent(projects: List<Project>): String {
+    private fun buildHomeContent(projectEntities: List<ProjectEntity>): String {
         val writer = StringWriter()
         writer.appendHTML().section(classes = "hero") {
             h2 { +"Featured Projects" }
             div(classes = "projects-container") {
                 // Add projects directly since we already have them
-                unsafe { +buildProjectsSection(projects) }
+                unsafe { +buildProjectsSection(projectEntities) }
             }
         }
         return writer.toString()
@@ -48,10 +48,10 @@ class PortfolioTemplates {
     /**
      * Builds the projects section using Kotlin HTML DSL
      */
-    fun buildProjectsSection(projects: List<Project>): String {
+    fun buildProjectsSection(projectEntities: List<ProjectEntity>): String {
         val writer = StringWriter()
         writer.appendHTML().div(classes = "projects-container") {
-            projects.forEach { project ->
+            projectEntities.forEach { project ->
                 div(classes = "project-card") {
                     // Preserve HTMX attributes for dynamic loading
                     attributes["hx-get"] = "/api/projects/${project.id}"

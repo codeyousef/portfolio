@@ -28,7 +28,8 @@ class UserMapper {
             role = entity.role,
             createdAt = entity.createdAt,
             updatedAt = entity.updatedAt,
-            lastLogin = entity.lastLogin
+            lastLogin = entity.lastLogin,
+            password = entity.password
         )
     }
 
@@ -73,7 +74,8 @@ class UserMapper {
             role = request.role ?: existingUser?.role ?: throw IllegalArgumentException("Role must be provided"),
             createdAt = existingUser?.createdAt ?: now,
             updatedAt = now,
-            lastLogin = existingUser?.lastLogin
+            lastLogin = existingUser?.lastLogin,
+            password = existingUser.let { existingUser?.password } ?: request.password ?: throw IllegalArgumentException("Password must be provided")
         )
     }
 

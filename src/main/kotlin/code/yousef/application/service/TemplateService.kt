@@ -1,7 +1,9 @@
 package code.yousef.application.service
 
+import code.yousef.domain.model.Project
 import code.yousef.infrastructure.persistence.entity.BlogPost
-import code.yousef.infrastructure.persistence.entity.Project
+import code.yousef.infrastructure.persistence.entity.ProjectEntity
+import code.yousef.infrastructure.persistence.mapper.ProjectMapper
 import code.yousef.infrastructure.template.AdminTemplates
 import code.yousef.infrastructure.template.BlogTemplates
 import code.yousef.infrastructure.template.PortfolioTemplates
@@ -11,29 +13,23 @@ import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 
 @ApplicationScoped
-class TemplateService {
+class TemplateService @Inject constructor(
+    var projectService: ProjectService,
+    var blogService: BlogService,
+    var portfolioTemplates: PortfolioTemplates,
+    var blogTemplates: BlogTemplates,
+    val projectMapper: ProjectMapper
+) {
 
-    @Inject
-    lateinit var projectService: ProjectService
+    suspend fun renderHomePage(): TemplateInstance {
+        val projects = projectService.getFeaturedProjects()
+        val projectEntities = projects.map { project: Project -> projectMapper.toEntity(project) }
 
-    @Inject
-    lateinit var blogService: BlogService
-
-    @Inject
-    lateinit var portfolioTemplates: PortfolioTemplates
-
-    @Inject
-    lateinit var blogTemplates: BlogTemplates
-
-    fun renderHomePage(): Uni<TemplateInstance> {
-        return projectService.getFeaturedProjects()
-            .onItem().transform { projects ->
-                portfolioTemplates.buildHomePage(projects)
-            }
+        return portfolioTemplates.buildHomePage(projectEntities)
     }
 
-    fun renderProjectsSection(projects: List<Project>): String {
-        return portfolioTemplates.buildProjectsSection(projects)
+    fun renderProjectsSection(projectEntities: List<ProjectEntity>): String {
+        return portfolioTemplates.buildProjectsSection(projectEntities)
     }
 
     fun renderBlogPage(page: Int = 0, size: Int = 9): Uni<TemplateInstance> {
@@ -64,11 +60,11 @@ class TemplateService {
         return AdminTemplates.buildDashboard()
     }
 
-    fun renderAdminProjects(): Uni<String> {
-        return projectService.getAllProjects()
-            .onItem().transform { projects ->
-                AdminTemplates.buildProjectsPage(projects).toString()
-            }
+    suspend fun renderAdminProjects(): StringBuilder {
+        val projects = projectService.getAllProjects()
+        val projectEntities = projects.map { project: Project -> projectMapper.toEntity(project) }
+        return AdminTemplates.buildProjectsPage(projectEntities)
+
     }
 
     fun renderAdminBlogPosts(): Uni<String> {
@@ -78,8 +74,8 @@ class TemplateService {
             }
     }
 
-    fun renderProjectForm(project: Project? = null): StringBuilder {
-        return AdminTemplates.buildProjectForm(project)
+    fun renderProjectForm(projectEntity: ProjectEntity? = null): StringBuilder {
+        return AdminTemplates.buildProjectForm(projectEntity)
     }
 
     fun renderBlogPostForm(blogPost: BlogPost? = null): StringBuilder {

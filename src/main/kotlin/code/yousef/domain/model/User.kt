@@ -9,6 +9,7 @@ import java.util.*
  */
 class User(
     val id: UUID? = null,
+    val password: String,
     val username: String,
     val name: String,
     val email: String,
@@ -45,7 +46,8 @@ class User(
             role = role,
             createdAt = createdAt,
             updatedAt = LocalDateTime.now(),
-            lastLogin = LocalDateTime.now()
+            lastLogin = LocalDateTime.now(),
+            password = password
         )
     }
 }
