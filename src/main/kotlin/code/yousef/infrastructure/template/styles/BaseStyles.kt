@@ -12,12 +12,17 @@ class BaseStyles : StyleGenerator {
                 put("--primary", "#00f7ff")
                 put("--primary-rgb", "0, 247, 255")
                 put("--secondary", "#ff2a6d")
+                put("--secondary-rgb", "255, 42, 109")
                 // Background colors
                 put("--bg-dark", "#0a0a14")
                 put("--bg-surface", "rgba(20, 20, 35, 0.5)")
+                // Text colors
+                put("--text-primary", "#ffffff")
+                put("--text-secondary", "#cccccc")
                 // Typography
                 put("--font-heading", "'Syne', sans-serif")
                 put("--font-body", "'Space Grotesk', sans-serif")
+                put("--font-mono", "'Space Mono', monospace")
             }
 
             // Light theme overrides
