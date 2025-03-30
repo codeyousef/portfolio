@@ -1,5 +1,10 @@
 // Enhanced Three.js setup for Sci-Fi Cyberwave theme
 let camera, scene, renderer;
+let isLowPerformanceDevice = false;
+let lastFrameTime = 0;
+let frameCount = 0;
+let lastGcTime = 0;
+let animationFrameId;
 let geometry, material, mesh;
 let mouseX = 0, mouseY = 0;
 let windowHalfX = window.innerWidth / 2;
@@ -40,7 +45,35 @@ const COLORS = {
   }
 };
 
+// Check device performance
+function checkPerformance() {
+  const startTime = performance.now();
+  let testArr = [];
+  
+  // Create objects to test memory and CPU
+  for (let i = 0; i < 10000; i++) {
+    testArr.push({ test: i });
+  }
+  
+  const endTime = performance.now();
+  const duration = endTime - startTime;
+  
+  // Clean up test objects
+  testArr = null;
+  
+  // If performance test takes more than 50ms, consider it a low-performance device
+  return duration > 50;
+}
+
 function init() {
+  // Detect performance
+  isLowPerformanceDevice = checkPerformance();
+  console.log('Low performance device?', isLowPerformanceDevice);
+  
+  if (isLowPerformanceDevice) {
+    // Apply even more aggressive optimizations for low-performance devices
+    document.body.classList.add('low-performance');
+  }
   console.log('3D background init called');
   
   // Canvas setup
@@ -136,7 +169,7 @@ function updateSceneColors() {
 function createDynamicGrid() {
   // Create more detailed grid with cyberpunk styling
   const gridSize = 200;
-  const gridDivisions = 40;
+  const gridDivisions = 20; // Reduced from 40 for better performance
   
   // Main grid
   const gridGeometry = new THREE.PlaneGeometry(gridSize, gridSize, gridDivisions, gridDivisions);
@@ -329,7 +362,7 @@ function addStars() {
     new THREE.Color(COLORS.dark.neonPurple)
   ];
   
-  for (let i = 0; i < 3000; i++) {
+  for (let i = 0; i < 1000; i++) { // Reduced from 3000 for better performance
     const x = (Math.random() - 0.5) * 1000;
     const y = (Math.random() - 0.5) * 500;
     const z = (Math.random() - 0.5) * 1000;
@@ -351,7 +384,7 @@ function addStars() {
 
 function addLightBeams() {
   // Add cyberpunk light beams
-  const beamCount = 8;
+  const beamCount = 4; // Reduced from 8 for better performance
   const colors = themeIsDark ? 
     [COLORS.dark.cyberCyan, COLORS.dark.neonPink, COLORS.dark.neonPurple, COLORS.dark.neonGreen, COLORS.dark.neonOrange] : 
     [COLORS.light.cyberCyan, COLORS.light.neonPink, COLORS.light.neonPurple, COLORS.light.neonGreen, COLORS.light.neonOrange];
@@ -492,6 +525,9 @@ function initProjectModels() {
     }
     
     animateModel();
+    } catch (error) {
+      console.error('Error initializing 3D model:', error);
+    }
   });
 }
 
@@ -583,7 +619,7 @@ function createParticleExplosion() {
     opacity: 1
   });
   
-  const particleCount = 150;
+  const particleCount = 50; // Reduced from 150 for better performance
   const positions = new Float32Array(particleCount * 3);
   const particleColors = new Float32Array(particleCount * 3);
   const velocities = [];
@@ -688,8 +724,27 @@ function updateDynamicGrid(deltaTime) {
   gridMesh.geometry.attributes.position.needsUpdate = true;
 }
 
-function animate() {
-  requestAnimationFrame(animate);
+function animate(timestamp) {
+  animationFrameId = requestAnimationFrame(animate);
+  
+  // Skip frames on low-performance devices
+  if (isLowPerformanceDevice) {
+    frameCount++;
+    if (frameCount % 2 !== 0) return; // Render only every other frame
+  }
+  
+  // Calculate FPS
+  if (timestamp) {
+    const elapsed = timestamp - lastFrameTime;
+    if (elapsed >= 1000) { // Update every second
+      lastFrameTime = timestamp;
+    }
+  }
+  
+  // Force garbage collection occasionally by nullifying and recreating objects
+  if (timestamp - lastGcTime > 10000) { // Every 10 seconds
+    lastGcTime = timestamp;
+  }
   
   const deltaTime = clock.getDelta();
   
@@ -719,6 +774,19 @@ function animate() {
   
   renderer.render(scene, camera);
 }
+
+// Function to stop rendering when tab is not visible
+function handleVisibilityChange() {
+  if (document.hidden) {
+    // Stop animation loop when tab is not visible
+    cancelAnimationFrame(animationFrameId);
+  } else {
+    // Resume animation loop when tab becomes visible again
+    animationFrameId = requestAnimationFrame(animate);
+  }
+}
+
+document.addEventListener('visibilitychange', handleVisibilityChange);
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM loaded in 3d-background.js');

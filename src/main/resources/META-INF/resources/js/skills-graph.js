@@ -67,15 +67,110 @@ const links = [
   { source: "azure", target: "kubernetes", strength: 0.7 }
 ];
 
+// Add a debug object if it doesn't exist
+// Simple logging function
+function debugLog(msg) {
+  console.log('[SkillsGraph] ' + msg);
+}
+
+// Performance detection function
+function isLowPerformanceDevice() {
+  const startTime = performance.now();
+  let testArr = [];
+  
+  // Create objects to test memory and CPU
+  for (let i = 0; i < 10000; i++) {
+    testArr.push({ test: i });
+  }
+  
+  const endTime = performance.now();
+  const duration = endTime - startTime;
+  
+  // Clean up test objects
+  testArr = null;
+  
+  // If test takes more than 50ms, consider it a low-performance device
+  return duration > 50;
+}
+
+// Create a fallback view for devices that can't handle 3D
+function createFallbackSkillsView() {
+  const container = document.getElementById('skills-matrix');
+  if (!container) return;
+  
+  // Clear container
+  container.innerHTML = '';
+  
+  // Create a simple grid layout
+  const gridContainer = document.createElement('div');
+  gridContainer.style.display = 'grid';
+  gridContainer.style.gridTemplateColumns = 'repeat(auto-fill, minmax(150px, 1fr))';
+  gridContainer.style.gap = '15px';
+  gridContainer.style.padding = '20px';
+  
+  // Create a card for each skill
+  skills.forEach(skill => {
+    const card = document.createElement('div');
+    card.className = 'glass-morphic';
+    card.style.padding = '15px';
+    card.style.textAlign = 'center';
+    
+    const title = document.createElement('h3');
+    title.textContent = skill.name;
+    title.style.margin = '0 0 10px 0';
+    
+    const category = document.createElement('p');
+    category.textContent = skill.category;
+    category.style.margin = '0';
+    category.style.fontSize = '0.9rem';
+    
+    const level = document.createElement('div');
+    level.style.width = '100%';
+    level.style.height = '5px';
+    level.style.marginTop = '10px';
+    level.style.background = 'var(--cyber-cyan)';
+    level.style.transform = `scaleX(${skill.level})`;
+    level.style.transformOrigin = 'left';
+    
+    card.appendChild(title);
+    card.appendChild(category);
+    card.appendChild(level);
+    gridContainer.appendChild(card);
+  });
+  
+  container.appendChild(gridContainer);
+}
+
 // Main initialization function
 function initSkillsGraph() {
-  window.debug.log('Initializing skills graph');
-  const container = document.getElementById('skills-matrix');
-  if (!container) {
-    window.debug.log('Skills matrix container not found');
+  // Check if THREE is available
+  if (typeof THREE === 'undefined') {
+    console.error('[SkillsGraph] THREE.js not loaded. Falling back to simple view.');
+    createFallbackSkillsView();
     return;
   }
-  window.debug.log('Container found: ' + container.id);
+  debugLog('Initializing skills graph');
+  
+  // Don't initialize if 3D effects are disabled
+  if (document.body.classList.contains('no-3d')) {
+    debugLog('3D effects disabled, using fallback');
+    createFallbackSkillsView();
+    return;
+  }
+  
+  // Check if we're on a low-performance device
+  const isLowPerformance = document.body.classList.contains('low-performance') || isLowPerformanceDevice();
+  if (isLowPerformance) {
+    debugLog('Low performance device detected');
+    document.body.classList.add('low-performance');
+  }
+  const container = document.getElementById('skills-matrix');
+  if (!container) {
+    debugLog('Skills matrix container not found');
+    createFallbackSkillsView();
+    return;
+  }
+  debugLog('Container found: ' + container.id);
   
   // Check theme
   const themeIsDark = !document.body.hasAttribute('data-theme') || 
@@ -99,10 +194,12 @@ function initSkillsGraph() {
   
   // Check for OrbitControls
   if (!THREE.OrbitControls) {
-    window.debug.log('OrbitControls not available');
+    debugLog('OrbitControls not available');
+    // Create a simple fallback if OrbitControls is missing
+    createFallbackSkillsView();
     return;
   }
-  window.debug.log('OrbitControls found');
+  debugLog('OrbitControls found');
   
   // Controls for interactive rotation
   try {
@@ -112,9 +209,10 @@ function initSkillsGraph() {
     controls.enableZoom = true;
     controls.autoRotate = true;
     controls.autoRotateSpeed = 0.5;
-    window.debug.log('Controls initialized successfully');
+    debugLog('Controls initialized successfully');
   } catch (e) {
-    window.debug.log('Error initializing controls: ' + e.message);
+    debugLog('Error initializing controls: ' + e.message);
+    createFallbackSkillsView();
     return;
   }
   
@@ -132,8 +230,9 @@ function initSkillsGraph() {
     // Scale node size by skill level
     const radius = 3 + skill.level * 3;
     
-    // Create sphere geometry
-    const geometry = new THREE.SphereGeometry(radius, 32, 32);
+    // Create sphere geometry (reduced complexity for low-performance devices)
+    const detail = isLowPerformance ? 12 : 32;
+    const geometry = new THREE.SphereGeometry(radius, detail, detail);
     
     // Create PBR material with specified properties
     // roughness: 0.2, metalness: 0.9 as specified in design
@@ -267,8 +366,10 @@ function initSkillsGraph() {
     });
     
     // Apply repulsion forces between all nodes
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
+    // Use a less intensive approach on low-performance devices
+    const increment = isLowPerformance ? 2 : 1; // Skip nodes on low-performance devices
+    for (let i = 0; i < nodes.length; i += increment) {
+      for (let j = i + increment; j < nodes.length; j += increment) {
         const nodeA = nodes[i];
         const nodeB = nodes[j];
         
@@ -467,4 +568,8 @@ function getColorForCategory(category, colors) {
 }
 
 // Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', initSkillsGraph);
+// Make sure to initialize only when everything is loaded
+document.addEventListener('DOMContentLoaded', function() {
+  // Add a slight delay to ensure all scripts are loaded
+  setTimeout(initSkillsGraph, 500);
+});

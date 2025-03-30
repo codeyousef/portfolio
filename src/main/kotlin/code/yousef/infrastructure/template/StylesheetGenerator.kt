@@ -245,13 +245,19 @@ class StylesheetGenerator {
                 borderColor = Color("var(--neon-pink)")
             }
 
-            // Projects container - improved grid
+            // Projects container - 2 columns, centered
             rule(".projects-container") {
+                width = 100.pct
+                maxWidth = 900.px
+                margin = Margin(0.px, LinearDimension.auto)
+            }
+            
+            // Projects grid layout
+            rule(".projects-grid") {
                 display = Display.grid
-                gridTemplateColumns = GridTemplateColumns("repeat(auto-fill, minmax(300px, 1fr))")
+                gridTemplateColumns = GridTemplateColumns("repeat(2, 1fr)")
                 gap = 30.px
                 padding = Padding(20.px, 0.px)
-                width = 100.pct
             }
 
             // Project Cards with 3D flip effect
@@ -786,6 +792,52 @@ class StylesheetGenerator {
                     alignItems = Align.center
                     padding = Padding(20.px, 10.px)
                     gap = 15.px
+                }
+            }
+            
+            // Low performance device optimizations
+            rule(".low-performance .glass-morphic") {
+                backdropFilter = "blur(5px)"  // Less intense blur
+                boxShadow = BoxShadows().apply {
+                    this += BoxShadow(color = Color("var(--cyber-cyan)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 5.px)  // Smaller shadow
+                }
+            }
+            
+            rule(".low-performance #bg-canvas") {
+                opacity = 0.7  // Less intense background
+            }
+            
+            rule(".low-performance .glowing-text") {
+                textShadow = TextShadows().apply {
+                    this += TextShadow(color = Color("var(--cyber-cyan)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 5.px)  // Less intense glow
+                }
+            }
+            
+            // Option to disable 3D effects entirely
+            rule(".no-3d #bg-canvas, .no-3d .terminal-container, .no-3d .model-container") {
+                display = Display.none
+            }
+            
+            rule(".no-3d .skills-matrix") {
+                height = LinearDimension.auto
+                minHeight = 200.px
+            }
+            
+            rule(".performance-toggle") {
+                position = Position.fixed
+                bottom = 20.px
+                right = 20.px
+                zIndex = 1000
+                backdropFilter = "blur(12px)"
+                backgroundColor = Color("var(--surface)")
+                border = Border(1.px, BorderStyle.solid, Color("var(--glass-border)"))
+                borderRadius = 5.px
+                padding = Padding(5.px, 10.px)
+                fontSize = 0.8.rem
+                color = Color("var(--text)")
+                cursor = Cursor.pointer
+                transition = Transitions().apply {
+                    this += Transition("all", 0.3.s, Timing.ease)
                 }
             }
         }.toString()

@@ -69,24 +69,6 @@ class PortfolioTemplates {
             // Content divider
             div(classes = "content-divider")
             
-            // Skills section with 3D force-directed graph
-            section(classes = "skills-section") {
-                id = "skills"
-                h2(classes = "glowing-text") { +"Skills Matrix" }
-                p {
-                    +"This interactive 3D graph visualizes my skills and their relationships. "
-                    +"The nodes represent technologies I work with, rendered with liquid metal PBR materials."
-                }
-                
-                // Add skills matrix container (will be populated by skills-graph.js)
-                div(classes = "skills-matrix") {
-                    id = "skills-matrix"
-                }
-            }
-            
-            // Content divider
-            div(classes = "content-divider")
-            
             // Contact section
             section(classes = "contact-section") {
                 id = "contact"
@@ -119,7 +101,7 @@ class PortfolioTemplates {
      */
     fun buildProjectsSection(projectEntities: List<ProjectEntity>): String {
         val writer = StringWriter()
-        writer.appendHTML().div(classes = "projects-container") {
+        writer.appendHTML().div(classes = "projects-grid") {
             projectEntities.forEach { project ->
                 div(classes = "project-card") {
                     // Preserve HTMX attributes for dynamic loading
