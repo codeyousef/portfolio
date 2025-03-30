@@ -21,9 +21,9 @@ let themeIsDark = true;
 
 // Refined, professional color palette
 const COLORS = {
-  // Dark theme colors - more refined
+  // Dark theme colors - gray based
   dark: {
-    base: 0x0a0a14,           // Deep space blue base
+    base: 0x1c1c1c,           // Dark gray base
     cyberCyan: 0x00c9db,      // Professional subdued cyan
     neonPink: 0xd63384,       // Professional muted pink
     neonPurple: 0x7952b3,     // Professional muted purple
@@ -32,9 +32,9 @@ const COLORS = {
     neonBlue: 0x0984e3,       // Professional blue
     neonYellow: 0xfdcb6e      // Professional muted yellow
   },
-  // Light theme colors - more refined
+  // Light theme colors - gray based
   light: {
-    base: 0xf8fafc,           // Off-white base
+    base: 0xf5f5f5,           // Light gray base
     cyberCyan: 0x0891b2,      // Professional teal
     neonPink: 0xbe185d,       // Professional rose
     neonPurple: 0x6d28d9,     // Professional violet

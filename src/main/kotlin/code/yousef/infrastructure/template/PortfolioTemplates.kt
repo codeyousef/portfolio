@@ -104,39 +104,36 @@ class PortfolioTemplates {
         writer.appendHTML().div(classes = "projects-grid") {
             projectEntities.forEach { project ->
                 div(classes = "project-card") {
-                    // Preserve HTMX attributes for dynamic loading
+                    // HTMX attributes for dynamic loading
                     attributes["hx-get"] = "/api/projects/${project.id}"
                     attributes["hx-trigger"] = "click"
                     attributes["hx-target"] = "#project-detail"
                     attributes["hx-swap"] = "innerHTML"
 
-                    div(classes = "card-inner") {
-                        // Front side with glowing text as specified
-                        div(classes = "project-info") {
-                            h3 { +project.title }
-                            p { +project.description }
+                    // Project image
+                    div(classes = "project-image") {
+                        img(src = "https://placehold.co/600x350/333/white?text=${project.title}", alt = project.title) {
+                            attributes["loading"] = "lazy"
+                        }
+                    }
+                    
+                    // Project content
+                    div(classes = "project-content") {
+                        h3 { +project.title }
+                        p { +project.description }
 
-                            div(classes = "tech-stack") {
-                                project.technologies.forEach { tech ->
-                                    span(classes = "tech-pill") { +tech }
-                                }
+                        div(classes = "tech-stack") {
+                            project.technologies.forEach { tech ->
+                                span(classes = "tech-pill") { +tech }
                             }
                         }
 
-                        // Back side with 3D model as specified
-                        div(classes = "card-back glass-morphic") {
-                            div(classes = "model-container") {
-                                // Container for 3D model
-                                attributes["data-model-url"] = project.modelUrl
+                        div(classes = "project-links") {
+                            a(href = project.githubUrl, target = "_blank") {
+                                +"View Code"
                             }
-
-                            div(classes = "project-links") {
-                                a(href = project.githubUrl, classes = "btn neon-btn", target = "_blank") {
-                                    +"View Code"
-                                }
-                                a(href = project.demoUrl, classes = "btn neon-btn", target = "_blank") {
-                                    +"Live Demo"
-                                }
+                            a(href = project.demoUrl, target = "_blank") {
+                                +"Live Demo"
                             }
                         }
                     }

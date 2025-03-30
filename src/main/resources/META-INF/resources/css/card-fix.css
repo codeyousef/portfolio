@@ -1,0 +1,153 @@
+/* Simple, reliable card flip implementation */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 450px);
+  justify-content: center;
+  grid-gap: 40px; 
+  width: 100%;
+}
+
+/* Basic flip card - proven technique */
+.project-card {
+  position: relative;
+  width: 450px; /* Fixed width */
+  height: 400px; /* Fixed height */
+  margin: 0 auto; /* Center cards */
+}
+
+/* This maintains the perspective */
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+/* Hide front elements on flip */
+.project-card:hover .project-info {
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* The flip effect */
+.project-card:hover .card-inner {
+  transform: rotateY(180deg);
+}
+
+/* Position both sides */
+.project-info, .card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+}
+
+/* Front side styling */
+.project-info {
+  background-color: var(--surface);
+}
+
+/* Back side styling - explicitly rotated */
+.card-back {
+  background-color: var(--surface);
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Image styling */
+.project-image {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+}
+
+.project-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Content container */
+.project-content {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 180px);
+}
+
+.project-content h3 {
+  color: var(--cyber-cyan);
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.project-content p {
+  margin-bottom: 15px;
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+/* Model container */
+.model-container {
+  width: 100%;
+  height: 180px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 201, 219, 0.3);
+  background-color: var(--base);
+}
+
+/* Links */
+.project-links {
+  display: flex;
+  gap: 15px;
+}
+
+.project-links a {
+  padding: 8px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+  color: var(--cyber-cyan);
+  border: 1px solid var(--cyber-cyan);
+  transition: all 0.3s;
+}
+
+.project-links a:hover {
+  background-color: var(--cyber-cyan);
+  color: var(--base);
+}
+
+/* Technology tags */
+.tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.tech-pill {
+  font-size: 0.8rem;
+  background: rgba(0, 201, 219, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: var(--cyber-cyan);
+}
+
+@media (max-width: 768px) {
+  .projects-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 400px));
+  }
+  
+  .project-card {
+    width: 100%;
+  }
+}

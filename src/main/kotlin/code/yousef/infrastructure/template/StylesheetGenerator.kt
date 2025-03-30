@@ -26,8 +26,8 @@ class StylesheetGenerator {
                 put("--space-lg", "32px")
                 put("--space-xl", "64px")
 
-                // Dark theme (default) - more refined palette
-                put("--base", "#0a0a14")              // Deep space blue
+                // Dark theme (default) - gray based palette
+                put("--base", "#1c1c1c")              // Dark gray
                 put("--cyber-cyan", "#00c9db")
                 put("--neon-pink", "#d63384")         // Muted professional pink
                 put("--neon-purple", "#7952b3")       // Muted purple
@@ -35,17 +35,17 @@ class StylesheetGenerator {
                 put("--neon-orange", "#e17055")       // Muted orange
                 put("--neon-blue", "#0984e3")         // Professional blue
                 put("--neon-yellow", "#fdcb6e")       // Muted yellow
-                put("--gradient-start", "#0a0a14")    // Deep space blue start
-                put("--gradient-end", "#1a1a2e")       // Slightly lighter purple end
+                put("--gradient-start", "#1c1c1c")    // Dark gray start
+                put("--gradient-end", "#333333")       // Medium dark gray end
                 put("--text", "#e2e8f0")              // Off-white text for better readability
-                put("--surface", "rgba(10, 10, 20, 0.7)")// Dark professional surface
+                put("--surface", "rgba(28, 28, 28, 0.7)")// Dark gray professional surface
                 put("--glass-border", "rgba(0, 201, 219, 0.3)") // Subtle border
                 put("--glow-intensity", "8px")       // More subtle glow
             }
 
             // Light theme
             rule("[data-theme='light']") {
-                put("--base", "#f8fafc")              // Off-white base
+                put("--base", "#f5f5f5")              // Light gray base
                 put("--cyber-cyan", "#0891b2")        // Professional teal for light mode
                 put("--neon-pink", "#be185d")         // Professional pink for light mode
                 put("--neon-purple", "#6d28d9")       // Professional purple for light mode
@@ -53,10 +53,10 @@ class StylesheetGenerator {
                 put("--neon-orange", "#ea580c")       // Professional orange for light mode
                 put("--neon-blue", "#2563eb")         // Professional blue for light mode
                 put("--neon-yellow", "#d97706")       // Professional amber for light mode
-                put("--gradient-start", "#f8fafc")    // Off-white start
-                put("--gradient-end", "#e0e7ff")      // Very light indigo end
+                put("--gradient-start", "#f5f5f5")    // Light gray start
+                put("--gradient-end", "#e0e0e0")      // Medium light gray end
                 put("--text", "#0f172a")              // Dark slate text for contrast
-                put("--surface", "rgba(248, 250, 252, 0.85)") // Light professional surface
+                put("--surface", "rgba(245, 245, 245, 0.85)") // Light professional surface
                 put("--glass-border", "rgba(8, 145, 178, 0.3)") // Subtle professional border
                 put("--glow-intensity", "5px")        // Even subtler glow
             }
@@ -343,22 +343,26 @@ class StylesheetGenerator {
             // Refined Project Cards with subtle 3D effect
             rule(".project-card") {
                 position = Position.relative
-                height = 350.px
+                height = 500.px  // Increased height to accommodate image
                 transform { perspective(1000.px) }
                 margin = Margin(0.px, 0.px, 40.px, 0.px)
+                put("transform-style", "preserve-3d")
+                put("-webkit-transform-style", "preserve-3d")
 
                 hover {
                     "& .card-inner" {
-                        transform { rotateY(175.deg) } // Less extreme rotation for subtlety
+                        transform { rotateY(180.deg) }
                     }
                 }
             }
             rule(".project-image") {
                 width = 100.pct
-                height = 160.px
+                height = 200.px
                 overflow = Overflow.hidden
-                marginBottom = 16.px
-                borderRadius = 6.px
+                marginBottom = 0.px
+                borderTopLeftRadius = 8.px
+                borderTopRightRadius = 8.px
+                backgroundColor = Color("rgba(0, 0, 0, 0.1)")
             }
 
             rule(".project-image img") {
@@ -387,9 +391,8 @@ class StylesheetGenerator {
             rule(".card-front, .card-back") {
                 position = Position.absolute
                 width = 100.pct
-                height = 100.pct
                 put("backface-visibility", "hidden")
-                padding = Padding(32.px)
+                padding = Padding(0.px)
                 borderRadius = 8.px
                 backdropFilter = "blur(10px)"
                 backgroundColor = Color("var(--surface)")
@@ -402,13 +405,22 @@ class StylesheetGenerator {
                 transition = Transitions().apply {
                     this += Transition("all", 0.3.s, Timing.ease)
                 }
+                put("-webkit-backface-visibility", "hidden")
+                put("-webkit-transform-style", "preserve-3d")
+            }
+
+            rule(".project-info") {
+                padding = Padding(20.px)
+                height = 100.pct
+                display = Display.flex
+                flexDirection = FlexDirection.column
             }
 
             rule(".card-front h3") {
                 color = Color("var(--cyber-cyan)")
                 fontSize = 1.6.rem
-                marginTop = 0.px
-                marginBottom = 16.px
+                marginTop = 15.px
+                marginBottom = 10.px
                 fontWeight = FontWeight.w500
             }
 
@@ -421,6 +433,11 @@ class StylesheetGenerator {
                 overflow = Overflow.hidden
             }
 
+            rule(".card-front") {
+                transform { rotateY(0.deg) }
+                zIndex = 2
+            }
+
             rule(".card-back") {
                 transform { rotateY(180.deg) }
                 display = Display.flex
@@ -428,6 +445,8 @@ class StylesheetGenerator {
                 justifyContent = JustifyContent.center
                 alignItems = Align.center
                 backgroundColor = Color("var(--surface)")
+                padding = Padding(20.px)
+                zIndex = 1
             }
 
             // 3D model container - refined styling
@@ -442,6 +461,8 @@ class StylesheetGenerator {
                 boxShadow = BoxShadows().apply {
                     this += BoxShadow(color = Color("rgba(0, 201, 219, 0.15)"), offsetX = 0.px, offsetY = 4.px, blurRadius = 16.px, spreadRadius = (-8).px)
                 }
+                position = Position.relative
+                zIndex = 1
             }
 
             // Tech stack styling - more professional pills

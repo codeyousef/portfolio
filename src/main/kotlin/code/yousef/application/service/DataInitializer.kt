@@ -80,7 +80,7 @@ class DataInitializer @Inject constructor(
                     val projectRequest = CreateUpdateProjectRequest(
                         title = "Project $i",
                         description = "This is a sample project $i that showcases various skills and technologies.",
-                        imageUrl = "/images/project$i.jpg",
+                        imageUrl = "https://placehold.co/600x350/333/white?text=Project+$i",
                         modelUrl = "/models/project$i.glb",
                         technologies = listOf("Kotlin", "JavaScript", "Three.js", "WebGL"),
                         githubUrl = "https://github.com/yousef/project$i",
