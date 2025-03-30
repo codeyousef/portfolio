@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title}</title>
-    <!-- Space Grotesk font -->
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap">
+    <!-- Refined typography with primary and secondary fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap">
     <link rel="stylesheet" href="/css/styles.css">
 
     <!-- Libraries -->
@@ -20,18 +21,11 @@
     <script src="/js/terminal.js"></script>
 </head>
 <body>
-<!-- 3D Canvas Background -->
+<!-- Subtle 3D Canvas Background -->
 <canvas id="bg-canvas"></canvas>
 
-<!-- Parallax layers for depth -->
-<div class="parallax-layer-1"></div>
-<div class="parallax-layer-2"></div>
-<div class="parallax-layer-3"></div>
-<div class="parallax-layer-4"></div>
-<div class="parallax-layer-5"></div>
-
-<!-- Theme Toggle Button -->
-<button class="theme-toggle" id="theme-toggle">
+<!-- Theme Toggle Button - Refined design -->
+<button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
     <svg class="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path d="M12 3a1 1 0 011 1v1a1 1 0 01-2 0V4a1 1 0 011-1zm0 15a1 1 0 011 1v1a1 1 0 01-2 0v-1a1 1 0 011-1zm9-9a1 1 0 01-1 1h-1a1 1 0 010-2h1a1 1 0 011 1zM4 12a1 1 0 01-1 1H2a1 1 0 010-2h1a1 1 0 011 1zm15.7-6.3a1 1 0 01-1.4 0l-.7-.7a1 1 0 011.4-1.4l.7.7a1 1 0 010 1.4zM5.3 18.7a1 1 0 01-1.4 0l-.7-.7a1 1 0 011.4-1.4l.7.7a1 1 0 010 1.4zM5.3 5.3a1 1 0 010-1.4l.7-.7a1 1 0 011.4 1.4l-.7.7a1 1 0 01-1.4 0zm12.8 12.8a1 1 0 010 1.4l-.7.7a1 1 0 11-1.4-1.4l.7-.7a1 1 0 011.4 0zM12 6a6 6 0 100 12 6 6 0 000-12z"/>
     </svg>
@@ -40,11 +34,12 @@
     </svg>
 </button>
 
-<!-- Performance Toggle Button -->
-<button class="performance-toggle" id="performance-toggle">Disable 3D Effects</button>
+<!-- Performance Toggle Button - Refined design -->
+<button class="performance-toggle" id="performance-toggle">Disable 3D</button>
 
+<!-- Refined Professional Header -->
 <header>
-    <h1 class="glowing-text">CYBERPUNK PORTFOLIO</h1>
+    <h1>Developer Portfolio</h1>
     <nav>
         <ul>
             <li><a href="/">Home</a></li>
@@ -55,28 +50,30 @@
     </nav>
 </header>
 
+<!-- Main content with refined glass container -->
 <main class="glass-container">
-    <!-- Terminal container for the floating 3D terminal -->
+    <!-- Terminal container with more professional styling -->
     <div class="terminal-container" id="terminal-container"></div>
 
+    <!-- Content from template -->
     {#if content??}
     {content.safe}
     {/if}
 
-    <!-- Project detail container for HTMX to target -->
+    <!-- Project detail container for HTMX targets -->
     <div id="project-detail" class="glass-morphic"></div>
 </main>
 
-<!-- Holographic Circular Menu -->
-<div class="holographic-menu">
-    <div class="menu-icon" data-section="home">
+<!-- Professional side navigation instead of circular menu -->
+<aside class="side-navigation">
+    <div class="nav-icon" data-section="home" aria-label="Home">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
             <polyline points="9 22 9 12 15 12 15 22"></polyline>
         </svg>
     </div>
-    <div class="menu-icon" data-section="projects">
+    <div class="nav-icon" data-section="projects" aria-label="Projects">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
@@ -84,27 +81,28 @@
             <polyline points="2 12 12 17 22 12"></polyline>
         </svg>
     </div>
-    <div class="menu-icon" data-section="blog">
+    <div class="nav-icon" data-section="blog" aria-label="Blog">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
         </svg>
     </div>
-    <div class="menu-icon" data-section="contact">
+    <div class="nav-icon" data-section="contact" aria-label="Contact">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
             <polyline points="22,6 12,13 2,6"></polyline>
         </svg>
     </div>
-</div>
+</aside>
 
+<!-- Refined Professional Footer -->
 <footer>
-    <p>© 2025 Cyberpunk Portfolio</p>
+    <p>© 2025 Professional Portfolio</p>
 </footer>
 
-<!-- Theme toggle and parallax effects -->
+<!-- Theme toggle and performance optimization -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
       // Performance toggle
@@ -114,7 +112,7 @@
       // Apply saved preference
       if (effectsDisabled) {
         document.body.classList.add('no-3d');
-        performanceToggle.textContent = 'Enable 3D Effects';
+        performanceToggle.textContent = 'Enable 3D';
       }
 
       performanceToggle.addEventListener('click', function() {
@@ -123,10 +121,10 @@
 
         if (effectsDisabled) {
           document.body.classList.add('no-3d');
-          performanceToggle.textContent = 'Enable 3D Effects';
+          performanceToggle.textContent = 'Enable 3D';
         } else {
           document.body.classList.remove('no-3d');
-          performanceToggle.textContent = 'Disable 3D Effects';
+          performanceToggle.textContent = 'Disable 3D';
           // Reload to reinitialize 3D elements
           window.location.reload();
         }
@@ -152,20 +150,8 @@
         }
       });
 
-      // Parallax effect for layers
-      const parallaxElements = document.querySelectorAll('.parallax-layer-1, .parallax-layer-2, .parallax-layer-5');
-
-      window.addEventListener('scroll', function() {
-        const scrollY = window.scrollY;
-
-        parallaxElements.forEach(function(element, index) {
-          const speed = 0.1 * (index + 1);
-          element.style.transform = 'translateY(' + (scrollY * speed) + 'px)';
-        });
-      });
-
-      // Smooth scrolling for menu icons
-      document.querySelectorAll('.menu-icon').forEach(function(icon) {
+      // Smooth scrolling for nav icons
+      document.querySelectorAll('.nav-icon').forEach(function(icon) {
         icon.addEventListener('click', function() {
           const sectionId = icon.getAttribute('data-section');
           const target = document.querySelector('section[id="' + sectionId + '"]') ||
@@ -180,56 +166,10 @@
           }
         });
       });
-
-      // Add particle trail to menu icons on hover
-      document.querySelectorAll('.menu-icon').forEach(function(icon) {
-        icon.addEventListener('mouseenter', function() {
-          // Create particle effect
-          for (let i = 0; i < 10; i++) {
-            const particle = document.createElement('div');
-            particle.classList.add('menu-particle');
-            particle.style.position = 'absolute';
-            particle.style.width = '4px';
-            particle.style.height = '4px';
-            particle.style.backgroundColor = '#00ffff';
-            particle.style.borderRadius = '50%';
-            particle.style.pointerEvents = 'none';
-
-            document.body.appendChild(particle);
-
-            const startX = icon.offsetLeft + icon.offsetWidth / 2;
-            const startY = icon.offsetTop + icon.offsetHeight / 2;
-
-            particle.style.left = startX + 'px';
-            particle.style.top = startY + 'px';
-            particle.style.opacity = '1';
-
-            // Random movement animation
-            const angle = Math.random() * Math.PI * 2;
-            const distance = Math.random() * 50;
-            const endX = startX + Math.cos(angle) * distance;
-            const endY = startY + Math.sin(angle) * distance;
-
-            setTimeout(function() {
-              particle.style.transition = 'all 1s ease-out';
-              particle.style.left = endX + 'px';
-              particle.style.top = endY + 'px';
-              particle.style.opacity = '0';
-
-              // Remove particle after animation
-              setTimeout(function() {
-                if (particle.parentNode) {
-                  document.body.removeChild(particle);
-                }
-              }, 1000);
-            }, 10);
-          }
-        });
-      });
     });
 </script>
 
-<!-- Load our custom scripts -->
+<!-- Load custom scripts -->
 <script src="/js/project-models.js"></script>
 <script src="/js/3d-background.js"></script>
 </body>

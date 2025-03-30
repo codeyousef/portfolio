@@ -112,11 +112,10 @@ class PortfolioTemplates {
 
                     div(classes = "card-inner") {
                         // Front side with glowing text as specified
-                        div(classes = "card-front glass-morphic") {
-                            h3(classes = "glowing-text") { +project.title }
+                        div(classes = "project-info") {
+                            h3 { +project.title }
                             p { +project.description }
 
-                            // Tech stack pills
                             div(classes = "tech-stack") {
                                 project.technologies.forEach { tech ->
                                     span(classes = "tech-pill") { +tech }
