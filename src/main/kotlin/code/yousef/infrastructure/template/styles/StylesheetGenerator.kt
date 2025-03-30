@@ -1,7 +1,7 @@
 package code.yousef.infrastructure.template.styles
 
-import kotlinx.css.*
 import jakarta.enterprise.context.ApplicationScoped
+import kotlinx.css.CssBuilder
 import org.jboss.logging.Logger
 
 @ApplicationScoped
@@ -13,27 +13,28 @@ class StylesheetGenerator {
         ComponentStyles(),
         ProjectStyles(),
         TerminalStyles(),
+        CodeWindowStyles(),
         AnimationStyles(),
         ThemeStyles(),
         MediaQueryStyles(),
-        SkillStyles() // Add the new SkillStyles
+        SkillStyles(),
     )
 
     fun generateStyles(): String {
         val cssBuilder = CssBuilder()
-        
+
         try {
             // Apply all style generators
             styleGenerators.forEach { generator ->
                 generator.generateStyles(cssBuilder)
             }
-            
+
             // Return the generated CSS
             val css = cssBuilder.toString()
-            
+
             // Log the first 500 characters for debugging
             logger.debug("Generated CSS (first 500 chars): ${css.take(500)}...")
-            
+
             return css
         } catch (e: Exception) {
             logger.error("Error generating CSS", e)
@@ -41,7 +42,7 @@ class StylesheetGenerator {
             return fallbackCSS()
         }
     }
-    
+
     /**
      * Provides a basic fallback CSS in case the Kotlin CSS DSL has issues
      */
@@ -81,90 +82,82 @@ class StylesheetGenerator {
               overflow-x: hidden;
             }
             
-            /* Grid lines background */
-            .grid-lines {
-              position: fixed;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-              background-size: 50px 50px;
-              background-image: linear-gradient(to right, rgba(0, 247, 255, 0.03) 1px, transparent 1px),
-                                linear-gradient(to bottom, rgba(0, 247, 255, 0.03) 1px, transparent 1px);
-              z-index: -1;
-              pointer-events: none;
-            }
-            
-            /* Navigation */
-            .navbar {
-              position: fixed;
-              top: 0;
-              left: 0;
-              width: 100%;
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              padding: 1rem 4rem;
-              background: rgba(10, 10, 20, 0.8);
+            /* Terminal styles - fallback */
+            .terminal {
+              position: absolute;
+              width: 350px;
+              background-color: rgba(10, 10, 25, 0.8);
               backdrop-filter: blur(10px);
-              z-index: 1000;
-              border-bottom: 1px solid rgba(0, 247, 255, 0.1);
+              border-radius: 0.5rem;
+              border: 1px solid rgba(0, 247, 255, 0.2);
+              padding: 1rem;
+              top: 60%;
+              right: 25%;
+              transform: rotate(-8deg);
+              box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+              z-index: 1;
             }
             
-            /* Project cards */
-            .projects-grid {
-              display: grid;
-              grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-              gap: 2rem;
+            .terminal-header {
+              display: flex;
+              align-items: center;
+              margin-bottom: 1rem;
+              border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+              padding-bottom: 0.5rem;
             }
             
-            .project-card {
-              position: relative;
-              border-radius: 1rem;
-              overflow: hidden;
-              height: 400px;
-              cursor: pointer;
-              transition: transform 0.3s ease, box-shadow 0.3s ease;
+            .terminal-title {
+              font-family: monospace;
+              color: rgba(255, 255, 255, 0.5);
+              font-size: 0.8rem;
             }
             
-            .project-card:hover {
-              transform: translateY(-10px);
-              box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            .terminal-content {
+              font-family: monospace;
+              font-size: 0.9rem;
+              line-height: 1.5;
+              color: rgba(255, 255, 255, 0.7);
             }
             
-            /* Skills */
-            .tech-circuit {
-              position: relative;
-              max-width: 1100px;
-              margin: 0 auto;
-              padding: 30px 0;
-              min-height: 500px;
+            .prompt {
+              color: var(--primary);
+              margin-right: 0.25rem;
             }
             
-            .skill-cards-container {
-              display: grid;
-              grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-              gap: 30px;
-              position: relative;
-              z-index: 2;
+            .command {
+              color: var(--text-primary);
             }
             
-            .skill-card {
-              perspective: 1000px;
-              height: 280px;
+            .output {
+              color: var(--accent-green);
+              margin-top: 0.25rem;
+              margin-bottom: 0.5rem;
+              white-space: pre-wrap;
             }
             
-            .skill-card-inner {
-              position: relative;
-              width: 100%;
-              height: 100%;
-              text-align: center;
-              transition: transform 0.8s;
-              transform-style: preserve-3d;
+            .pulse {
+              animation: pulse 2s ease-in-out infinite;
             }
             
-            .skill-card:hover .skill-card-inner {
-              transform: rotateY(180deg);
+            @keyframes pulse {
+              0%, 100% { opacity: 1; }
+              50% { opacity: 0.7; }
+            }
+            
+            /* Code window styles - fallback */
+            .code-window {
+              position: absolute;
+              width: 400px;
+              background-color: rgba(10, 10, 25, 0.7);
+              backdrop-filter: blur(10px);
+              border-radius: 0.5rem;
+              border: 1px solid rgba(0, 247, 255, 0.2);
+              padding: 1rem;
+              transform: rotate(5deg);
+              top: 30%;
+              right: 15%;
+              box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+              z-index: 1;
             }
         """.trimIndent()
     }

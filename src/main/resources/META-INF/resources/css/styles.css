@@ -8,7 +8,7 @@
   --bg-dark: #0a0a14; /* deep space blue */
   --bg-surface: rgba(20, 20, 35, 0.5);
   --text-primary: #ffffff;
-  
+
   /* Typography */
   --font-heading: 'Syne', sans-serif;
   --font-body: 'Space Grotesk', sans-serif;
@@ -260,15 +260,15 @@ body {
   .projects-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .hero h1 {
     font-size: 2.5rem;
   }
-  
+
   .navbar {
     padding: 15px 20px;
   }
-  
+
   .nav-links {
     display: none;
   }
@@ -278,4 +278,179 @@ body {
 .no-effects .project-card:hover {
   transform: none;
   box-shadow: none;
+}
+
+/* Add this to src/main/resources/META-INF/resources/css/styles.css */
+
+/* Floating elements container */
+.floating-elements {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Terminal styling */
+.terminal {
+  position: absolute;
+  width: 350px;
+  background-color: rgba(10, 10, 25, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(0, 247, 255, 0.2);
+  padding: 1rem;
+  top: 60%;
+  right: 25%;
+  transform: rotate(-8deg);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.terminal-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.5rem;
+}
+
+.terminal-title {
+  font-family: monospace, 'Space Mono', Consolas;
+  color: var(--text-tertiary, rgba(255, 255, 255, 0.5));
+  font-size: 0.8rem;
+}
+
+.terminal-content {
+  font-family: monospace, 'Space Mono', Consolas;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+}
+
+.prompt {
+  color: var(--primary, #00f7ff);
+  margin-right: 0.25rem;
+}
+
+.command {
+  color: var(--text-primary, #ffffff);
+}
+
+.output {
+  color: var(--accent-green, #05ffa1);
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
+  white-space: pre-wrap;
+}
+
+/* Code window styling */
+.code-window {
+  position: absolute;
+  width: 400px;
+  background-color: rgba(10, 10, 25, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(0, 247, 255, 0.2);
+  padding: 1rem;
+  transform: rotate(5deg);
+  top: 30%;
+  right: 15%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.code-window-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.5rem;
+}
+
+.window-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--secondary, #ff2a6d);
+  margin-right: 4px;
+}
+
+.window-dot:first-child {
+  background-color: #ff5f56;
+}
+
+.window-dot:nth-child(2) {
+  background-color: #ffbd2e;
+}
+
+.window-dot:nth-child(3) {
+  background-color: #27c93f;
+}
+
+.code-window-title {
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-tertiary, rgba(255, 255, 255, 0.5));
+}
+
+.code-content {
+  font-family: monospace, 'Space Mono', Consolas;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+}
+
+.code-line {
+  margin-bottom: 0.25rem;
+  white-space: pre;
+}
+
+.code-keyword {
+  color: var(--secondary, #ff2a6d);
+}
+
+.code-function {
+  color: var(--primary, #00f7ff);
+}
+
+.code-string {
+  color: var(--accent-green, #05ffa1);
+}
+
+.code-number {
+  color: var(--accent-purple, #b967ff);
+}
+
+/* Animation classes */
+.floating {
+  animation: floating 3s ease-in-out infinite;
+}
+
+.pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes floating {
+  0%, 100% {
+    transform: translateY(0) rotate(5deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
