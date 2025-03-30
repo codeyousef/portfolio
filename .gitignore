@@ -49,3 +49,4 @@ nb-configuration.xml
 /azure-pipelines.yml
 /docker-compose.yml
 /.kotlin/*
+/.cursor/rules/css.mdc

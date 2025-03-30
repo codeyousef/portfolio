@@ -20,7 +20,9 @@ class ComponentStyles : StyleGenerator {
                 backdropFilter = "blur(10px)"
                 zIndex = 1000
                 borderBottom = Border(1.px, BorderStyle.solid, Color("rgba(0, 247, 255, 0.1)"))
-                transition += Transition("all", Time("var(--transition-medium)"))
+                transition = Transitions().apply {
+                    this += Transition("all", Time("var(--transition-medium)"))
+                }
             }
 
             rule("[data-theme=\"light\"] .navbar") {
@@ -59,7 +61,9 @@ class ComponentStyles : StyleGenerator {
                 fontWeight = FontWeight.w500
                 position = Position.relative
                 padding = Padding(LinearDimension("var(--spacing-xs)"), LinearDimension("var(--spacing-sm)"))
-                transition += Transition("color", Time("var(--transition-fast)"))
+                transition = Transitions().apply {
+                    this += Transition("color", Time("var(--transition-fast)"))
+                }
             }
 
             rule(".nav-links a::after") {
@@ -70,7 +74,9 @@ class ComponentStyles : StyleGenerator {
                 width = 0.px
                 height = 2.px
                 backgroundColor = Color("var(--primary)")
-                transition += Transition("width", Time("var(--transition-medium)"))
+                transition = Transitions().apply {
+                    this += Transition("width", Time("var(--transition-medium)"))
+                }
             }
 
             rule(".nav-links a:hover") {
@@ -89,7 +95,7 @@ class ComponentStyles : StyleGenerator {
 
             // Theme toggle button
             rule(".theme-toggle") {
-                background = "none"
+                background = "transparent"
                 border = Border.none
                 cursor = Cursor.pointer
                 width = 40.px
@@ -99,7 +105,9 @@ class ComponentStyles : StyleGenerator {
                 justifyContent = JustifyContent.center
                 borderRadius = 50.pct
                 backgroundColor = Color("var(--bg-surface)")
-                transition += (Transition("background-color", Time("var(--transition-fast)")))
+                transition = Transitions().apply {
+                    this += Transition("background-color", Time("var(--transition-fast)"))
+                }
             }
 
             rule(".theme-toggle:hover") {
@@ -110,71 +118,157 @@ class ComponentStyles : StyleGenerator {
                 width = 20.px
                 height = 20.px
                 put("fill", "var(--primary)")
-                transition += (Transition("transform", Time("var(--transition-medium)")))
+                transition = Transitions().apply {
+                    this += Transition("transform", Time("var(--transition-medium)"))
+                }
             }
 
             rule(".theme-toggle:hover svg") {
-                transform {
-                    rotate(30.deg)
-                }
+                transform { rotate(30.deg) }
             }
 
-            // Project cards
-            rule(".project-card") {
-                position = Position.relative
-                borderRadius = LinearDimension("var(--border-radius-lg)")
-                overflow = Overflow.hidden
-                transition += Transition("transform", Time("var(--transition-medium)"))
-                transition += Transition("box-shadow", Time("var(--transition-medium)"))
-                height = 400.px
+            // CTA Button
+            rule(".cta-button") {
+                display = Display.inlineBlock
+                padding = Padding(LinearDimension("var(--spacing-sm)"), LinearDimension("var(--spacing-lg)"))
+                background = "linear-gradient(90deg, var(--primary), var(--primary-dark))"
+                color = Color("var(--bg-dark)")
+                fontWeight = FontWeight.w600
+                textDecoration = TextDecoration.none
+                borderRadius = LinearDimension("var(--border-radius-md)")
+                transition = Transitions().apply {
+                    this += Transition("transform", Time("var(--transition-fast)"))
+                    this += Transition("box-shadow", Time("var(--transition-fast)"))
+                }
+                border = Border.none
                 cursor = Cursor.pointer
+                fontFamily = "var(--font-body)"
+                fontSize = 1.rem
             }
 
-            rule(".project-card:hover") {
-                transform { translateY((-10).px) }
+            rule(".cta-button:hover") {
+                transform { translateY((-2).px) }
                 boxShadow = BoxShadows().apply {
-                    this += BoxShadow(color = Color("rgba(0, 0, 0, 0.2)"), offsetY = 15.px, blurRadius = 30.px)
+                    this += BoxShadow(Color("rgba(0, 247, 255, 0.3)"), 0.px, 5.px, 15.px)
                 }
             }
 
-            rule(".project-card:hover .project-image img") {
-                transform {
-                    scale(1.05)
+            rule(".cta-button.secondary") {
+                background = "linear-gradient(90deg, var(--secondary), var(--secondary-dark))"
+                marginLeft = LinearDimension("var(--spacing-md)")
+            }
+
+            rule(".cta-button.secondary:hover") {
+                boxShadow = BoxShadows().apply {
+                    this += BoxShadow(Color("rgba(255, 42, 109, 0.3)"), 0.px, 5.px, 15.px)
                 }
             }
 
-            rule(".project-card:hover .project-content") {
-                background =
-                    "linear-gradient(to top, rgba(10, 10, 20, 0.9) 0%, rgba(10, 10, 20, 0.8) 50%, rgba(10, 10, 20, 0) 100%)"
+            // Contact container
+            rule(".contact-container") {
+                display = Display.flex
+                gap = LinearDimension("var(--spacing-xl)")
+                maxWidth = 1000.px
+                margin = Margin(0.px, LinearDimension.auto)
+                alignItems = Align.flexStart
             }
 
-            rule(".project-image") {
-                position = Position.absolute
-                top = 0.px
-                left = 0.px
-                width = 100.pct
-                height = 100.pct
-                zIndex = 0
+            rule(".contact-info") {
+                flex = Flex(1)
             }
 
-            rule(".project-image img") {
-                width = 100.pct
-                height = 100.pct
-                objectFit = ObjectFit.cover
-                transition += Transition("transform", Time("var(--transition-slow)"))
+            rule(".contact-info h3") {
+                fontFamily = "var(--font-heading)"
+                fontSize = 1.5.rem
+                marginBottom = LinearDimension("var(--spacing-md)")
+                color = Color("var(--primary)")
             }
 
-            // Card content
-            rule(".project-content") {
-                position = Position.absolute
-                bottom = 0.px
-                left = 0.px
-                width = 100.pct
+            rule(".contact-info p") {
+                color = Color("var(--text-secondary)")
+                marginBottom = LinearDimension("var(--spacing-lg)")
+            }
+
+            rule(".contact-item") {
+                display = Display.flex
+                alignItems = Align.center
+                marginBottom = LinearDimension("var(--spacing-md)")
+            }
+
+            rule(".contact-icon") {
+                width = 40.px
+                height = 40.px
+                display = Display.flex
+                alignItems = Align.center
+                justifyContent = JustifyContent.center
+                backgroundColor = Color("rgba(0, 247, 255, 0.1)")
+                borderRadius = 50.pct
+                marginRight = LinearDimension("var(--spacing-md)")
+            }
+
+            rule(".contact-icon svg") {
+                width = 20.px
+                height = 20.px
+                put("fill", "var(--primary)")
+            }
+
+            rule(".contact-text") {
+                color = Color("var(--text-secondary)")
+            }
+
+            rule(".contact-text a") {
+                color = Color("var(--primary)")
+                textDecoration = TextDecoration.none
+                transition = Transitions().apply {
+                    this += Transition("color", Time("var(--transition-fast)"))
+                }
+            }
+
+            rule(".contact-text a:hover") {
+                color = Color("var(--text-primary)")
+            }
+
+            // Form style
+            rule(".contact-form") {
+                flex = Flex(1)
+                backgroundColor = Color("var(--bg-card)")
+                borderRadius = LinearDimension("var(--border-radius-lg)")
                 padding = Padding(LinearDimension("var(--spacing-lg)"))
-                background =
-                    "linear-gradient(to top, rgba(10, 10, 20, 0.8) 0%, rgba(10, 10, 20, 0.6) 50%, rgba(10, 10, 20, 0) 100%)"
-                zIndex = 1
-                transition += Transition("background", Time("var(--transition-medium)"))
+                border = Border(1.px, BorderStyle.solid, Color("rgba(255, 255, 255, 0.05)"))
+            }
+
+            rule(".form-group") {
+                marginBottom = LinearDimension("var(--spacing-md)")
+            }
+
+            rule(".form-label") {
+                display = Display.block
+                marginBottom = LinearDimension("var(--spacing-xs)")
+                color = Color("var(--text-secondary)")
+                fontSize = 0.9.rem
+            }
+
+            rule(".form-input, .form-textarea") {
+                width = 100.pct
+                padding = Padding(LinearDimension("var(--spacing-sm)"))
+                backgroundColor = Color("rgba(0, 0, 0, 0.2)")
+                border = Border(1.px, BorderStyle.solid, Color("rgba(255, 255, 255, 0.1)"))
+                borderRadius = LinearDimension("var(--border-radius-sm)")
+                color = Color("var(--text-primary)")
+                fontFamily = "var(--font-body)"
+                transition = Transitions().apply {
+                    this += Transition("border-color", Time("var(--transition-fast)"))
+                }
+            }
+
+            rule(".form-input:focus, .form-textarea:focus") {
+                outline = Outline.none
+                borderColor = Color("var(--primary)")
+            }
+
+            rule(".form-textarea") {
+                minHeight = 120.px
+                resize = Resize.vertical
             }
 
             // Footer
@@ -211,7 +305,9 @@ class ComponentStyles : StyleGenerator {
             rule(".footer-link") {
                 color = Color("var(--text-secondary)")
                 textDecoration = TextDecoration.none
-                transition += Transition("color", Time("var(--transition-fast)"))
+                transition = Transitions().apply {
+                    this += Transition("color", Time("var(--transition-fast)"))
+                }
             }
 
             rule(".footer-link:hover") {
@@ -231,15 +327,15 @@ class ComponentStyles : StyleGenerator {
                 justifyContent = JustifyContent.center
                 backgroundColor = Color("rgba(255, 255, 255, 0.05)")
                 borderRadius = 50.pct
-                transition += Transition("background-color", Time("var(--transition-fast)"))
-                transition += Transition("transform", Time("var(--transition-fast)"))
+                transition = Transitions().apply {
+                    this += Transition("background-color", Time("var(--transition-fast)"))
+                    this += Transition("transform", Time("var(--transition-fast)"))
+                }
             }
 
             rule(".social-icon:hover") {
                 backgroundColor = Color("var(--primary)")
-                transform {
-                    translateY((-3).px)
-                }
+                transform { translateY((-3).px) }
             }
 
             rule(".social-icon svg") {
@@ -252,6 +348,84 @@ class ComponentStyles : StyleGenerator {
                 marginTop = LinearDimension("var(--spacing-lg)")
                 color = Color("var(--text-tertiary)")
                 fontSize = 0.9.rem
+            }
+
+            // Code window components
+            rule(".code-window") {
+                position = Position.absolute
+                width = 400.px
+                backgroundColor = Color("rgba(10, 10, 25, 0.7)")
+                backdropFilter = "blur(10px)"
+                borderRadius = LinearDimension("var(--border-radius-md)")
+                border = Border(1.px, BorderStyle.solid, Color("rgba(0, 247, 255, 0.2)"))
+                padding = Padding(LinearDimension("var(--spacing-md)"))
+                transform { rotate(5.deg) }
+                top = 30.pct
+                right = 15.pct
+                boxShadow = BoxShadows().apply {
+                    this += BoxShadow(Color("rgba(0, 0, 0, 0.2)"), 0.px, 10.px, 30.px)
+                }
+            }
+
+            rule(".code-window-header") {
+                display = Display.flex
+                alignItems = Align.center
+                marginBottom = LinearDimension("var(--spacing-md)")
+                borderBottom = Border(1.px, BorderStyle.solid, Color("rgba(255, 255, 255, 0.1)"))
+                paddingBottom = LinearDimension("var(--spacing-sm)")
+            }
+
+            rule(".window-dot") {
+                width = 10.px
+                height = 10.px
+                borderRadius = 50.pct
+                backgroundColor = Color("var(--secondary)")
+                marginRight = LinearDimension("var(--spacing-xs)")
+            }
+
+            rule(".window-dot:first-child") {
+                backgroundColor = Color("#ff5f56")
+            }
+
+            rule(".window-dot:nth-child(2)") {
+                backgroundColor = Color("#ffbd2e")
+            }
+
+            rule(".window-dot:nth-child(3)") {
+                backgroundColor = Color("#27c93f")
+            }
+
+            rule(".code-window-title") {
+                marginLeft = LinearDimension("var(--spacing-sm)")
+                fontSize = 0.8.rem
+                color = Color("var(--text-tertiary)")
+            }
+
+            rule(".code-content") {
+                fontFamily = "monospace"
+                fontSize = 0.9.rem
+                lineHeight = LineHeight("1.5")
+                color = Color("var(--text-secondary)")
+            }
+
+            rule(".code-line") {
+                marginBottom = LinearDimension("var(--spacing-xs)")
+            }
+
+            rule(".code-keyword") {
+                color = Color("var(--secondary)")
+            }
+
+            rule(".code-function") {
+                color = Color("var(--primary)")
+            }
+
+            rule(".code-string") {
+                color = Color("var(--accent-green)")
+            }
+
+            rule(".code-number") {
+                color = Color("var(--accent-purple)")
             }
         }
     }

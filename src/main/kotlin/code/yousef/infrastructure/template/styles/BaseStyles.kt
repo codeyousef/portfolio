@@ -1,7 +1,10 @@
 package code.yousef.infrastructure.template.styles
 
 import kotlinx.css.*
-import kotlinx.css.properties.*
+import kotlinx.css.properties.LineHeight
+import kotlinx.css.properties.Time
+import kotlinx.css.properties.Transition
+import kotlinx.css.properties.Transitions
 
 class BaseStyles : StyleGenerator {
     override fun generateStyles(cssBuilder: CssBuilder) {
@@ -49,7 +52,6 @@ class BaseStyles : StyleGenerator {
                 // Typography
                 put("--font-heading", "'Syne', sans-serif")
                 put("--font-body", "'Space Grotesk', sans-serif")
-                put("--font-mono", "'Space Mono', monospace")
 
                 // Animations
                 put("--transition-fast", "0.2s ease")
@@ -91,7 +93,9 @@ class BaseStyles : StyleGenerator {
                 color = Color("var(--text-primary)")
                 lineHeight = LineHeight("1.6")
                 overflowX = Overflow.hidden
-                transition += Transition("background-color", duration = 0.3.s)
+                transition = Transitions().apply {
+                    this += Transition("background-color", Time("var(--transition-medium)"))
+                }
             }
 
             // Background effect

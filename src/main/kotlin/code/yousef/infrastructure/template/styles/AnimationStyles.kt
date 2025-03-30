@@ -10,18 +10,7 @@ class AnimationStyles : StyleGenerator {
             rule(".fade-in") {
                 opacity = 0
                 transform { translateY(20.px) }
-                animation = Animations().apply {
-                    this += Animation(
-                        duration = 0.6.s,
-                        fillMode = FillMode.forwards,
-                        timing = Timing.ease,
-                        name = "fadeIn",
-                        delay = 0.s,
-                        iterationCount = IterationCount("1"),
-                        direction = AnimationDirection.normal,
-                        playState = PlayState.running
-                    )
-                }
+                put("animation", "fadeIn 0.6s ease forwards")
             }
 
             keyframes("fadeIn") {
@@ -31,47 +20,11 @@ class AnimationStyles : StyleGenerator {
                 }
             }
 
-            // Pulse animation
-            rule(".pulse") {
-                animation = Animations().apply {
-                    this += Animation(
-                        duration = 2.s,
-                        timing = Timing.easeInOut,
-                        iterationCount = IterationCount.infinite,
-                        name = "pulse",
-                        delay = 0.s,
-                        direction = AnimationDirection.alternate,
-                        fillMode = FillMode.forwards,
-                        playState = PlayState.running
-                    )
-                }
-            }
-
-            keyframes("pulse") {
-                from {
-                    opacity = 1.0
-                }
-                to {
-                    opacity = 0.7
-                }
-            }
-
             // Floating animation
             rule(".floating") {
-                animation = Animations().apply {
-                    this += Animation(
-                        duration = 3.s,
-                        timing = Timing.easeInOut,
-                        iterationCount = IterationCount.infinite,
-                        name = "floating",
-                        delay = 0.s,
-                        direction = AnimationDirection.alternate,
-                        fillMode = FillMode.forwards,
-                        playState = PlayState.running
-                    )
-                }
+                put("animation", "floating 3s ease-in-out infinite")
             }
-            
+
             keyframes("floating") {
                 from {
                     transform { translateY(0.px) }
@@ -79,33 +32,48 @@ class AnimationStyles : StyleGenerator {
                 to {
                     transform { translateY((-10).px) }
                 }
+            }
+
+            // Pulse animation
+            rule(".pulse") {
+                put("animation", "pulse 2s ease-in-out infinite")
+            }
+
+            keyframes("pulse") {
                 from {
-                    transform { translateY(0.px) }
+                    opacity = 1
+                }
+                to {
+                    opacity = 0.7
                 }
             }
 
             // Circuit animations
             keyframes("pulseLine") {
-                from { opacity = 0.2 }
-                to { opacity = 0.6 }
+                from {
+                    opacity = 0.2
+                }
+                to {
+                    opacity = 0.6
+                }
             }
 
             keyframes("nodePulse") {
                 from {
                     transform { scale(0.8) }
                     boxShadow = BoxShadows().apply {
-                        this += BoxShadow(color = Color("rgba(var(--primary-rgb), 0.5)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 5.px)
+                        this += BoxShadow(color = Color("rgba(var(--primary-rgb), 0.5)"), blurRadius = 5.px)
                     }
                 }
                 to {
                     transform { scale(1.2) }
                     boxShadow = BoxShadows().apply {
-                        this += BoxShadow(color = Color("rgba(var(--primary-rgb), 0.8)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 20.px)
+                        this += BoxShadow(color = Color("rgba(var(--primary-rgb), 0.8)"), blurRadius = 20.px)
                     }
                 }
             }
-            
-            // Move Around animation for skill card backgrounds
+
+            // Orbit animation for skill card backgrounds
             keyframes("moveAround") {
                 from {
                     transform {
@@ -122,17 +90,28 @@ class AnimationStyles : StyleGenerator {
                     }
                 }
             }
-            
-            // Glow pulse for skill icons
-            keyframes("glowPulse") {
+
+            // Type animation for terminal
+            keyframes("blink") {
                 from {
-                    filter = "drop-shadow(0 0 5px rgba(var(--primary-rgb), 0.5))"
+                    opacity = 1
                 }
                 to {
-                    filter = "drop-shadow(0 0 20px rgba(var(--primary-rgb), 0.8))"
+                    opacity = 0
                 }
+            }
+
+            // Glow pulse
+            keyframes("glowPulse") {
                 from {
-                    filter = "drop-shadow(0 0 5px rgba(var(--primary-rgb), 0.5))"
+                    boxShadow = BoxShadows().apply {
+                        this += BoxShadow(color = Color("rgba(var(--primary-rgb), 0.2)"), blurRadius = 5.px)
+                    }
+                }
+                to {
+                    boxShadow = BoxShadows().apply {
+                        this += BoxShadow(color = Color("rgba(var(--primary-rgb), 0.8)"), blurRadius = 20.px)
+                    }
                 }
             }
         }

@@ -28,20 +28,13 @@ class SkillStyles : StyleGenerator {
 
             rule(".circuit-line") {
                 position = Position.absolute
-                background =
-                    "linear-gradient(90deg, rgba(var(--primary-rgb), 0.1), rgba(var(--primary-rgb), 0.6), rgba(var(--primary-rgb), 0.1))"
+                background = "linear-gradient(90deg, rgba(var(--primary-rgb), 0.1), rgba(var(--primary-rgb), 0.6), rgba(var(--primary-rgb), 0.1))"
                 height = 1.px
                 width = 100.pct
                 top = 50.pct
                 left = 0.px
                 put("transform-origin", "center")
-                animation += Animation(
-                    "pulseLine",
-                    3.s,
-                    iterationCount = IterationCount.infinite,
-                    direction = AnimationDirection.alternate,
-                    timing = Timing.easeInOut
-                )
+                put("animation", "pulseLine 3s ease-in-out infinite alternate")
             }
 
             rule(".circuit-line:nth-child(2)") {
@@ -57,19 +50,15 @@ class SkillStyles : StyleGenerator {
             }
 
             rule(".circuit-line:nth-child(4)") {
-                transform {
-                    rotate(45.deg)
-                }
-                put("transform-origin", "left top")
+                transform { rotate(45.deg) }
+                put("transform-origin", "top left")
                 width = 150.pct
                 animationDelay = 1.5.s
             }
 
             rule(".circuit-line:nth-child(5)") {
-                transform {
-                    rotate((-45).deg)
-                }
-                put("transform-origin", "right top")
+                transform { rotate((-45).deg) }
+                put("transform-origin", "top right")
                 width = 150.pct
                 animationDelay = 2.s
             }
@@ -83,15 +72,10 @@ class SkillStyles : StyleGenerator {
                 boxShadow = BoxShadows().apply {
                     this += BoxShadow(color = Color("rgba(var(--primary-rgb), 0.8)"), blurRadius = 15.px)
                 }
-                animation += Animation(
-                    "nodePulse",
-                    2.s,
-                    iterationCount = IterationCount.infinite,
-                    direction = AnimationDirection.alternate,
-                    timing = Timing.easeInOut
-                )
+                put("animation", "nodePulse 2s ease-in-out infinite alternate")
             }
 
+            // Skill cards container
             rule(".skill-cards-container") {
                 display = Display.grid
                 gridTemplateColumns = GridTemplateColumns("repeat(auto-fit, minmax(250px, 1fr))")
@@ -100,6 +84,7 @@ class SkillStyles : StyleGenerator {
                 zIndex = 2
             }
 
+            // Skill card with 3D effect
             rule(".skill-card") {
                 put("perspective", "1000px")
                 height = 280.px
@@ -116,11 +101,10 @@ class SkillStyles : StyleGenerator {
             }
 
             rule(".skill-card:hover .skill-card-inner") {
-                transform {
-                    rotateY(180.deg)
-                }
+                transform { rotateY(180.deg) }
             }
 
+            // Card faces
             rule(".skill-card-front, .skill-card-back") {
                 position = Position.absolute
                 width = 100.pct
@@ -136,6 +120,9 @@ class SkillStyles : StyleGenerator {
                 background = "linear-gradient(135deg, rgba(16, 16, 30, 0.7) 0%, rgba(30, 30, 50, 0.7) 100%)"
                 backdropFilter = "blur(10px)"
                 border = Border(1.px, BorderStyle.solid, Color("rgba(var(--primary-rgb), 0.2)"))
+                boxShadow = BoxShadows().apply {
+                    this += BoxShadow(color = Color("rgba(0, 0, 0, 0.2)"), offsetY = 10.px, blurRadius = 25.px)
+                }
                 put("box-shadow", "0 10px 25px rgba(0, 0, 0, 0.2), inset 0 0 40px rgba(var(--primary-rgb), 0.1)")
                 overflow = Overflow.hidden
             }
@@ -145,25 +132,25 @@ class SkillStyles : StyleGenerator {
             }
 
             rule(".skill-card-back") {
-                transform {
-                    rotateY(180.deg)
-                }
+                transform { rotateY(180.deg) }
                 zIndex = 1
             }
 
+            // Skill logo
             rule(".skill-logo") {
                 width = 100.px
                 height = 100.px
                 objectFit = ObjectFit.contain
                 marginBottom = 20.px
                 filter = "drop-shadow(0 0 10px rgba(var(--primary-rgb), 0.7))"
-                transition += Transition("all", 0.3.s, Timing.ease)
+                put("transition", "all 0.3s ease")
             }
 
             rule(".skill-card:hover .skill-logo") {
                 filter = "drop-shadow(0 0 15px rgba(var(--primary-rgb), 1))"
             }
 
+            // Skill title and subtitle
             rule(".skill-title") {
                 fontFamily = "var(--font-heading)"
                 fontSize = 1.5.rem
@@ -181,6 +168,12 @@ class SkillStyles : StyleGenerator {
                 marginBottom = 15.px
             }
 
+            rule(".skill-details") {
+                fontSize = 0.9.rem
+                color = Color("var(--text-secondary)")
+                lineHeight = LineHeight("1.6")
+            }
+
             // Glowing corner accents
             rule(".skill-card-front::before, .skill-card-front::after, .skill-card-back::before, .skill-card-back::after") {
                 content = QuotedString("")
@@ -189,7 +182,7 @@ class SkillStyles : StyleGenerator {
                 height = 40.px
                 borderColor = Color("var(--primary)")
                 opacity = 0.6
-                transition += Transition("all", 0.3.s, Timing.ease)
+                transition+=Transition(property = "all", duration = 0.3.s, timing = Timing.ease)
             }
 
             rule(".skill-card-front::before") {
@@ -245,22 +238,8 @@ class SkillStyles : StyleGenerator {
             rule(".skill-card-bg-circle") {
                 position = Position.absolute
                 borderRadius = 50.pct
-                background =
-                    "radial-gradient(circle, rgba(var(--primary-rgb), 0.3) 0%, rgba(var(--primary-rgb), 0) 70%)"
-                put("animation", "moveAround 20s infinite linear")
-            }
-
-            keyframes("moveAround") {
-                from {
-                    transform {
-                        translate(0.px, 0.px)
-                    }
-                }
-                to {
-                    transform {
-                        translate(100.pct, 100.pct)
-                    }
-                }
+                background = "radial-gradient(circle, rgba(var(--primary-rgb), 0.3) 0%, rgba(var(--primary-rgb), 0) 70%)"
+                put("animation", "moveAround 20s linear infinite")
             }
 
             rule(".skill-card-bg-circle:nth-child(1)") {
@@ -308,7 +287,7 @@ class SkillStyles : StyleGenerator {
                 }
             }
 
-            // Responsive styling
+            // Media queries
             media("(max-width: 768px)") {
                 rule(".skill-cards-container") {
                     gridTemplateColumns = GridTemplateColumns("repeat(auto-fit, minmax(200px, 1fr))")
