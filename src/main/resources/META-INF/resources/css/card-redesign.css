@@ -8,7 +8,8 @@
 }
 
 .project-card {
-  height: 420px;
+  height: auto;
+  min-height: 650px;
   position: relative;
   border-radius: 12px;
   background: linear-gradient(145deg, rgba(40,40,40,0.7), rgba(30,30,30,0.9));
@@ -53,10 +54,10 @@
 }
 
 .project-content {
-  padding: 20px;
+  padding: 20px 20px 80px 20px;
   display: flex;
   flex-direction: column;
-  height: calc(100% - 200px);
+  flex: 1;
 }
 
 .project-content h3 {
@@ -89,7 +90,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 15px;
+  margin-bottom: 35px;
 }
 
 .tech-pill {
@@ -110,7 +111,8 @@
 .project-links {
   display: flex;
   gap: 15px;
-  margin-top: auto;
+  margin-top: 15px;
+  margin-bottom: 50px;
 }
 
 .project-links a {
