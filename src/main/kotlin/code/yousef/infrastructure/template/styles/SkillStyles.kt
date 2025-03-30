@@ -14,53 +14,54 @@ class SkillStyles : StyleGenerator {
                 minHeight = 500.px
             }
 
-            rule(".circuit-lines") {
-                position = Position.absolute
-                top = 0.px
-                left = 0.px
-                width = 100.pct
-                height = 100.pct
-                zIndex = 0
-                opacity = 0.3
-                pointerEvents = PointerEvents.none
-                overflow = Overflow.hidden
-            }
-
             rule(".circuit-line") {
                 position = Position.absolute
-                background = "linear-gradient(90deg, rgba(var(--primary-rgb), 0.1), rgba(var(--primary-rgb), 0.6), rgba(var(--primary-rgb), 0.1))"
+                background =
+                    "linear-gradient(90deg, rgba(var(--primary-rgb), 0.1), rgba(var(--primary-rgb), 0.6), rgba(var(--primary-rgb), 0.1))"
                 height = 1.px
                 width = 100.pct
                 top = 50.pct
                 left = 0.px
                 put("transform-origin", "center")
-                put("animation", "pulseLine 3s ease-in-out infinite alternate")
+                put("animation", "pulseLine 3s infinite alternate ease-in-out")
+            }
+
+            rule(".circuit-line") {
+                position = Position.absolute
+                background =
+                    "linear-gradient(90deg, rgba(var(--primary-rgb), 0.1), rgba(var(--primary-rgb), 0.6), rgba(var(--primary-rgb), 0.1))"
+                height = 1.px
+                width = 100.pct
+                top = 50.pct
+                left = 0.px
+                put("transform-origin", "center")
+                put("animation", "pulseLine 3s infinite alternate ease-in-out")
             }
 
             rule(".circuit-line:nth-child(2)") {
                 top = 35.pct
-                animationDelay = 0.5.s
-                animationDuration = 4.s
+                put("animation-delay", "0.5s")
+                put("animation-duration", "4s")
             }
 
             rule(".circuit-line:nth-child(3)") {
                 top = 65.pct
-                animationDelay = 1.s
-                animationDuration = 3.5.s
+                put("animation-delay", "1s")
+                put("animation-duration", "3.5s")
             }
 
             rule(".circuit-line:nth-child(4)") {
                 transform { rotate(45.deg) }
                 put("transform-origin", "top left")
                 width = 150.pct
-                animationDelay = 1.5.s
+                put("animation-delay", "1.5s")
             }
 
             rule(".circuit-line:nth-child(5)") {
                 transform { rotate((-45).deg) }
                 put("transform-origin", "top right")
                 width = 150.pct
-                animationDelay = 2.s
+                put("animation-delay", "2s")
             }
 
             rule(".circuit-node") {
@@ -69,10 +70,8 @@ class SkillStyles : StyleGenerator {
                 height = 8.px
                 borderRadius = 50.pct
                 backgroundColor = Color("var(--primary)")
-                boxShadow = BoxShadows().apply {
-                    this += BoxShadow(color = Color("rgba(var(--primary-rgb), 0.8)"), blurRadius = 15.px)
-                }
-                put("animation", "nodePulse 2s ease-in-out infinite alternate")
+                put("box-shadow", "0 0 15px rgba(var(--primary-rgb), 0.8)")
+                put("animation", "nodePulse 2s infinite alternate ease-in-out")
             }
 
             // Skill cards container
@@ -109,6 +108,7 @@ class SkillStyles : StyleGenerator {
                 position = Position.absolute
                 width = 100.pct
                 height = 100.pct
+                put("-webkit-backface-visibility", "hidden")
                 put("backface-visibility", "hidden")
                 borderRadius = LinearDimension("var(--border-radius-lg)")
                 display = Display.flex
@@ -118,14 +118,13 @@ class SkillStyles : StyleGenerator {
                 padding = Padding(20.px)
                 background = "rgba(16, 16, 30, 0.7)"
                 background = "linear-gradient(135deg, rgba(16, 16, 30, 0.7) 0%, rgba(30, 30, 50, 0.7) 100%)"
-                backdropFilter = "blur(10px)"
+                put("backdrop-filter", "blur(10px)")
+                put("-webkit-backdrop-filter", "blur(10px)")
                 border = Border(1.px, BorderStyle.solid, Color("rgba(var(--primary-rgb), 0.2)"))
-                boxShadow = BoxShadows().apply {
-                    this += BoxShadow(color = Color("rgba(0, 0, 0, 0.2)"), offsetY = 10.px, blurRadius = 25.px)
-                }
                 put("box-shadow", "0 10px 25px rgba(0, 0, 0, 0.2), inset 0 0 40px rgba(var(--primary-rgb), 0.1)")
                 overflow = Overflow.hidden
             }
+
 
             rule(".skill-card-front") {
                 zIndex = 2
@@ -140,7 +139,7 @@ class SkillStyles : StyleGenerator {
             rule(".skill-logo") {
                 width = 100.px
                 height = 100.px
-                objectFit = ObjectFit.contain
+                put("object-fit", "contain")
                 marginBottom = 20.px
                 filter = "drop-shadow(0 0 10px rgba(var(--primary-rgb), 0.7))"
                 put("transition", "all 0.3s ease")
@@ -182,7 +181,7 @@ class SkillStyles : StyleGenerator {
                 height = 40.px
                 borderColor = Color("var(--primary)")
                 opacity = 0.6
-                transition+=Transition(property = "all", duration = 0.3.s, timing = Timing.ease)
+                put("transition", "all 0.3s ease")
             }
 
             rule(".skill-card-front::before") {
@@ -238,8 +237,9 @@ class SkillStyles : StyleGenerator {
             rule(".skill-card-bg-circle") {
                 position = Position.absolute
                 borderRadius = 50.pct
-                background = "radial-gradient(circle, rgba(var(--primary-rgb), 0.3) 0%, rgba(var(--primary-rgb), 0) 70%)"
-                put("animation", "moveAround 20s linear infinite")
+                background =
+                    "radial-gradient(circle, rgba(var(--primary-rgb), 0.3) 0%, rgba(var(--primary-rgb), 0) 70%)"
+                put("animation", "moveAround 20s infinite linear")
             }
 
             rule(".skill-card-bg-circle:nth-child(1)") {
@@ -247,7 +247,7 @@ class SkillStyles : StyleGenerator {
                 height = 200.px
                 top = (-100).px
                 left = (-100).px
-                animationDuration = 30.s
+                put("animation-duration", "30s")
             }
 
             rule(".skill-card-bg-circle:nth-child(2)") {
@@ -255,8 +255,8 @@ class SkillStyles : StyleGenerator {
                 height = 150.px
                 bottom = (-50).px
                 right = (-50).px
-                animationDuration = 20.s
-                animationDirection = AnimationDirection.reverse
+                put("animation-duration", "20s")
+                put("animation-direction", "reverse")
             }
 
             // Detail list on back

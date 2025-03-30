@@ -14,6 +14,10 @@ class AnimationStyles : StyleGenerator {
             }
 
             keyframes("fadeIn") {
+                from {
+                    opacity = 0
+                    transform { translateY(20.px) }
+                }
                 to {
                     opacity = 1
                     transform { translateY(0.px) }
@@ -26,11 +30,14 @@ class AnimationStyles : StyleGenerator {
             }
 
             keyframes("floating") {
-                from {
+                0 {
                     transform { translateY(0.px) }
                 }
-                to {
+                50 {
                     transform { translateY((-10).px) }
+                }
+                100 {
+                    transform { translateY(0.px) }
                 }
             }
 
@@ -43,8 +50,11 @@ class AnimationStyles : StyleGenerator {
                 from {
                     opacity = 1
                 }
-                to {
+                50 {
                     opacity = 0.7
+                }
+                to {
+                    opacity = 1
                 }
             }
 
@@ -61,33 +71,21 @@ class AnimationStyles : StyleGenerator {
             keyframes("nodePulse") {
                 from {
                     transform { scale(0.8) }
-                    boxShadow = BoxShadows().apply {
-                        this += BoxShadow(color = Color("rgba(var(--primary-rgb), 0.5)"), blurRadius = 5.px)
-                    }
+                    put("box-shadow", "0 0 5px rgba(var(--primary-rgb), 0.5)")
                 }
                 to {
                     transform { scale(1.2) }
-                    boxShadow = BoxShadows().apply {
-                        this += BoxShadow(color = Color("rgba(var(--primary-rgb), 0.8)"), blurRadius = 20.px)
-                    }
+                    put("box-shadow", "0 0 20px rgba(var(--primary-rgb), 0.8)")
                 }
             }
 
             // Orbit animation for skill card backgrounds
             keyframes("moveAround") {
                 from {
-                    transform {
-                        rotate(0.deg)
-                        translateX(30.px)
-                        rotate(0.deg)
-                    }
+                    put("transform", "rotate(0deg) translateX(30px) rotate(0deg)")
                 }
                 to {
-                    transform {
-                        rotate(360.deg)
-                        translateX(30.px)
-                        rotate((-360).deg)
-                    }
+                    put("transform", "rotate(360deg) translateX(30px) rotate(-360deg)")
                 }
             }
 
@@ -104,14 +102,10 @@ class AnimationStyles : StyleGenerator {
             // Glow pulse
             keyframes("glowPulse") {
                 from {
-                    boxShadow = BoxShadows().apply {
-                        this += BoxShadow(color = Color("rgba(var(--primary-rgb), 0.2)"), blurRadius = 5.px)
-                    }
+                    put("box-shadow", "0 0 5px rgba(var(--primary-rgb), 0.2)")
                 }
                 to {
-                    boxShadow = BoxShadows().apply {
-                        this += BoxShadow(color = Color("rgba(var(--primary-rgb), 0.8)"), blurRadius = 20.px)
-                    }
+                    put("box-shadow", "0 0 20px rgba(var(--primary-rgb), 0.8)")
                 }
             }
         }
