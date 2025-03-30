@@ -64,7 +64,7 @@ class StylesheetGenerator {
                 }
             }
 
-            // Theme toggle switch
+            // Theme toggle styling
             rule(".theme-toggle") {
                 position = Position.fixed
                 bottom = 20.px
@@ -86,7 +86,40 @@ class StylesheetGenerator {
                     this += Transition("all", 0.3.s, Timing.ease)
                 }
             }
-            
+
+            // Performance toggle styling - position to the LEFT of theme toggle
+            rule(".performance-toggle") {
+                position = Position.fixed
+                bottom = 20.px  // Same bottom as theme toggle
+                right = 90.px  // Position it to the left of theme toggle
+                zIndex = 1000
+                height = 50.px  // Same height as theme toggle
+                display = Display.flex
+                alignItems = Align.center
+                padding = Padding(10.px, 15.px)
+                borderRadius = 25.px
+                backgroundColor = Color("var(--surface)")
+                border = Border(2.px, BorderStyle.solid, Color("var(--glass-border)"))
+                cursor = Cursor.pointer
+                boxShadow = BoxShadows().apply {
+                    this += BoxShadow(color = Color("var(--cyber-cyan)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 10.px)
+                }
+                color = Color("var(--text)")
+                fontSize = 14.px
+                fontWeight = FontWeight.bold
+            }
+
+            // Make sure both SVGs are visible but with proper coloring
+            rule(".sun") {
+                put("fill", "#F9D71C")  // Yellowish color for sun
+                put("stroke", "#F9D71C")
+            }
+
+            rule(".moon") {
+                put("fill", "#CCCCFF")  // Light purple/blue for moon
+                put("stroke", "#CCCCFF")
+            }
+
             rule(".theme-toggle:hover") {
                 transform {
                     scale(1.1)
@@ -104,8 +137,19 @@ class StylesheetGenerator {
                 }
             }
             
-            rule("[data-theme='light'] .theme-toggle .moon") {
+            rule("[data-theme='light'] .moon") {
                 display = Display.none
+            }
+            rule("[data-theme='light'] .sun") {
+                display = Display.block
+            }
+
+            rule(":not([data-theme='light']) .sun") {
+                display = Display.none
+            }
+
+            rule(":not([data-theme='light']) .moon") {
+                display = Display.block
             }
             
             rule("[data-theme='light'] .theme-toggle") {
@@ -114,10 +158,6 @@ class StylesheetGenerator {
                 boxShadow = BoxShadows().apply {
                     this += BoxShadow(color = Color("rgba(0, 170, 255, 0.8)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 15.px)
                 }
-            }
-            
-            rule(":not([data-theme='light']) .theme-toggle .sun") {
-                display = Display.none
             }
 
             // Canvas background
@@ -829,24 +869,7 @@ class StylesheetGenerator {
                 height = LinearDimension.auto
                 minHeight = 200.px
             }
-            
-            rule(".performance-toggle") {
-                position = Position.fixed
-                bottom = 20.px
-                right = 80.px
-                zIndex = 1000
-                backdropFilter = "blur(12px)"
-                backgroundColor = Color("var(--surface)")
-                border = Border(1.px, BorderStyle.solid, Color("var(--glass-border)"))
-                borderRadius = 5.px
-                padding = Padding(5.px, 10.px)
-                fontSize = 0.8.rem
-                color = Color("var(--text)")
-                cursor = Cursor.pointer
-                transition = Transitions().apply {
-                    this += Transition("all", 0.3.s, Timing.ease)
-                }
-            }
+
         }.toString()
     }
 }
