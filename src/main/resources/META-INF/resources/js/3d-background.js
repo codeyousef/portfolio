@@ -1,5 +1,5 @@
 // Enhanced Three.js setup for Sci-Fi Cyberwave theme
-let camera, scene, renderer;
+let camera, scene, renderer, controls;
 let isLowPerformanceDevice = false;
 let lastFrameTime = 0;
 let frameCount = 0;
@@ -89,7 +89,6 @@ function init() {
   camera.position.z = 30;
   
   // Add OrbitControls with restricted polar angle - with error handling
-  let controls;
   try {
     if (typeof THREE.OrbitControls === 'function') {
       controls = new THREE.OrbitControls(camera, canvas);
