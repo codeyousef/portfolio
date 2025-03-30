@@ -67,7 +67,7 @@ class StylesheetGenerator {
             // Theme toggle switch
             rule(".theme-toggle") {
                 position = Position.fixed
-                top = 20.px
+                bottom = 20.px
                 right = 20.px
                 zIndex = 1000
                 width = 50.px
@@ -99,7 +99,6 @@ class StylesheetGenerator {
             rule(".theme-toggle svg") {
                 width = 24.px
                 height = 24.px
-                put("fill", "var(--text)")
                 transition = Transitions().apply {
                     this += Transition("transform", 0.5.s, Timing.easeInOut)
                 }
@@ -107,6 +106,14 @@ class StylesheetGenerator {
             
             rule("[data-theme='light'] .theme-toggle .moon") {
                 display = Display.none
+            }
+            
+            rule("[data-theme='light'] .theme-toggle") {
+                borderColor = Color("rgba(0, 170, 255, 0.8)")
+                backgroundColor = Color("rgba(255, 255, 255, 0.9)")
+                boxShadow = BoxShadows().apply {
+                    this += BoxShadow(color = Color("rgba(0, 170, 255, 0.8)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 15.px)
+                }
             }
             
             rule(":not([data-theme='light']) .theme-toggle .sun") {
@@ -826,7 +833,7 @@ class StylesheetGenerator {
             rule(".performance-toggle") {
                 position = Position.fixed
                 bottom = 20.px
-                right = 20.px
+                right = 80.px
                 zIndex = 1000
                 backdropFilter = "blur(12px)"
                 backgroundColor = Color("var(--surface)")

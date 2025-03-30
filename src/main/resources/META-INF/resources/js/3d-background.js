@@ -88,13 +88,23 @@ function init() {
   camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 1000);
   camera.position.z = 30;
   
-  // Add OrbitControls with restricted polar angle
-  const controls = new THREE.OrbitControls(camera, canvas);
-  controls.enableZoom = false;
-  controls.enablePan = false;
-  controls.maxPolarAngle = Math.PI / 3;
-  controls.minPolarAngle = Math.PI / 6;
-  controls.update();
+  // Add OrbitControls with restricted polar angle - with error handling
+  let controls;
+  try {
+    if (typeof THREE.OrbitControls === 'function') {
+      controls = new THREE.OrbitControls(camera, canvas);
+      controls.enableZoom = false;
+      controls.enablePan = false;
+      controls.maxPolarAngle = Math.PI / 3;
+      controls.minPolarAngle = Math.PI / 6;
+      controls.update();
+      console.log('OrbitControls initialized successfully');
+    } else {
+      console.warn('THREE.OrbitControls is not available');
+    }
+  } catch (error) {
+    console.error('Error initializing OrbitControls:', error);
+  }
   
   // Create dynamic grid
   createDynamicGrid();
@@ -744,6 +754,11 @@ function animate(timestamp) {
   // Force garbage collection occasionally by nullifying and recreating objects
   if (timestamp - lastGcTime > 10000) { // Every 10 seconds
     lastGcTime = timestamp;
+  }
+  
+  // Update controls if available
+  if (controls && typeof controls.update === 'function') {
+    controls.update();
   }
   
   const deltaTime = clock.getDelta();
