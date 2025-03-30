@@ -49,14 +49,14 @@ class PortfolioTemplates {
                         a(href = "#contact", classes = "cta-button secondary") { +"Get In Touch" }
                     }
                 }
-                
+
                 div(classes = "hero-glow") {}
                 div(classes = "hero-glow-2") {}
             }
-            
+
             // Content divider
             div(classes = "content-divider")
-            
+
             // Projects section
             section(classes = "section") {
                 id = "projects"
@@ -66,16 +66,16 @@ class PortfolioTemplates {
                         +"Explore my latest work showcasing innovative solutions and cutting-edge technologies."
                     }
                 }
-                
+
                 div(classes = "projects-container") {
                     // Add projects directly since we already have them
                     unsafe { +buildProjectsSection(projectEntities) }
                 }
             }
-            
+
             // Content divider
             div(classes = "content-divider")
-            
+
             // Skills section
             section(classes = "section") {
                 id = "skills"
@@ -83,7 +83,7 @@ class PortfolioTemplates {
                     h2(classes = "section-title") { +"Technical Skills" }
                     p(classes = "section-desc") { +"Advanced technologies powering my development stack" }
                 }
-                
+
                 div(classes = "tech-circuit") {
                     // Circuit lines and nodes
                     div(classes = "circuit-lines") {
@@ -92,7 +92,7 @@ class PortfolioTemplates {
                         div(classes = "circuit-line") {}
                         div(classes = "circuit-line") {}
                         div(classes = "circuit-line") {}
-                        
+
                         // Circuit nodes
                         div(classes = "circuit-node") { attributes["style"] = "top: 35%; left: 20%;" }
                         div(classes = "circuit-node") { attributes["style"] = "top: 50%; left: 50%;" }
@@ -103,7 +103,7 @@ class PortfolioTemplates {
                         div(classes = "circuit-node") { attributes["style"] = "top: 15%; left: 35%;" }
                         div(classes = "circuit-node") { attributes["style"] = "top: 85%; left: 70%;" }
                     }
-                    
+
                     // Skill cards
                     div(classes = "skill-cards-container") {
                         // Kotlin
@@ -114,10 +114,15 @@ class PortfolioTemplates {
                                         div(classes = "skill-card-bg-circle") {}
                                         div(classes = "skill-card-bg-circle") {}
                                     }
-                                    img(src = "https://play-lh.googleusercontent.com/jf-wUvZHEVzkyRSiCQiv1IxGsQ4bi0FeKYpVAb5hqkgIIGJqRTGSQ87Q_hbuCJgTsIQ", alt = "Kotlin", classes = "skill-logo") {}
+                                    img(
+                                        src = "https://play-lh.googleusercontent.com/jf-wUvZHEVzkyRSiCQiv1IxGsQ4bi0FeKYpVAb5hqkgIIGJqRTGSQ87Q_hbuCJgTsIQ",
+                                        alt = "Kotlin",
+                                        classes = "skill-logo"
+                                    ) {}
                                     h3(classes = "skill-title") { +"Kotlin" }
                                     p(classes = "skill-subtitle") { +"Modern JVM Language" }
                                 }
+
                                 div(classes = "skill-card-back") {
                                     h3(classes = "skill-title") { +"Kotlin" }
                                     ul(classes = "skill-detail-list") {
@@ -129,146 +134,10 @@ class PortfolioTemplates {
                                 }
                             }
                         }
-                        
-                        // Kotlin Compose Multiplatform
-                        div(classes = "skill-card") {
-                            div(classes = "skill-card-inner") {
-                                div(classes = "skill-card-front") {
-                                    div(classes = "skill-card-bg") {
-                                        div(classes = "skill-card-bg-circle") {}
-                                        div(classes = "skill-card-bg-circle") {}
-                                    }
-                                    img(src = "https://developer.android.com/static/images/jetpack/compose-tutorial/compose-logo.svg", alt = "Compose Multiplatform", classes = "skill-logo") {}
-                                    h3(classes = "skill-title") { +"Compose" }
-                                    p(classes = "skill-subtitle") { +"Multiplatform UI Framework" }
-                                }
-                                div(classes = "skill-card-back") {
-                                    h3(classes = "skill-title") { +"Compose Multiplatform" }
-                                    ul(classes = "skill-detail-list") {
-                                        li(classes = "skill-detail-item") { +"Declarative UI approach" }
-                                        li(classes = "skill-detail-item") { +"Share UI across platforms" }
-                                        li(classes = "skill-detail-item") { +"Android, iOS, and desktop" }
-                                        li(classes = "skill-detail-item") { +"Modern UI development pattern" }
-                                    }
-                                }
-                            }
-                        }
-                        
-                        // Quarkus/Spring Boot
-                        div(classes = "skill-card") {
-                            div(classes = "skill-card-inner") {
-                                div(classes = "skill-card-front") {
-                                    div(classes = "skill-card-bg") {
-                                        div(classes = "skill-card-bg-circle") {}
-                                        div(classes = "skill-card-bg-circle") {}
-                                    }
-                                    div {
-                                        attributes["style"] = "display: flex; justify-content: center; align-items: center; width: 100px; height: 100px; margin-bottom: 20px;"
-                                        img(src = "https://design.jboss.org/quarkus/logo/final/SVG/quarkus_logo_horizontal_rgb_default.svg", alt = "Quarkus", classes = "skill-logo") {
-                                            attributes["style"] = "width: 80px; height: auto; margin-right: -30px;"
-                                        }
-                                        img(src = "https://spring.io/img/spring.svg", alt = "Spring Boot", classes = "skill-logo") {
-                                            attributes["style"] = "width: 60px; height: auto; margin-left: -30px;"
-                                        }
-                                    }
-                                    h3(classes = "skill-title") { +"Quarkus/Spring" }
-                                    p(classes = "skill-subtitle") { +"Backend Frameworks" }
-                                }
-                                div(classes = "skill-card-back") {
-                                    h3(classes = "skill-title") { +"Quarkus/Spring Boot" }
-                                    ul(classes = "skill-detail-list") {
-                                        li(classes = "skill-detail-item") { +"Fast startup & low memory" }
-                                        li(classes = "skill-detail-item") { +"Microservices architecture" }
-                                        li(classes = "skill-detail-item") { +"Reactive programming" }
-                                        li(classes = "skill-detail-item") { +"Cloud-native development" }
-                                    }
-                                }
-                            }
-                        }
-                        
-                        // Android/iOS
-                        div(classes = "skill-card") {
-                            div(classes = "skill-card-inner") {
-                                div(classes = "skill-card-front") {
-                                    div(classes = "skill-card-bg") {
-                                        div(classes = "skill-card-bg-circle") {}
-                                        div(classes = "skill-card-bg-circle") {}
-                                    }
-                                    div {
-                                        attributes["style"] = "display: flex; justify-content: center; align-items: center; width: 100px; height: 100px; margin-bottom: 20px;"
-                                        img(src = "https://developer.android.com/static/images/brand/Android_Robot.svg", alt = "Android", classes = "skill-logo") {
-                                            attributes["style"] = "width: 70px; height: auto; margin-right: -20px;"
-                                        }
-                                        img(src = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/IOS_logo.svg/512px-IOS_logo.svg.png", alt = "iOS", classes = "skill-logo") {
-                                            attributes["style"] = "width: 70px; height: auto; margin-left: -20px;"
-                                        }
-                                    }
-                                    h3(classes = "skill-title") { +"Android/iOS" }
-                                    p(classes = "skill-subtitle") { +"Mobile Development" }
-                                }
-                                div(classes = "skill-card-back") {
-                                    h3(classes = "skill-title") { +"Android/iOS" }
-                                    ul(classes = "skill-detail-list") {
-                                        li(classes = "skill-detail-item") { +"Native app development" }
-                                        li(classes = "skill-detail-item") { +"Cross-platform solutions" }
-                                        li(classes = "skill-detail-item") { +"Material Design & SwiftUI" }
-                                        li(classes = "skill-detail-item") { +"App store optimization" }
-                                    }
-                                }
-                            }
-                        }
-                        
-                        // Vue/Nuxt
-                        div(classes = "skill-card") {
-                            div(classes = "skill-card-inner") {
-                                div(classes = "skill-card-front") {
-                                    div(classes = "skill-card-bg") {
-                                        div(classes = "skill-card-bg-circle") {}
-                                        div(classes = "skill-card-bg-circle") {}
-                                    }
-                                    img(src = "https://vuejs.org/images/logo.png", alt = "Vue.js", classes = "skill-logo") {}
-                                    h3(classes = "skill-title") { +"Vue/Nuxt" }
-                                    p(classes = "skill-subtitle") { +"Frontend Frameworks" }
-                                }
-                                div(classes = "skill-card-back") {
-                                    h3(classes = "skill-title") { +"Vue/Nuxt" }
-                                    ul(classes = "skill-detail-list") {
-                                        li(classes = "skill-detail-item") { +"Component-based architecture" }
-                                        li(classes = "skill-detail-item") { +"Server-side rendering" }
-                                        li(classes = "skill-detail-item") { +"State management with Pinia" }
-                                        li(classes = "skill-detail-item") { +"Vue 3 Composition API" }
-                                    }
-                                }
-                            }
-                        }
-                        
-                        // PostgreSQL
-                        div(classes = "skill-card") {
-                            div(classes = "skill-card-inner") {
-                                div(classes = "skill-card-front") {
-                                    div(classes = "skill-card-bg") {
-                                        div(classes = "skill-card-bg-circle") {}
-                                        div(classes = "skill-card-bg-circle") {}
-                                    }
-                                    img(src = "https://www.postgresql.org/media/img/about/press/elephant.png", alt = "PostgreSQL", classes = "skill-logo") {}
-                                    h3(classes = "skill-title") { +"PostgreSQL" }
-                                    p(classes = "skill-subtitle") { +"Advanced Database" }
-                                }
-                                div(classes = "skill-card-back") {
-                                    h3(classes = "skill-title") { +"PostgreSQL" }
-                                    ul(classes = "skill-detail-list") {
-                                        li(classes = "skill-detail-item") { +"ACID compliant transactions" }
-                                        li(classes = "skill-detail-item") { +"JSON & NoSQL capabilities" }
-                                        li(classes = "skill-detail-item") { +"Advanced indexing strategies" }
-                                        li(classes = "skill-detail-item") { +"High performance scaling" }
-                                    }
-                                }
-                            }
-                        }
                     }
                 }
             }
-            
+
             // Contact section
             section(classes = "section") {
                 id = "contact"
@@ -278,16 +147,18 @@ class PortfolioTemplates {
                         +"Have a project in mind? Let's discuss how we can work together to bring your ideas to life."
                     }
                 }
-                
+
                 div(classes = "contact-container glass-morphic") {
                     div(classes = "contact-item") {
                         span(classes = "contact-icon") { +"📧" }
                         a(href = "mailto:contact@example.com") { +"contact@example.com" }
                     }
+
                     div(classes = "contact-item") {
                         span(classes = "contact-icon") { +"🔗" }
                         a(href = "https://github.com/yourusername", target = "_blank") { +"GitHub" }
                     }
+
                     div(classes = "contact-item") {
                         span(classes = "contact-icon") { +"💼" }
                         a(href = "https://linkedin.com/in/yourusername", target = "_blank") { +"LinkedIn" }
@@ -300,19 +171,28 @@ class PortfolioTemplates {
 
     /**
      * Builds the projects section using Kotlin HTML DSL with glass-morphic cards as specified
+     * Applies inline styles to ensure grid layout works regardless of CSS conflicts
      */
     fun buildProjectsSection(projectEntities: List<ProjectEntity>): String {
         val writer = StringWriter()
-        writer.appendHTML().div(classes = "projects-grid") {
+        writer.appendHTML().div {
+            // Apply inline styles to ensure grid layout works correctly
+            attributes["class"] = "projects-grid"
+            attributes["style"] =
+                "display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px; padding: 20px 0;"
+
             projectEntities.forEach { project ->
                 div(classes = "project-card") {
                     // Project image
                     div(classes = "project-image") {
-                        img(src = "https://placehold.co/600x400/020024/00f7ff?text=${project.title}", alt = project.title) {
+                        img(
+                            src = "https://placehold.co/600x400/020024/00f7ff?text=${project.title}",
+                            alt = project.title
+                        ) {
                             attributes["loading"] = "lazy"
                         }
                     }
-                    
+
                     // Project content
                     div(classes = "project-content") {
                         h3(classes = "project-title") { +project.title }
