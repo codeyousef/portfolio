@@ -1,12 +1,9 @@
 package code.yousef.presentation.resource
 
-import code.yousef.infrastructure.template.styles.StylesheetGenerator
 import jakarta.enterprise.context.ApplicationScoped
-import jakarta.inject.Inject
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.Path
 import jakarta.ws.rs.Produces
-import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
 import java.io.InputStream
 import org.jboss.logging.Logger
@@ -14,18 +11,15 @@ import org.jboss.logging.Logger
 @Path("/css")
 @ApplicationScoped
 class StyleResource {
-
-    @Inject
-    lateinit var stylesheetRegistry: StylesheetGenerator
     
     private val logger = Logger.getLogger(StyleResource::class.java)
     
     /**
-     * Serves the static CSS file first, falling back to dynamically generated CSS
+     * Serves the static CSS file
      */
     @GET
     @Path("/styles.css")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces("text/css")
     fun getStaticCss(): Response {
         try {
             logger.info("Serving CSS from StyleResource")
@@ -40,38 +34,16 @@ class StyleResource {
                     .header("Content-Type", "text/css;charset=UTF-8")
                     .build()
             } else {
-                // Fall back to dynamically generated CSS
-                logger.info("Static CSS not found, generating dynamically")
-                val css = stylesheetRegistry.generateStyles()
-                return Response.ok(css)
-                    .header("Content-Type", "text/css;charset=UTF-8")
+                // Return error if static CSS file is missing
+                logger.error("Static CSS file not found")
+                return Response.serverError()
+                    .entity("Static CSS file not found")
                     .build()
             }
         } catch (e: Exception) {
             logger.error("Error serving CSS", e)
             return Response.serverError()
                 .entity("Error serving CSS: ${e.message}")
-                .build()
-        }
-    }
-
-    /**
-     * Always serves dynamically generated CSS
-     */
-    @GET
-    @Path("/dynamic.css")
-    @Produces(MediaType.TEXT_PLAIN)
-    fun getDynamicCss(): Response {
-        try {
-            logger.info("CSS endpoint called, generating dynamic styles")
-            val css = stylesheetRegistry.generateStyles()
-            return Response.ok(css)
-                .header("Content-Type", "text/css;charset=UTF-8")
-                .build()
-        } catch (e: Exception) {
-            logger.error("Error generating CSS", e)
-            return Response.serverError()
-                .entity("Error generating CSS: ${e.message}")
                 .build()
         }
     }

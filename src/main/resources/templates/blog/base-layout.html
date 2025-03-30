@@ -21,7 +21,7 @@
 
 <main>
   {#if content??}
-  {content|raw}
+  {content.safe}
   {/if}
 </main>
 

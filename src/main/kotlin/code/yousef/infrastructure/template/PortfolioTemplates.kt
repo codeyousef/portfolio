@@ -85,11 +85,11 @@ class PortfolioTemplates {
                                 +"    skills = "
                                 span(classes = "code-function") { +"listOf" }
                                 +"("
-                                span(classes = "code-string") { +"\"Kotlin\"" }
+                                span(classes = "code-string") { +"\"Kotlin Multiplatform\"" }
                                 +", "
-                                span(classes = "code-string") { +"\"Quarkus\"" }
+                                span(classes = "code-string") { +"\"Quarkus/Spring Boot\"" }
                                 +", "
-                                span(classes = "code-string") { +"\"React\"" }
+                                span(classes = "code-string") { +"\"VueJS\"" }
                                 +")"
                             }
                             div(classes = "code-line") { +"  )" }
