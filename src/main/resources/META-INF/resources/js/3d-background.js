@@ -6,7 +6,7 @@ let windowHalfX = window.innerWidth / 2;
 let windowHalfY = window.innerHeight / 2;
 let terminalGroup, gridMesh;
 let clock = new THREE.Clock();
-let skills = ["Kotlin", "Quarkus", "React", "WebGL", "Cloud Native", "REST APIs"];
+let terminalSkills = ["Kotlin", "Quarkus", "React", "WebGL", "Cloud Native", "REST APIs"];
 let currentSkill = 0;
 let typedText = "";
 let isTyping = true;
@@ -41,8 +41,11 @@ const COLORS = {
 };
 
 function init() {
+  console.log('3D background init called');
+  
   // Canvas setup
   const canvas = document.getElementById('bg-canvas');
+  console.log('bg-canvas element:', canvas);
   
   // Scene setup
   scene = new THREE.Scene();
@@ -65,6 +68,7 @@ function init() {
   
   // Create floating 3D terminal
   createFloatingTerminal();
+  console.log('Created floating terminal:', terminalGroup);
   
   // Add star particles
   addStars();
@@ -246,32 +250,23 @@ function createFloatingTerminal() {
   // Load font for TextGeometry
   const fontLoader = new THREE.FontLoader();
   fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function(font) {
-    // Create terminal title
-    const titleGeometry = new THREE.TextGeometry('SYSTEM TERMINAL', {
-      font: font,
-      size: 1,
-      height: 0.1
-    });
+    console.log('Font loaded, creating terminal elements');
     
+    // Create terminal title - simplified to box
+    const titleWidth = 15;
+    const titleGeometry = new THREE.BoxGeometry(titleWidth, 1, 0.1);
     const titleMaterial = new THREE.MeshBasicMaterial({
       color: themeIsDark ? COLORS.dark.cyberCyan : COLORS.light.cyberCyan
     });
     
-    titleGeometry.computeBoundingBox();
-    const titleWidth = titleGeometry.boundingBox.max.x - titleGeometry.boundingBox.min.x;
-    
     const titleMesh = new THREE.Mesh(titleGeometry, titleMaterial);
-    titleMesh.position.set(-titleWidth / 2, 6.5, 0.6);
+    titleMesh.position.set(0, 6.5, 0.6);
     titleMesh.userData.type = 'text';
+    titleMesh.userData.text = 'SYSTEM TERMINAL';
     terminalGroup.add(titleMesh);
     
     // Create prompt
-    const promptGeometry = new THREE.TextGeometry('>', {
-      font: font,
-      size: 1,
-      height: 0.1
-    });
-    
+    const promptGeometry = new THREE.BoxGeometry(1, 1, 0.1);
     const promptMaterial = new THREE.MeshBasicMaterial({
       color: themeIsDark ? COLORS.dark.neonGreen : COLORS.light.neonGreen
     });
@@ -294,23 +289,21 @@ function createTerminalText(font, text) {
     }
   });
   
-  // Create new text geometry
-  const textGeometry = new THREE.TextGeometry(text + "_", {
-    font: font,
-    size: 1.2,
-    height: 0.1
-  });
+  console.log('Creating terminal text:', text);
   
-  textGeometry.computeBoundingBox();
+  // Simple text box instead of TextGeometry
+  const textWidth = text.length * 0.8;
+  const textGeometry = new THREE.BoxGeometry(textWidth, 1, 0.1);
   
   const textMaterial = new THREE.MeshBasicMaterial({
     color: themeIsDark ? COLORS.dark.cyberCyan : COLORS.light.cyberCyan
   });
   
   const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-  textMesh.position.set(-11, 3, 0.6);
+  textMesh.position.set(-13 + textWidth/2, 3, 0.6);
   textMesh.userData.isText = true;
   textMesh.userData.type = 'text';
+  textMesh.userData.text = text; // Store the text
   
   terminalGroup.add(textMesh);
 }
@@ -391,24 +384,34 @@ function addLightBeams() {
 
 function initProjectModels() {
   // Find all model containers
+  console.log('Initializing project models');
   const modelContainers = document.querySelectorAll('.model-container');
+  console.log('Found model containers:', modelContainers.length);
+  
+  if (modelContainers.length === 0) {
+    console.log('No model containers found');
+    return;
+  }
   
   modelContainers.forEach((container, index) => {
-    // Create a separate scene for each model
-    const modelScene = new THREE.Scene();
+    console.log('Processing container:', index);
     
-    // Create a camera for this model
-    const modelCamera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 1000);
-    modelCamera.position.z = 5;
-    
-    // Create a renderer
-    const modelRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    modelRenderer.setSize(container.clientWidth, container.clientHeight);
-    container.appendChild(modelRenderer.domElement);
-    
-    // Create dynamic geometries based on index
-    let geometry;
-    switch(index % 4) {
+    try {
+      // Create a separate scene for each model
+      const modelScene = new THREE.Scene();
+      
+      // Create a camera for this model
+      const modelCamera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 1000);
+      modelCamera.position.z = 5;
+      
+      // Create a renderer
+      const modelRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      modelRenderer.setSize(container.clientWidth, container.clientHeight);
+      container.appendChild(modelRenderer.domElement);
+      
+      // Create dynamic geometries based on index
+      let geometry;
+      switch(index % 4) {
       case 0:
         // Sphere
         geometry = new THREE.SphereGeometry(1.5, 32, 32);
@@ -522,6 +525,12 @@ function onWindowResize() {
 function updateTerminalTyping(deltaTime) {
   if (!terminalGroup) return;
   
+  // Check if skills array is valid
+  if (!terminalSkills || terminalSkills.length === 0 || currentSkill >= terminalSkills.length) {
+    console.warn('Terminal skills not properly initialized');
+    return;
+  }
+  
   // Get font loader
   const fontLoader = new THREE.FontLoader();
   
@@ -532,8 +541,8 @@ function updateTerminalTyping(deltaTime) {
     if (lastTypingTime > typingSpeed) {
       lastTypingTime = 0;
       
-      if (typedText.length < skills[currentSkill].length) {
-        typedText += skills[currentSkill][typedText.length];
+      if (typedText.length < terminalSkills[currentSkill].length) {
+        typedText += terminalSkills[currentSkill][typedText.length];
         
         fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function(font) {
           createTerminalText(font, typedText);
@@ -543,13 +552,16 @@ function updateTerminalTyping(deltaTime) {
         setTimeout(() => {
           isTyping = false;
           typedText = "";
-          currentSkill = (currentSkill + 1) % skills.length;
+          // Make sure we stay within bounds
+          currentSkill = (currentSkill + 1) % terminalSkills.length;
           
           // Create particle explosion effect on skill change
           createParticleExplosion();
           
           setTimeout(() => {
             isTyping = true;
+            // Make sure we stay within bounds
+            currentSkill = (currentSkill + 1) % terminalSkills.length;
           }, 1000);
         }, 2000);
       }
@@ -709,6 +721,7 @@ function animate() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM loaded in 3d-background.js');
   // Check for theme
   themeIsDark = !document.body.hasAttribute('data-theme') || 
                document.body.getAttribute('data-theme') !== 'light';

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terminal Test</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap">
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: 'Space Grotesk', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    
+    .terminal-container {
+      position: relative;
+      width: 700px;
+      height: 300px;
+      border: 2px solid #00ffff;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #00ffff;
+      overflow: hidden;
+    }
+  </style>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.150.1/three.min.js"></script>
+  <script src="/js/lib/OrbitControls.nonmodule.js"></script>
+  <script src="/js/lib/FontLoader.js"></script>
+  <script src="/js/lib/TextGeometry.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="terminal-container" id="terminal-container">
+      <div style="background-color: rgba(0,255,255,0.5); padding: 20px; text-align: center; border-radius: 8px; margin: 10px;">
+        Terminal Placeholder
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Simplified terminal display
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM loaded');
+      const terminalContainer = document.getElementById('terminal-container');
+      console.log('Terminal container:', terminalContainer);
+      
+      let scene, camera, renderer;
+      let terminalGroup;
+      let clock = new THREE.Clock();
+      
+      function init() {
+        console.log('Initializing 3D terminal');
+        
+        // Scene setup
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x000000);
+        
+        // Camera setup
+        camera = new THREE.PerspectiveCamera(75, terminalContainer.clientWidth / terminalContainer.clientHeight, 0.1, 1000);
+        camera.position.z = 30;
+        
+        // Renderer setup
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(terminalContainer.clientWidth, terminalContainer.clientHeight);
+        terminalContainer.innerHTML = '';
+        terminalContainer.appendChild(renderer.domElement);
+        
+        // Terminal group
+        terminalGroup = new THREE.Group();
+        scene.add(terminalGroup);
+        
+        // Terminal base
+        const baseGeometry = new THREE.BoxGeometry(30, 15, 1);
+        const baseMaterial = new THREE.MeshBasicMaterial({
+          color: 0x00ffff,
+          transparent: true,
+          opacity: 0.5
+        });
+        
+        const base = new THREE.Mesh(baseGeometry, baseMaterial);
+        terminalGroup.add(base);
+        
+        // Add ambient light
+        const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+        scene.add(ambientLight);
+        
+        // Animation
+        animate();
+      }
+      
+      function animate() {
+        requestAnimationFrame(animate);
+        
+        // Rotate terminal slightly
+        if (terminalGroup) {
+          const time = Date.now() * 0.001;
+          terminalGroup.rotation.y = Math.sin(time * 0.5) * 0.2;
+        }
+        
+        // Render
+        renderer.render(scene, camera);
+      }
+      
+      // Start
+      init();
+    });
+  </script>
+</body>
+</html>

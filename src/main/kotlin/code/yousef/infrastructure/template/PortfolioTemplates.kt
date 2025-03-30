@@ -45,10 +45,7 @@ class PortfolioTemplates {
                     +"Explore my digital space inspired by NEOM's The Line with immersive 3D elements."
                 }
                 
-                // Add floating terminal UI element (will be populated by Three.js)
-                div(classes = "terminal-container") {
-                    id = "terminal-container"
-                }
+                // The terminal container is now defined in base-layout.html
             }
             
             // Content divider with light effect

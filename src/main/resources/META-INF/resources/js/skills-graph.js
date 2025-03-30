@@ -69,8 +69,13 @@ const links = [
 
 // Main initialization function
 function initSkillsGraph() {
+  window.debug.log('Initializing skills graph');
   const container = document.getElementById('skills-matrix');
-  if (!container) return;
+  if (!container) {
+    window.debug.log('Skills matrix container not found');
+    return;
+  }
+  window.debug.log('Container found: ' + container.id);
   
   // Check theme
   const themeIsDark = !document.body.hasAttribute('data-theme') || 
@@ -92,13 +97,26 @@ function initSkillsGraph() {
   renderer.setSize(container.clientWidth, container.clientHeight);
   container.appendChild(renderer.domElement);
   
+  // Check for OrbitControls
+  if (!THREE.OrbitControls) {
+    window.debug.log('OrbitControls not available');
+    return;
+  }
+  window.debug.log('OrbitControls found');
+  
   // Controls for interactive rotation
-  const controls = new THREE.OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.25;
-  controls.enableZoom = true;
-  controls.autoRotate = true;
-  controls.autoRotateSpeed = 0.5;
+  try {
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.25;
+    controls.enableZoom = true;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0.5;
+    window.debug.log('Controls initialized successfully');
+  } catch (e) {
+    window.debug.log('Error initializing controls: ' + e.message);
+    return;
+  }
   
   // Add ambient light
   const ambientLight = new THREE.AmbientLight(0x404040, 0.5);

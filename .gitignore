@@ -48,5 +48,4 @@ nb-configuration.xml
 /jwt-setup.sh
 /azure-pipelines.yml
 /docker-compose.yml
-/.kotlin/sessions/kotlin-compiler-1088794503034823820.salive
-/.kotlin/sessions/kotlin-compiler-11486975426400432652.salive
+/.kotlin/*

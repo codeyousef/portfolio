@@ -11,6 +11,22 @@
   <script src="https://unpkg.com/htmx.org@1.9.6"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.150.1/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+  <script src="/js/lib/simple-debug.js"></script>
+  <script src="/js/lib/OrbitControls.nonmodule.js"></script>
+  <script src="/js/lib/FontLoader.js"></script>
+  <script src="/js/lib/TextGeometry.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
+  <script src="/js/terminal.js"></script>
+  
+  <script>
+    // Debug terminal container existence
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM loaded, checking terminal container');
+      const terminalContainer = document.getElementById('terminal-container');
+      console.log('Terminal container exists:', !!terminalContainer);
+      console.log('Terminal container:', terminalContainer);
+    });
+  </script>
   
   <!-- Load our scripts at the end of body instead -->
 </head>
@@ -45,7 +61,11 @@
 
 <main class="glass-container">
   <!-- Terminal container for the floating 3D terminal -->
-  <div class="terminal-container" id="terminal-container"></div>
+  <div class="terminal-container" id="terminal-container">
+    <div style="background-color: rgba(0,255,255,0.5); padding: 20px; text-align: center; border-radius: 10px;">
+      Fallback Terminal Display
+    </div>
+  </div>
   
   {#if content??}
   {content.safe}
@@ -54,8 +74,7 @@
   <!-- Project detail container for HTMX to target -->
   <div id="project-detail" class="glass-morphic"></div>
   
-  <!-- Skills matrix container for 3D force-directed graph -->
-  <div class="skills-matrix" id="skills-matrix"></div>
+  <!-- Skills matrix container removed, will be placed in template -->
 </main>
 
 <!-- Holographic Circular Menu -->
@@ -177,9 +196,12 @@
     });
   });
 </script>
+-->
 
-<!-- Simplified background effect -->
+<!-- Commented out scripts -->
+<!--
 <script>
+  // Simplified background effect
   document.addEventListener('DOMContentLoaded', function() {
     // Basic Three.js setup for background
     const canvas = document.getElementById('bg-canvas');
@@ -328,8 +350,10 @@
     animate();
   });
 </script>
+-->
 
 <!-- Simplified skills matrix -->
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const skillsMatrix = document.getElementById('skills-matrix');
@@ -534,6 +558,55 @@
     
     animate();
   });
+</script>
+
+<script>
+function createSimpleTerminal() {
+  const container = document.getElementById('terminal-container');
+  // Create fallback if the 3D version fails
+  const fallbackDiv = document.createElement('div');
+  fallbackDiv.style.backgroundColor = 'rgba(0, 255, 255, 0.1)';
+  fallbackDiv.style.color = '#00ffff';
+  fallbackDiv.style.border = '2px solid #00ffff';
+  fallbackDiv.style.boxShadow = '0 0 15px #00ffff';
+  fallbackDiv.style.borderRadius = '8px';
+  fallbackDiv.style.padding = '20px';
+  fallbackDiv.style.width = '100%';
+  fallbackDiv.style.height = '100%';
+  fallbackDiv.style.fontFamily = 'monospace';
+  fallbackDiv.style.fontSize = '20px';
+  fallbackDiv.style.boxSizing = 'border-box';
+  
+  // Create terminal layout
+  fallbackDiv.innerHTML = `
+    <div style="border-bottom: 1px solid #00ffff; padding-bottom: 10px; margin-bottom: 10px;">
+      <span style="color: #00ffff; text-shadow: 0 0 5px #00ffff;">SYSTEM TERMINAL</span>
+    </div>
+    <div>
+      <span style="color: #00ff00;">></span>
+      <span class="cursor" style="color: #00ffff;">Welcome to the Portfolio</span>
+    </div>
+  `;
+  
+  container.appendChild(fallbackDiv);
+  
+  // Blinking cursor effect
+  const cursor = fallbackDiv.querySelector('.cursor');
+  setInterval(() => {
+    cursor.style.opacity = cursor.style.opacity === '0' ? '1' : '0';
+  }, 500);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Wait a bit and check if the 3D terminal has rendered
+  setTimeout(function() {
+    const container = document.getElementById('terminal-container');
+    if (!container.querySelector('canvas')) {
+      console.log('No 3D terminal detected, creating simple version');
+      createSimpleTerminal();
+    }
+  }, 1000);
+});
 </script>
 </body>
 </html>

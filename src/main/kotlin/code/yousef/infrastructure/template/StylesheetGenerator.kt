@@ -462,9 +462,8 @@ class StylesheetGenerator {
             rule(".terminal-container") {
                 position = Position.relative
                 width = 100.pct
-                maxWidth = 700.px
-                height = 250.px
-                margin = Margin(0.px, LinearDimension.auto, 50.px, LinearDimension.auto)
+                maxWidth = 800.px
+                margin = Margin(2.rem, LinearDimension.auto)
                 backdropFilter = "blur(12px)"
                 backgroundColor = Color("var(--surface)")
                 border = Border(2.px, BorderStyle.solid, Color("var(--cyber-cyan)"))
@@ -476,6 +475,7 @@ class StylesheetGenerator {
                 transition = Transitions().apply {
                     this += Transition("all", 0.3.s, Timing.ease)
                 }
+                display = Display.block
             }
 
             // Skills matrix container
@@ -643,6 +643,127 @@ class StylesheetGenerator {
             
             rule(".contact-item:hover a") {
                 color = Color("var(--neon-pink)")
+            }
+
+            // Terminal styles (Internal layout)
+            rule(".terminal") {
+                fontFamily = "'Space Grotesk', monospace"
+                color = Color("var(--neon-green)")
+                textShadow = TextShadows().apply {
+                    this += TextShadow(color = Color("rgba(0, 255, 0, 0.5)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 5.px)
+                }
+                height = 100.pct
+                display = Display.flex
+                flexDirection = FlexDirection.column
+            }
+
+            rule(".terminal-header") {
+                backgroundColor = Color("rgba(0, 255, 255, 0.1)")
+                padding = Padding(0.5.rem, 1.rem)
+                display = Display.flex
+                justifyContent = JustifyContent.spaceBetween
+                alignItems = Align.center
+                borderBottom = Border(1.px, BorderStyle.solid, Color("var(--cyber-cyan)"))
+            }
+
+            rule(".terminal-title") {
+                fontSize = 0.9.rem
+                color = Color("var(--cyber-cyan)")
+                textShadow = TextShadows().apply {
+                    this += TextShadow(color = Color("rgba(0, 255, 255, 0.5)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 5.px)
+                }
+            }
+
+            rule(".terminal-controls") {
+                display = Display.flex
+                gap = 0.5.rem
+            }
+
+            rule(".terminal-control") {
+                width = 12.px
+                height = 12.px
+                borderRadius = 50.pct
+                cursor = Cursor.pointer
+            }
+
+            rule(".terminal-control.close") {
+                backgroundColor = Color("#ff5f56")
+            }
+
+            rule(".terminal-control.minimize") {
+                backgroundColor = Color("#ffbd2e")
+            }
+
+            rule(".terminal-control.maximize") {
+                backgroundColor = Color("#27c93f")
+            }
+
+            rule(".terminal-content") {
+                padding = Padding(1.rem)
+                height = 400.px
+                overflowY = Overflow.auto
+            }
+
+            rule(".terminal-line") {
+                marginBottom = 0.5.rem
+                display = Display.flex
+                alignItems = Align.flexStart
+                gap = 0.5.rem
+            }
+
+            rule(".prompt") {
+                color = Color("var(--neon-green)")
+                fontWeight = FontWeight.bold
+            }
+
+            rule(".command") {
+                color = Color("var(--cyber-cyan)")
+            }
+
+            rule(".output") {
+                marginTop = 0.5.rem
+                color = Color("var(--text)")
+                lineHeight = LineHeight("1.5")
+            }
+
+            rule(".terminal-input-line") {
+                display = Display.flex
+                alignItems = Align.center
+                gap = 0.5.rem
+                padding = Padding(0.5.rem)
+                backgroundColor = Color("rgba(0, 255, 255, 0.05)")
+            }
+
+            rule(".terminal-input") {
+                background = "transparent"
+                border = Border.none
+                color = Color("var(--neon-green)")
+                fontFamily = "'Space Grotesk', monospace"
+                fontSize = 1.rem
+                flex = Flex(1)
+                outline = Outline.none
+            }
+
+            rule(".terminal-input::placeholder") {
+                color = Color("rgba(0, 255, 0, 0.5)")
+            }
+
+            // Terminal scrollbar styling
+            rule(".terminal-content::-webkit-scrollbar") {
+                width = 8.px
+            }
+
+            rule(".terminal-content::-webkit-scrollbar-track") {
+                backgroundColor = Color("rgba(0, 255, 255, 0.1)")
+            }
+
+            rule(".terminal-content::-webkit-scrollbar-thumb") {
+                backgroundColor = Color("rgba(0, 255, 255, 0.3)")
+                borderRadius = 4.px
+            }
+
+            rule(".terminal-content::-webkit-scrollbar-thumb:hover") {
+                backgroundColor = Color("rgba(0, 255, 255, 0.5)")
             }
 
             // Media queries for responsive design
