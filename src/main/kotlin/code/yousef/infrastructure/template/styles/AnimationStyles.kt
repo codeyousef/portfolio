@@ -22,7 +22,6 @@ class AnimationStyles : StyleGenerator {
                         playState = PlayState.running
                     )
                 }
-                animationName = "fadeIn"
             }
 
             keyframes("fadeIn") {
@@ -36,7 +35,7 @@ class AnimationStyles : StyleGenerator {
             rule(".pulse") {
                 animation = Animations().apply {
                     this += Animation(
-                        duration = 3.s,
+                        duration = 2.s,
                         timing = Timing.easeInOut,
                         iterationCount = IterationCount.infinite,
                         name = "pulse",
@@ -46,7 +45,6 @@ class AnimationStyles : StyleGenerator {
                         playState = PlayState.running
                     )
                 }
-                animationName = "pulse"
             }
 
             keyframes("pulse") {
@@ -56,8 +54,33 @@ class AnimationStyles : StyleGenerator {
                 to {
                     opacity = 0.7
                 }
+            }
+
+            // Floating animation
+            rule(".floating") {
+                animation = Animations().apply {
+                    this += Animation(
+                        duration = 3.s,
+                        timing = Timing.easeInOut,
+                        iterationCount = IterationCount.infinite,
+                        name = "floating",
+                        delay = 0.s,
+                        direction = AnimationDirection.alternate,
+                        fillMode = FillMode.forwards,
+                        playState = PlayState.running
+                    )
+                }
+            }
+            
+            keyframes("floating") {
                 from {
-                    opacity = 1.0
+                    transform { translateY(0.px) }
+                }
+                to {
+                    transform { translateY((-10).px) }
+                }
+                from {
+                    transform { translateY(0.px) }
                 }
             }
 
@@ -79,6 +102,37 @@ class AnimationStyles : StyleGenerator {
                     boxShadow = BoxShadows().apply {
                         this += BoxShadow(color = Color("rgba(var(--primary-rgb), 0.8)"), offsetX = 0.px, offsetY = 0.px, blurRadius = 20.px)
                     }
+                }
+            }
+            
+            // Move Around animation for skill card backgrounds
+            keyframes("moveAround") {
+                from {
+                    transform {
+                        rotate(0.deg)
+                        translateX(30.px)
+                        rotate(0.deg)
+                    }
+                }
+                to {
+                    transform {
+                        rotate(360.deg)
+                        translateX(30.px)
+                        rotate((-360).deg)
+                    }
+                }
+            }
+            
+            // Glow pulse for skill icons
+            keyframes("glowPulse") {
+                from {
+                    filter = "drop-shadow(0 0 5px rgba(var(--primary-rgb), 0.5))"
+                }
+                to {
+                    filter = "drop-shadow(0 0 20px rgba(var(--primary-rgb), 0.8))"
+                }
+                from {
+                    filter = "drop-shadow(0 0 5px rgba(var(--primary-rgb), 0.5))"
                 }
             }
         }
