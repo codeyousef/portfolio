@@ -4,175 +4,125 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title}</title>
-    <!-- Refined typography with primary and secondary fonts -->
+    <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap">
+    
+    <!-- Styles -->
     <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="/css/card-redesign.css">
-    <link rel="stylesheet" href="/css/card-fix.css">
-
+    <link rel="stylesheet" href="/css/skills.css">
+    
     <!-- Libraries -->
     <script src="https://unpkg.com/htmx.org@1.9.6"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.150.1/three.min.js"></script>
-    <script src="/js/lib/OrbitControls.nonmodule.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
-    <script src="/js/lib/FontLoader.js"></script>
-    <script src="/js/lib/TextGeometry.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
-    <script src="/js/terminal.js"></script>
 </head>
 <body>
-<!-- Subtle 3D Canvas Background -->
-<canvas id="bg-canvas"></canvas>
-
-<!-- Theme Toggle Button - Refined design -->
-<button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
-    <svg class="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path d="M12 3a1 1 0 011 1v1a1 1 0 01-2 0V4a1 1 0 011-1zm0 15a1 1 0 011 1v1a1 1 0 01-2 0v-1a1 1 0 011-1zm9-9a1 1 0 01-1 1h-1a1 1 0 010-2h1a1 1 0 011 1zM4 12a1 1 0 01-1 1H2a1 1 0 010-2h1a1 1 0 011 1zm15.7-6.3a1 1 0 01-1.4 0l-.7-.7a1 1 0 011.4-1.4l.7.7a1 1 0 010 1.4zM5.3 18.7a1 1 0 01-1.4 0l-.7-.7a1 1 0 011.4-1.4l.7.7a1 1 0 010 1.4zM5.3 5.3a1 1 0 010-1.4l.7-.7a1 1 0 011.4 1.4l-.7.7a1 1 0 01-1.4 0zm12.8 12.8a1 1 0 010 1.4l-.7.7a1 1 0 11-1.4-1.4l.7-.7a1 1 0 011.4 0zM12 6a6 6 0 100 12 6 6 0 000-12z"/>
-    </svg>
-    <svg class="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path d="M12 3a9 9 0 108.9 7.6 5.4 5.4 0 01-9.8-3.1c0-2.3 1.4-4.2 3.5-5A9 9 0 0012 3z"/>
-    </svg>
-</button>
-
-<!-- Performance Toggle Button - Refined design -->
-<button class="performance-toggle" id="performance-toggle">Disable 3D</button>
-
-<!-- Refined Professional Header -->
-<header>
-    <h1>Developer Portfolio</h1>
-    <nav>
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/projects">Projects</a></li>
+    <!-- Background grid lines -->
+    <div class="grid-lines"></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="/" class="logo">TECHWAVE<span></span></a>
+        
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#contact">Contact</a></li>
             <li><a href="/blog">Blog</a></li>
-            <li><a href="/contact">Contact</a></li>
         </ul>
+        
+        <div class="actions">
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                <svg class="sun" viewBox="0 0 24 24">
+                    <path d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0 c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2 c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1S11,19.45,11,20z M5.99,4.58 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0 c0.39-0.39,0.39-1.03,0-1.41L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0 l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"/>
+                </svg>
+                <svg class="moon" viewBox="0 0 24 24">
+                    <path d="M12 3a9 9 0 108.9 7.6 5.4 5.4 0 01-9.8-3.1c0-2.3 1.4-4.2 3.5-5A9 9 0 0012 3z"/>
+                </svg>
+            </button>
+            <button class="performance-toggle" id="performance-toggle">Disable Effects</button>
+        </div>
     </nav>
-</header>
 
-<!-- Main content with refined glass container -->
-<main class="glass-container">
-    <!-- Terminal container with more professional styling -->
-    <div class="terminal-container" id="terminal-container"></div>
-
-    <!-- Content from template -->
+    <!-- Main content -->
     {#if content??}
     {content.safe}
     {/if}
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 TECHWAVE. All rights reserved.</p>
+        </div>
+    </footer>
 
-    <!-- Project detail container for HTMX targets -->
-    <div id="project-detail" class="glass-morphic"></div>
-</main>
-
-<!-- Professional side navigation instead of circular menu -->
-<aside class="side-navigation">
-    <div class="nav-icon" data-section="home" aria-label="Home">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-        </svg>
-    </div>
-    <div class="nav-icon" data-section="projects" aria-label="Projects">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-            <polyline points="2 17 12 22 22 17"></polyline>
-            <polyline points="2 12 12 17 22 12"></polyline>
-        </svg>
-    </div>
-    <div class="nav-icon" data-section="blog" aria-label="Blog">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-        </svg>
-    </div>
-    <div class="nav-icon" data-section="contact" aria-label="Contact">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-            <polyline points="22,6 12,13 2,6"></polyline>
-        </svg>
-    </div>
-</aside>
-
-<!-- Refined Professional Footer -->
-<footer>
-    <p>© 2025 Professional Portfolio</p>
-</footer>
-
-<!-- Theme toggle and performance optimization -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Performance toggle
-      const performanceToggle = document.getElementById('performance-toggle');
-      let effectsDisabled = localStorage.getItem('disable3dEffects') === 'true';
-
-      // Apply saved preference
-      if (effectsDisabled) {
-        document.body.classList.add('no-3d');
-        performanceToggle.textContent = 'Enable 3D';
-      }
-
-      performanceToggle.addEventListener('click', function() {
-        effectsDisabled = !effectsDisabled;
-        localStorage.setItem('disable3dEffects', effectsDisabled);
-
-        if (effectsDisabled) {
-          document.body.classList.add('no-3d');
-          performanceToggle.textContent = 'Enable 3D';
-        } else {
-          document.body.classList.remove('no-3d');
-          performanceToggle.textContent = 'Disable 3D';
-          // Reload to reinitialize 3D elements
-          window.location.reload();
-        }
-      });
-
-      // Theme Toggle
-      const themeToggle = document.getElementById('theme-toggle');
-
-      // Check for saved theme preference
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'light') {
-        document.body.setAttribute('data-theme', 'light');
-      }
-
-      // Theme toggle button
-      themeToggle.addEventListener('click', function() {
-        if (document.body.getAttribute('data-theme') === 'light') {
-          document.body.removeAttribute('data-theme');
-          localStorage.setItem('theme', 'dark');
-        } else {
-          document.body.setAttribute('data-theme', 'light');
-          localStorage.setItem('theme', 'light');
-        }
-      });
-
-      // Smooth scrolling for nav icons
-      document.querySelectorAll('.nav-icon').forEach(function(icon) {
-        icon.addEventListener('click', function() {
-          const sectionId = icon.getAttribute('data-section');
-          const target = document.querySelector('section[id="' + sectionId + '"]') ||
-                        document.querySelector('#' + sectionId) ||
-                        document.querySelector('[data-section="' + sectionId + '"]');
-
-          if (target) {
-            window.scrollTo({
-              top: target.offsetTop - 100,
-              behavior: 'smooth'
+    <!-- Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Theme toggle
+            const themeToggle = document.querySelector('.theme-toggle');
+            const body = document.body;
+            
+            // Check saved theme
+            if (localStorage.getItem('theme') === 'light') {
+                body.setAttribute('data-theme', 'light');
+            }
+            
+            themeToggle.addEventListener('click', function() {
+                if (body.getAttribute('data-theme') === 'light') {
+                    body.removeAttribute('data-theme');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    body.setAttribute('data-theme', 'light');
+                    localStorage.setItem('theme', 'light');
+                }
             });
-          }
+            
+            // Performance toggle
+            const performanceToggle = document.getElementById('performance-toggle');
+            let effectsDisabled = localStorage.getItem('disableEffects') === 'true';
+            
+            if (effectsDisabled) {
+                document.body.classList.add('no-effects');
+                performanceToggle.textContent = 'Enable Effects';
+            }
+            
+            performanceToggle.addEventListener('click', function() {
+                effectsDisabled = !effectsDisabled;
+                localStorage.setItem('disableEffects', effectsDisabled);
+                
+                if (effectsDisabled) {
+                    document.body.classList.add('no-effects');
+                    performanceToggle.textContent = 'Enable Effects';
+                } else {
+                    document.body.classList.remove('no-effects');
+                    performanceToggle.textContent = 'Disable Effects';
+                    // Reload to reinitialize effects
+                    window.location.reload();
+                }
+            });
+            
+            // Smooth scrolling for nav links
+            document.querySelectorAll('.nav-links a').forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    
+                    if (href.startsWith('#')) {
+                        e.preventDefault();
+                        const targetId = href.substring(1);
+                        const targetElement = document.getElementById(targetId);
+                        
+                        if (targetElement) {
+                            window.scrollTo({
+                                top: targetElement.offsetTop - 80,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
         });
-      });
-    });
-</script>
-
-<!-- Load custom scripts -->
-<script src="/js/project-models.js"></script>
-<script src="/js/3d-background.js"></script>
+    </script>
 </body>
 </html>
