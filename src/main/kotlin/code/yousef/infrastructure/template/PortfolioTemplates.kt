@@ -26,7 +26,7 @@ class PortfolioTemplates {
 
         // Use Qute template for the base layout
         return baseTemplate
-            .data("title", "NeoTech Portfolio")
+            .data("title", "Yousef's Portfolio")
             .data("content", contentHtml)
     }
 
@@ -137,6 +137,14 @@ class PortfolioTemplates {
                     h2(classes = "section-title") { +"Featured Projects" }
                     p(classes = "section-desc") {
                         +"Explore my latest work showcasing innovative solutions and cutting-edge technologies."
+                    }
+                    div(classes = "hire-me-cta") {
+                        a(href = "/services", classes = "cta-button primary") {
+                            +"Hire Me"
+                        }
+                        span(classes = "cta-note") {
+                            +"Ready to start your project? Let's collaborate!"
+                        }
                     }
                 }
 

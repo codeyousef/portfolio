@@ -1228,4 +1228,6 @@ div[style*="display: flex; justify-content: center; align-items: center"] img {
 .form-input,
 .form-textarea {
   width: 100%;
+  height: 30px;
+  padding: 5px;
 }
