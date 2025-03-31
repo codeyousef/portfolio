@@ -16,7 +16,9 @@ class UserEntity : PanacheEntityBase {
     @Column(unique = true)
     lateinit var username: String
 
-    lateinit var password: String // Hashed password
+    @Column(nullable = false)
+    var password: String = ""
+
     lateinit var name: String
     lateinit var email: String
 
@@ -27,7 +29,7 @@ class UserEntity : PanacheEntityBase {
     lateinit var createdAt: LocalDateTime
 
     @Column(name = "updated_at")
-    lateinit var updatedAt: LocalDateTime
+    var updatedAt: LocalDateTime = LocalDateTime.now()
 
     @Column(name = "last_login")
     var lastLogin: LocalDateTime? = null

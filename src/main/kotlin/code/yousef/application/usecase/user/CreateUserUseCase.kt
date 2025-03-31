@@ -11,9 +11,9 @@ import jakarta.inject.Inject
 class CreateUserUseCase @Inject constructor(
     private val userService: UserService
 ) {
-    suspend fun execute(request: CreateUpdateUserRequest): UserResponse {
+    suspend fun execute(request: CreateUpdateUserRequest): UserResponse? {
         val user = userService.createUser(request)
-        return userService.toResponse(user)
+        return user?.let { userService.toResponse(it) }
     }
 
     suspend fun createAdminUser(
@@ -21,7 +21,7 @@ class CreateUserUseCase @Inject constructor(
         password: String,
         name: String,
         email: String
-    ): UserResponse {
+    ): UserResponse? {
         val request = CreateUpdateUserRequest(
             username = username,
             password = password,
@@ -31,7 +31,7 @@ class CreateUserUseCase @Inject constructor(
         )
 
         val user = userService.createUser(request)
-        return userService.toResponse(user)
+        return user?.let { userService.toResponse(it) }
     }
 
     suspend fun createContributorUser(
@@ -39,7 +39,7 @@ class CreateUserUseCase @Inject constructor(
         password: String,
         name: String,
         email: String
-    ): UserResponse {
+    ): UserResponse? {
         val request = CreateUpdateUserRequest(
             username = username,
             password = password,
@@ -49,6 +49,6 @@ class CreateUserUseCase @Inject constructor(
         )
 
         val user = userService.createUser(request)
-        return userService.toResponse(user)
+        return user?.let { userService.toResponse(it) }
     }
 }

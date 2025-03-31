@@ -16,7 +16,7 @@ class User(
     val role: UserRole,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
-    val lastLogin: LocalDateTime? = null
+    var lastLogin: LocalDateTime? = null
 ) {
 
     fun isAdmin(): Boolean = role == UserRole.ADMIN
@@ -26,7 +26,7 @@ class User(
     fun isAccountActive(): Boolean {
         // If user hasn't logged in for 90 days, consider account inactive
         val ninetyDaysAgo = LocalDateTime.now().minusDays(90)
-        return lastLogin == null || lastLogin.isAfter(ninetyDaysAgo)
+        return lastLogin?.isAfter(ninetyDaysAgo) ?: false
     }
 
     fun getDisplayName(): String = name.ifBlank { username }

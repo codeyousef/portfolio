@@ -11,6 +11,9 @@ import io.smallrye.mutiny.coroutines.awaitSuspending
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import org.hibernate.reactive.mutiny.Mutiny.SessionFactory
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import java.time.LocalDateTime
 import java.util.*
 
 @ApplicationScoped
@@ -18,6 +21,8 @@ class UserRepoImpl @Inject constructor(
     private val sessionFactory: SessionFactory,
     private val userMapper: UserMapper
 ) : PanacheRepositoryBase<UserEntity, UUID>, UserRepo {
+
+    val logger: Logger = LoggerFactory.getLogger(UserRepoImpl::class.java)
 
     override suspend fun findUserById(id: UUID): User? {
         val user = sessionFactory.withSession {
@@ -40,25 +45,62 @@ class UserRepoImpl @Inject constructor(
         return user?.let { userMapper.toDomain(it) }
     }
 
-    override suspend fun saveUser(createUpdateUserRequest: CreateUpdateUserRequest): User {
-        val domainUser = userMapper.toDomain(createUpdateUserRequest)
+    override suspend fun saveUser(user: User): User {
+        val userToSave = UserEntity().apply {
+            this.username = user.username
+            this.password = user.password
+            this.name = user.name
+            this.email = user.email
+            this.role = user.role
+            this.createdAt = user.createdAt
+            this.lastLogin = user.lastLogin
+        }
         val savedUser = sessionFactory.withSession { session ->
-            session.withTransaction {
-                persistAndFlush(userMapper.toEntity(domainUser))
+            if (user.id == null) {
+                session.withTransaction {
+                    persistAndFlush(userToSave)
+                }
+            } else {
+                // For updates
+                session.withTransaction {
+                    session.merge(userToSave)
+                }
             }
         }.awaitSuspending()
         return userMapper.toDomain(savedUser)
     }
 
     override suspend fun updateLastLogin(user: User): User {
+        // Make sure we have a valid ID
+        if (user.id == null) {
+            throw IllegalArgumentException("Cannot update user without ID")
+        }
 
-        val updatedUser = user.withUpdatedLoginTime()
-        val savedUser = sessionFactory.withSession { session ->
+        // Log for debugging
+        logger.debug("Updating lastLogin for user ID: {}, username: {}", user.id, user.username)
+
+        // Get the entity from database first
+        val existingUser = findUserById(user.id)
+
+        if (existingUser == null) {
+            logger.warn("User entity not found for ID: ${user.id}")
+            throw IllegalStateException("User not found in database")
+        }
+
+        // Update the entity and persist it
+        val updatedUser = sessionFactory.withSession { session ->
             session.withTransaction {
-                persistAndFlush(userMapper.toEntity(updatedUser))
+                // Update the lastLogin field
+                existingUser.lastLogin = LocalDateTime.now()
+                // Use persist instead of merge since we're working with the entity directly
+                session.merge(userMapper.toEntity(existingUser))
+                    .onItem()
+                    .ifNotNull()
+                    .transform { existingUser }
             }
         }.awaitSuspending()
-        return userMapper.toDomain(savedUser)
+
+        return updatedUser
     }
 
     override suspend fun getAllUsers(): List<User> {

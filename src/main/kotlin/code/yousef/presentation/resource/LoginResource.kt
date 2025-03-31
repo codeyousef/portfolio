@@ -26,8 +26,8 @@ class LoginResource {
 
     @GET
     @Produces(MediaType.TEXT_HTML)
-    fun loginPage(@QueryParam("error") error: String?): TemplateInstance {
-        return loginTemplate.data("error", error)
+    fun loginPage(@QueryParam("error") error: String?): String? {
+        return loginTemplate.data("error", error).render()
     }
 
     @POST

@@ -35,7 +35,7 @@ class SecurityIdentityProvider(private val sessionFactory: Mutiny.SessionFactory
                 .setParameter("username", username)
                 .singleResultOrNull
         }.onItem().transformToUni { user ->
-            if (user != null && verifyPassword(password, user.password)) {
+            if (user != null && user.password?.let { verifyPassword(password, it) } == true) {
                 // Update last login time
                 user.lastLogin = java.time.LocalDateTime.now()
                 return@transformToUni sessionFactory.withSession { session ->

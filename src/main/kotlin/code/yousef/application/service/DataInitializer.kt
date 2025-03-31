@@ -48,7 +48,7 @@ class DataInitializer @Inject constructor(
                 // Create admin user
                 val adminRequest = CreateUpdateUserRequest(
                     username = "admin",
-                    password = "admin",
+                    password = userService.hashPassword("admin"),
                     name = "Administrator",
                     email = "admin@example.com",
                     role = UserRole.ADMIN
@@ -58,7 +58,7 @@ class DataInitializer @Inject constructor(
                 // Create regular user
                 val userRequest = CreateUpdateUserRequest(
                     username = "user",
-                    password = "user",
+                    password = userService.hashPassword("user"),
                     name = "Regular User",
                     email = "user@example.com",
                     role = UserRole.CONTRIBUTOR

@@ -29,7 +29,7 @@ class UserMapper {
             createdAt = entity.createdAt,
             updatedAt = entity.updatedAt,
             lastLogin = entity.lastLogin,
-            password = entity.password
+            password = entity.password ?: ""
         )
     }
 
@@ -38,6 +38,7 @@ class UserMapper {
      */
     fun toEntity(user: User): UserEntity {
         val entity = UserEntity()
+        entity.id = user.id
         entity.username = user.username
         entity.name = user.name
         entity.email = user.email
@@ -75,7 +76,8 @@ class UserMapper {
             createdAt = existingUser?.createdAt ?: now,
             updatedAt = now,
             lastLogin = existingUser?.lastLogin,
-            password = existingUser.let { existingUser?.password } ?: request.password ?: throw IllegalArgumentException("Password must be provided")
+            password = existingUser.let { existingUser?.password } ?: request.password
+            ?: throw IllegalArgumentException("Password must be provided")
         )
     }
 
