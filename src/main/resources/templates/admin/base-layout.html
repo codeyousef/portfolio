@@ -5,69 +5,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <!-- Add Space Grotesk font -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     {#bundle /}
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap">
-    <link rel="stylesheet" href="/css/admin-styles.css">
+    <!-- Admin Styles -->
+    <link rel="stylesheet" href="/app/css/admin-styles.css">
     <!-- SimpleMDE for markdown editing -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
 </head>
 <body class="admin">
-<div class="admin-container">
-    <!-- Sidebar -->
-    <div class="admin-sidebar">
-        <div class="admin-logo">
-            <h1>Admin Panel</h1>
-        </div>
-        <nav class="admin-nav">
-            <ul>
-                <li>
-                    <a href="/admin" class="{#if currentPath?? && (currentPath == '/admin' or currentPath == '/admin/')}active{/if}">
-                        Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a href="/admin/projects" class="{#if currentPath?? && currentPath.startsWith('/admin/projects')}active{/if}">
-                        Projects
-                    </a>
-                </li>
-                <li>
-                    <a href="/admin/blog" class="{#if currentPath?? && currentPath.startsWith('/admin/blog')}active{/if}">
-                        Blog Posts
-                    </a>
-                </li>
-                <li>
-                    <a href="/admin/logout">
-                        Logout
-                    </a>
-                </li>
-            </ul>
+<div class="container-fluid g-0">
+    <div class="row g-0">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar">
+            <div class="position-sticky">
+                <div class="sidebar-header mb-4">
+                    <h3>Admin Panel</h3>
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link {#if currentPath?? && (currentPath == '/admin' or currentPath == '/admin/')} active{/if}"
+                           href="/admin">
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {#if currentPath?? && currentPath.startsWith('/admin/projects')}active{/if}"
+                           href="/admin/projects">
+                            Projects
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {#if currentPath?? && currentPath.startsWith('/admin/blog')}active{/if}"
+                           href="/admin/blog">
+                            Blog Posts
+                        </a>
+                    </li>
+                    <li class="nav-item mt-5">
+                        <a class="nav-link" href="/admin/logout">
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </nav>
-    </div>
 
-    <!-- Main content -->
-    <div class="admin-content">
-        <div class="admin-header">
-            <h2>{title ?: 'Admin Dashboard'}</h2>
-        </div>
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1>{title ?: 'Admin Dashboard'}</h1>
+            </div>
 
-        {#if message??}
-        <div class="admin-message {message.type}">
-            {message.text}
-        </div>
-        {/if}
+            {#if message??}
+            <div class="alert alert-{message.type} alert-dismissible fade show" role="alert">
+                {message.text}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {/if}
 
-        {content.safe}
+            <div class="content-area">
+                {content.safe}
+            </div>
+        </main>
     </div>
 </div>
 
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <!-- SimpleMDE for markdown editing -->
 <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
-<!-- Initialize editors -->
+<!-- Initialize SimpleMDE -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const editors = document.querySelectorAll('.markdown-editor');
-        editors.forEach(element => {
-            new SimpleMDE({ element });
+        // Initialize SimpleMDE on textareas with markdown-editor class
+        const markdownEditors = document.querySelectorAll('.markdown-editor');
+        if (markdownEditors.length > 0) {
+            markdownEditors.forEach(function(element) {
+                new SimpleMDE({ element: element });
+            });
+        }
+
+        // Apply admin specific classes to buttons
+        document.querySelectorAll('.btn-primary').forEach(btn => {
+            btn.classList.add('admin-btn', 'primary-btn');
+        });
+
+        document.querySelectorAll('.btn-secondary').forEach(btn => {
+            btn.classList.add('admin-btn', 'secondary-btn');
+        });
+
+        document.querySelectorAll('.btn-danger').forEach(btn => {
+            btn.classList.add('admin-btn', 'delete-btn');
         });
     });
 </script>
