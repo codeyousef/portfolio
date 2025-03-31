@@ -4,7 +4,6 @@ import code.yousef.infrastructure.persistence.entity.BlogPostEntity
 import code.yousef.infrastructure.persistence.entity.ProjectEntity
 import io.quarkus.qute.Location
 import io.quarkus.qute.Template
-import io.quarkus.qute.TemplateInstance
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import kotlinx.html.*
@@ -34,8 +33,22 @@ class AdminTemplates {
     private fun buildDashboardContent(): String {
         return StringBuilder().appendHTML().div {
             h2 { +"Admin Dashboard" }
-            div(classes = "dashboard-widgets") {
+            div(classes = "admin-grid") {
                 // Dashboard widgets here
+                div(classes = "admin-card") {
+                    h3 { +"Projects" }
+                    p { +"Manage your portfolio projects." }
+                    div(classes = "card-actions") {
+                        a(href = "/admin/projects", classes = "admin-btn primary-btn") { +"View Projects" }
+                    }
+                }
+                div(classes = "admin-card") {
+                    h3 { +"Blog Posts" }
+                    p { +"Manage your blog content." }
+                    div(classes = "card-actions") {
+                        a(href = "/admin/blog", classes = "admin-btn primary-btn") { +"View Posts" }
+                    }
+                }
             }
         }.toString()
     }
@@ -48,10 +61,12 @@ class AdminTemplates {
     private fun buildProjectsContent(projectEntities: List<ProjectEntity>): String {
         return StringBuilder().appendHTML().div {
             h2 { +"Projects" }
-            a(href = "/admin/projects/new", classes = "btn btn-primary") {
-                +"Create New Project"
+            div(classes = "admin-actions") {
+                a(href = "/admin/projects/new", classes = "admin-btn primary-btn") {
+                    +"Create New Project"
+                }
             }
-            table(classes = "table projects-table") {
+            table(classes = "table") {
                 thead {
                     tr {
                         th { +"Title" }
@@ -64,11 +79,14 @@ class AdminTemplates {
                         tr {
                             td { +project.title }
                             td { +(if (project.featured) "Yes" else "No") }
-                            td {
-                                a(href = "/admin/projects/${project.id}/edit", classes = "btn btn-sm btn-info") {
+                            td(classes = "table-actions") {
+                                a(
+                                    href = "/admin/projects/${project.id}/edit",
+                                    classes = "admin-btn secondary-btn small"
+                                ) {
                                     +"Edit"
                                 }
-                                button(classes = "btn btn-sm btn-danger delete-project") {
+                                button(classes = "admin-btn delete-btn small delete-project") {
                                     attributes["data-id"] = project.id.toString()
                                     +"Delete"
                                 }
@@ -88,10 +106,12 @@ class AdminTemplates {
     private fun buildBlogPostsContent(blogPostEntities: List<BlogPostEntity>): String {
         return StringBuilder().appendHTML().div {
             h2 { +"Blog Posts" }
-            a(href = "/admin/blog/new", classes = "btn btn-primary") {
-                +"Create New Blog Post"
+            div(classes = "admin-actions") {
+                a(href = "/admin/blog/new", classes = "admin-btn primary-btn") {
+                    +"Create New Blog Post"
+                }
             }
-            table(classes = "table blog-posts-table") {
+            table(classes = "table") {
                 thead {
                     tr {
                         th { +"Title" }
@@ -104,13 +124,17 @@ class AdminTemplates {
                     blogPostEntities.forEach { post ->
                         tr {
                             td { +post.title }
-                            td { +(if (post.published) "Yes" else "No") }
-                            td { +post.publishDate.toString() }
                             td {
-                                a(href = "/admin/blog/${post.id}/edit", classes = "btn btn-sm btn-info") {
+                                span(classes = "status-badge ${if (post.published) "published" else "draft"}") {
+                                    +(if (post.published) "Published" else "Draft")
+                                }
+                            }
+                            td { +post.publishDate.toString() }
+                            td(classes = "table-actions") {
+                                a(href = "/admin/blog/${post.id}/edit", classes = "admin-btn secondary-btn small") {
                                     +"Edit"
                                 }
-                                button(classes = "btn btn-sm btn-danger delete-post") {
+                                button(classes = "admin-btn delete-btn small delete-post") {
                                     attributes["data-id"] = post.id.toString()
                                     +"Delete"
                                 }
@@ -145,7 +169,8 @@ class AdminTemplates {
             form(
                 action = if (isNew) "/admin/projects" else "/admin/projects/${project.id}",
                 method = FormMethod.post,
-                encType = FormEncType.multipartFormData
+                encType = FormEncType.multipartFormData,
+                classes = "admin-form"
             ) {
                 id = "projectForm"
 
@@ -154,7 +179,7 @@ class AdminTemplates {
                         htmlFor = "title"
                         +"Title"
                     }
-                    input(type = InputType.text, classes = "form-control") {
+                    input(type = InputType.text, classes = "admin-input") {
                         id = "title"
                         name = "title"
                         value = project.title
@@ -167,11 +192,10 @@ class AdminTemplates {
                         htmlFor = "description"
                         +"Description"
                     }
-                    textArea(classes = "form-control") {
+                    textArea(classes = "admin-textarea") {
                         id = "description"
                         name = "description"
                         +project.description
-                        rows = "5"
                     }
                 }
 
@@ -180,7 +204,7 @@ class AdminTemplates {
                         htmlFor = "imageUrl"
                         +"Image URL"
                     }
-                    input(type = InputType.text, classes = "form-control") {
+                    input(type = InputType.text, classes = "admin-input") {
                         id = "imageUrl"
                         name = "imageUrl"
                         value = project.imageUrl
@@ -192,7 +216,7 @@ class AdminTemplates {
                         htmlFor = "modelUrl"
                         +"Model URL"
                     }
-                    input(type = InputType.text, classes = "form-control") {
+                    input(type = InputType.text, classes = "admin-input") {
                         id = "modelUrl"
                         name = "modelUrl"
                         value = project.modelUrl
@@ -204,7 +228,7 @@ class AdminTemplates {
                         htmlFor = "githubUrl"
                         +"GitHub URL"
                     }
-                    input(type = InputType.text, classes = "form-control") {
+                    input(type = InputType.text, classes = "admin-input") {
                         id = "githubUrl"
                         name = "githubUrl"
                         value = project.githubUrl
@@ -216,7 +240,7 @@ class AdminTemplates {
                         htmlFor = "demoUrl"
                         +"Demo URL"
                     }
-                    input(type = InputType.text, classes = "form-control") {
+                    input(type = InputType.text, classes = "admin-input") {
                         id = "demoUrl"
                         name = "demoUrl"
                         value = project.demoUrl
@@ -228,35 +252,35 @@ class AdminTemplates {
                         htmlFor = "technologies"
                         +"Technologies (comma separated)"
                     }
-                    input(type = InputType.text, classes = "form-control") {
+                    input(type = InputType.text, classes = "admin-input") {
                         id = "technologies"
                         name = "technologies"
                         value = project.technologies.joinToString(", ")
                     }
                 }
 
-                div(classes = "form-check") {
-                    input(type = InputType.checkBox, classes = "form-check-input") {
+                div(classes = "checkbox-group") {
+                    input(type = InputType.checkBox) {
                         id = "featured"
                         name = "featured"
                         checked = project.featured
                     }
-                    label(classes = "form-check-label") {
+                    label(classes = "checkbox-label") {
                         htmlFor = "featured"
                         +"Featured"
                     }
                 }
 
-                div(classes = "form-group mt-3") {
+                div(classes = "form-actions") {
                     if (!isNew) {
                         input(type = InputType.hidden, name = "_method") {
                             value = "put"
                         }
                     }
-                    button(type = ButtonType.submit, classes = "btn btn-primary") {
+                    button(type = ButtonType.submit, classes = "admin-btn primary-btn") {
                         +(if (isNew) "Create" else "Update")
                     }
-                    a(href = "/admin/projects", classes = "btn btn-secondary ml-2") {
+                    a(href = "/admin/projects", classes = "admin-btn secondary-btn") {
                         +"Cancel"
                     }
                 }
@@ -287,7 +311,8 @@ class AdminTemplates {
             form(
                 action = if (isNew) "/admin/blog" else "/admin/blog/${post.id}",
                 method = FormMethod.post,
-                encType = FormEncType.multipartFormData
+                encType = FormEncType.multipartFormData,
+                classes = "admin-form"
             ) {
                 id = "blogPostForm"
 
@@ -296,7 +321,7 @@ class AdminTemplates {
                         htmlFor = "title"
                         +"Title"
                     }
-                    input(type = InputType.text, classes = "form-control") {
+                    input(type = InputType.text, classes = "admin-input") {
                         id = "title"
                         name = "title"
                         value = post.title
@@ -309,7 +334,7 @@ class AdminTemplates {
                         htmlFor = "slug"
                         +"Slug"
                     }
-                    input(type = InputType.text, classes = "form-control") {
+                    input(type = InputType.text, classes = "admin-input") {
                         id = "slug"
                         name = "slug"
                         value = post.slug
@@ -322,11 +347,10 @@ class AdminTemplates {
                         htmlFor = "summary"
                         +"Summary"
                     }
-                    textArea(classes = "form-control") {
+                    textArea(classes = "admin-textarea") {
                         id = "summary"
                         name = "summary"
                         +post.summary
-                        rows = "3"
                     }
                 }
 
@@ -335,11 +359,10 @@ class AdminTemplates {
                         htmlFor = "content"
                         +"Content (Markdown)"
                     }
-                    textArea(classes = "form-control markdown-editor") {
+                    textArea(classes = "admin-textarea markdown-editor") {
                         id = "content"
                         name = "content"
                         +post.content
-                        rows = "15"
                     }
                 }
 
@@ -348,7 +371,7 @@ class AdminTemplates {
                         htmlFor = "imageUrl"
                         +"Image URL"
                     }
-                    input(type = InputType.text, classes = "form-control") {
+                    input(type = InputType.text, classes = "admin-input") {
                         id = "imageUrl"
                         name = "imageUrl"
                         value = post.imageUrl
@@ -360,7 +383,7 @@ class AdminTemplates {
                         htmlFor = "tags"
                         +"Tags (comma separated)"
                     }
-                    input(type = InputType.text, classes = "form-control") {
+                    input(type = InputType.text, classes = "admin-input") {
                         id = "tags"
                         name = "tags"
                         value = post.tags.joinToString(", ")
@@ -372,35 +395,35 @@ class AdminTemplates {
                         htmlFor = "publishDate"
                         +"Publish Date"
                     }
-                    input(type = InputType.dateTimeLocal, classes = "form-control") {
+                    input(type = InputType.dateTimeLocal, classes = "admin-input") {
                         id = "publishDate"
                         name = "publishDate"
                         value = post.publishDate.toString().replace(" ", "T")
                     }
                 }
 
-                div(classes = "form-check") {
-                    input(type = InputType.checkBox, classes = "form-check-input") {
+                div(classes = "checkbox-group") {
+                    input(type = InputType.checkBox) {
                         id = "published"
                         name = "published"
                         checked = post.published
                     }
-                    label(classes = "form-check-label") {
+                    label(classes = "checkbox-label") {
                         htmlFor = "published"
                         +"Published"
                     }
                 }
 
-                div(classes = "form-group mt-3") {
+                div(classes = "form-actions") {
                     if (!isNew) {
                         input(type = InputType.hidden, name = "_method") {
                             value = "put"
                         }
                     }
-                    button(type = ButtonType.submit, classes = "btn btn-primary") {
+                    button(type = ButtonType.submit, classes = "admin-btn primary-btn") {
                         +(if (isNew) "Create" else "Update")
                     }
-                    a(href = "/admin/blog", classes = "btn btn-secondary ml-2") {
+                    a(href = "/admin/blog", classes = "admin-btn secondary-btn") {
                         +"Cancel"
                     }
                 }
