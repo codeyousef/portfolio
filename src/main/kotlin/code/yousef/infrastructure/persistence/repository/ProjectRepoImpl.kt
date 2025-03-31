@@ -43,9 +43,11 @@ class ProjectRepoImpl @Inject constructor(
 
         val savedProject = sessionFactory.withSession { session ->
             session.withTransaction {
-                persistAndFlush(entity)
+                val result = persistAndFlush(entity)
+                result // Return the entity from the transaction
             }
         }.awaitSuspending()
+
         return projectMapper.toDomain(savedProject)
     }
 

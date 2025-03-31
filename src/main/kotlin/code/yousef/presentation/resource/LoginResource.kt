@@ -20,7 +20,7 @@ class LoginResource {
     @Inject
     lateinit var userService: UserService
 
-    @Location("login.html")
+    @Location("admin/login.html")
     @Inject
     lateinit var loginTemplate: Template
 

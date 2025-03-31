@@ -23,7 +23,7 @@ class BlogPostEntity : PanacheEntityBase {
 
     lateinit var imageUrl: String
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     lateinit var tags: List<String>
 
     @Column(name = "publish_date")

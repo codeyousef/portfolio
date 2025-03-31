@@ -30,6 +30,7 @@ class ProjectMapper {
 
     fun toEntity(project: Project): ProjectEntity {
         val entity = ProjectEntity()
+        entity.id = project.id
         entity.title = project.title
         entity.description = project.description
         entity.imageUrl = project.imageUrl
@@ -44,6 +45,7 @@ class ProjectMapper {
     }
 
     fun updateEntity(entity: ProjectEntity, project: Project): ProjectEntity {
+        entity.id = project.id
         entity.title = project.title
         entity.description = project.description
         entity.imageUrl = project.imageUrl

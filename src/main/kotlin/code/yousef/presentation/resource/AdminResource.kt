@@ -1,6 +1,6 @@
 package code.yousef.presentation.resource
 
-import code.yousef.application.service.TemplateService
+import TemplateService
 import code.yousef.application.usecase.blog.CreateBlogUseCase
 import code.yousef.application.usecase.blog.DeleteBlogUseCase
 import code.yousef.application.usecase.blog.GetBlogsUseCase
@@ -13,6 +13,7 @@ import code.yousef.infrastructure.persistence.mapper.BlogPostMapper
 import code.yousef.infrastructure.persistence.mapper.ProjectMapper
 import code.yousef.presentation.dto.request.CreateUpdateBlogRequest
 import code.yousef.presentation.dto.request.CreateUpdateProjectRequest
+import io.quarkus.qute.TemplateInstance
 import jakarta.annotation.security.RolesAllowed
 import jakarta.inject.Inject
 import jakarta.ws.rs.*
@@ -41,7 +42,7 @@ class AdminResource @Inject constructor(
     @Path("/dashboard")
     @Produces(MediaType.TEXT_HTML)
     @RolesAllowed("ADMIN")
-    suspend fun getDashboard(): StringBuilder {
+    suspend fun getDashboard(): String? {
         return templateService.renderAdminDashboard()
     }
 
@@ -50,7 +51,7 @@ class AdminResource @Inject constructor(
     @Path("/projects")
     @Produces(MediaType.TEXT_HTML)
     @RolesAllowed("ADMIN")
-    suspend fun getProjects(): StringBuilder {
+    suspend fun getProjects(): String? {
         return templateService.renderAdminProjects()
     }
 
@@ -59,7 +60,7 @@ class AdminResource @Inject constructor(
     @Path("/projects/new")
     @Produces(MediaType.TEXT_HTML)
     @RolesAllowed("ADMIN")
-    suspend fun getNewProjectForm(): StringBuilder {
+    suspend fun getNewProjectForm(): String? {
         return templateService.renderProjectForm()
     }
 
@@ -122,7 +123,7 @@ class AdminResource @Inject constructor(
     @Path("/blog")
     @Produces(MediaType.TEXT_HTML)
     @RolesAllowed("ADMIN")
-    suspend fun getBlogPosts(): StringBuilder {
+    suspend fun getBlogPosts(): String? {
         return templateService.renderAdminBlogPosts()
     }
 
@@ -131,7 +132,7 @@ class AdminResource @Inject constructor(
     @Path("/blog/new")
     @Produces(MediaType.TEXT_HTML)
     @RolesAllowed("ADMIN")
-    suspend fun getNewBlogPostForm(): StringBuilder {
+    suspend fun getNewBlogPostForm(): String? {
         return templateService.renderBlogPostForm()
     }
 
