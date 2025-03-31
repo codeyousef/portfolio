@@ -1,240 +1,191 @@
-package code.yousef.presentation.resource//package code.yousef.resource
-//
-//import code.yousef.infrastructure.persistence.entity.BlogPost
-//import code.yousef.infrastructure.persistence.entity.Project
-//import code.yousef.adapter.service.BlogService
-//import code.yousef.adapter.service.ProjectService
-//import code.yousef.adapter.service.TemplateService
-//import io.smallrye.mutiny.Uni
-//import jakarta.annotation.security.RolesAllowed
-//import jakarta.inject.Inject
-//import jakarta.ws.rs.*
-//import jakarta.ws.rs.core.MediaType
-//import jakarta.ws.rs.core.Response
-//
-//@Path("/admin")
-//class AdminResource {
-//
-//    @Inject
-//    lateinit var templateService: TemplateService
-//
-//    @Inject
-//    lateinit var projectService: ProjectService
-//
-//    @Inject
-//    lateinit var blogService: BlogService
-//
-//    @Inject
-//    lateinit var authService: AuthenticationService
-//
-//    // Login page
-//    @GET
-//    @Path("/login")
-//    @Produces(MediaType.TEXT_HTML)
-//    fun getLoginPage(): Response {
-//        return Response.ok(templateService.renderLoginPage()).build()
-//    }
-//
-//    // Login action
-//    @POST
-//    @Path("/login")
-//    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    fun login(
-//        @FormParam("username") username: String,
-//        @FormParam("password") password: String
-//    ): Uni<Response> {
-//        return authService.login(username, password)
-//            .onItem().transform { loginResponse ->
-//                Response.ok()
-//                    .header("Authorization", "Bearer " + loginResponse.token)
-//                    .entity(mapOf("redirect" to "/admin/dashboard"))
-//                    .build()
-//            }
-//            .onFailure().recoverWithItem { e ->
-//                Response.status(Response.Status.UNAUTHORIZED)
-//                    .entity(mapOf("error" to "Invalid credentials"))
-//                    .build()
-//            }
-//    }
-//
-//    // Logout action
-//    @GET
-//    @Path("/logout")
-//    @Produces(MediaType.TEXT_HTML)
-//    fun logout(): Response {
-//        // In a real app, you'd invalidate the token on the server side
-//        return Response.temporaryRedirect(java.net.URI.create("/admin/login")).build()
-//    }
-//
-//    // Dashboard
-//    @GET
-//    @Path("/dashboard")
-//    @Produces(MediaType.TEXT_HTML)
-//    @RolesAllowed("ADMIN")
-//    fun getDashboard(): Response {
-//        return Response.ok(templateService.renderAdminDashboard()).build()
-//    }
-//
-//    // Projects list
-//    @GET
-//    @Path("/projects")
-//    @Produces(MediaType.TEXT_HTML)
-//    @RolesAllowed("ADMIN")
-//    fun getProjects(): Uni<Response> {
-//        return templateService.renderAdminProjects()
-//            .onItem().transform { content ->
-//                Response.ok(content).build()
-//            }
-//    }
-//
-//    // New project form
-//    @GET
-//    @Path("/projects/new")
-//    @Produces(MediaType.TEXT_HTML)
-//    @RolesAllowed("ADMIN")
-//    fun getNewProjectForm(): Response {
-//        return Response.ok(templateService.renderProjectForm()).build()
-//    }
-//
-//    // Create project
-//    @POST
-//    @Path("/projects")
-//    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @RolesAllowed("ADMIN")
-//    fun createProject(project: Project): Uni<Response> {
-//        return projectService.createProject(project)
-//            .onItem().transform { savedProject ->
-//                Response.ok(mapOf("id" to savedProject.id, "redirect" to "/admin/projects")).build()
-//            }
-//    }
-//
-//    // Edit project form
-//    @GET
-//    @Path("/projects/{id}/edit")
-//    @Produces(MediaType.TEXT_HTML)
-//    @RolesAllowed("ADMIN")
-//    fun getEditProjectForm(@PathParam("id") id: Long): Uni<Response> {
-//        return projectService.getProjectById(id)
-//            .onItem().transform { project ->
-//                Response.ok(templateService.renderProjectForm(project)).build()
-//            }
-//            .onFailure().recoverWithItem(java.util.function.Function<Throwable, Response> {
-//                Response.status(Response.Status.NOT_FOUND).entity("Project not found").build()
-//            })
-//    }
-//
-//    // Update project
-//    @PUT
-//    @Path("/projects/{id}")
-//    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @RolesAllowed("ADMIN")
-//    fun updateProject(@PathParam("id") id: Long, project: Project): Uni<Response> {
-//        return projectService.updateProject(id, project)
-//            .onItem().transform { updatedProject ->
-//                Response.ok(mapOf("id" to updatedProject.id, "redirect" to "/admin/projects")).build()
-//            }
-//            .onFailure().recoverWithItem(java.util.function.Function<Throwable, Response> {
-//                Response.status(Response.Status.NOT_FOUND).entity("Project not found").build()
-//            })
-//    }
-//
-//    // Delete project
-//    @DELETE
-//    @Path("/projects/{id}")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @RolesAllowed("ADMIN")
-//    fun deleteProject(@PathParam("id") id: Long): Uni<Response> {
-//        return projectService.deleteProject(id)
-//            .onItem().transform { success ->
-//                if (success) {
-//                    Response.ok(mapOf("success" to true)).build()
-//                } else {
-//                    Response.status(Response.Status.NOT_FOUND).entity(mapOf("success" to false)).build()
-//                }
-//            }
-//    }
-//
-//    // Blog posts list
-//    @GET
-//    @Path("/blog")
-//    @Produces(MediaType.TEXT_HTML)
-//    @RolesAllowed("ADMIN")
-//    fun getBlogPosts(): Uni<Response> {
-//        return templateService.renderAdminBlogPosts()
-//            .onItem().transform { content ->
-//                Response.ok(content).build()
-//            }
-//    }
-//
-//    // New blog post form
-//    @GET
-//    @Path("/blog/new")
-//    @Produces(MediaType.TEXT_HTML)
-//    @RolesAllowed("ADMIN")
-//    fun getNewBlogPostForm(): Response {
-//        return Response.ok(templateService.renderBlogPostForm()).build()
-//    }
-//
-//    // Create blog post
-//    @POST
-//    @Path("/blog")
-//    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @RolesAllowed("ADMIN")
-//    fun createBlogPost(blogPost: BlogPost): Uni<Response> {
-//        return blogService.createBlogPost(blogPost)
-//            .onItem().transform { savedPost ->
-//                Response.ok(mapOf("id" to savedPost.id, "redirect" to "/admin/blog")).build()
-//            }
-//    }
-//
-//    // Edit blog post form
-//    @GET
-//    @Path("/blog/{id}/edit")
-//    @Produces(MediaType.TEXT_HTML)
-//    @RolesAllowed("ADMIN")
-//    fun getEditBlogPostForm(@PathParam("id") id: Long): Uni<Response> {
-//        return blogService.getBlogPostById(id)
-//            .onItem().transform { post ->
-//                Response.ok(templateService.renderBlogPostForm(post)).build()
-//            }
-//            .onFailure().recoverWithItem(java.util.function.Function<Throwable, Response> {
-//                Response.status(Response.Status.NOT_FOUND).entity("Blog post not found").build()
-//            })
-//    }
-//
-//    // Update blog post
-//    @PUT
-//    @Path("/blog/{id}")
-//    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @RolesAllowed("ADMIN")
-//    fun updateBlogPost(@PathParam("id") id: Long, blogPost: BlogPost): Uni<Response> {
-//        return blogService.updateBlogPost(id, blogPost)
-//            .onItem().transform { updatedPost ->
-//                Response.ok(mapOf("id" to updatedPost.id, "redirect" to "/admin/blog")).build()
-//            }
-//            .onFailure().recoverWithItem(java.util.function.Function<Throwable, Response> {
-//                Response.status(Response.Status.NOT_FOUND).entity("Blog post not found").build()
-//            })
-//    }
-//
-//    // Delete blog post
-//    @DELETE
-//    @Path("/blog/{id}")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @RolesAllowed("ADMIN")
-//    fun deleteBlogPost(@PathParam("id") id: Long): Uni<Response> {
-//        return blogService.deleteBlogPost(id)
-//            .onItem().transform { success ->
-//                if (success) {
-//                    Response.ok(mapOf("success" to true)).build()
-//                } else {
-//                    Response.status(Response.Status.NOT_FOUND).entity(mapOf("success" to false)).build()
-//                }
-//            }
-//    }
-//}
+package code.yousef.presentation.resource
+
+import code.yousef.application.service.TemplateService
+import code.yousef.application.usecase.blog.CreateBlogUseCase
+import code.yousef.application.usecase.blog.DeleteBlogUseCase
+import code.yousef.application.usecase.blog.GetBlogsUseCase
+import code.yousef.application.usecase.blog.UpdateBlogUseCase
+import code.yousef.application.usecase.project.CreateProjectUseCase
+import code.yousef.application.usecase.project.DeleteProjectUseCase
+import code.yousef.application.usecase.project.GetProjectsUseCase
+import code.yousef.application.usecase.project.UpdateProjectUseCase
+import code.yousef.infrastructure.persistence.mapper.BlogPostMapper
+import code.yousef.infrastructure.persistence.mapper.ProjectMapper
+import code.yousef.presentation.dto.request.CreateUpdateBlogRequest
+import code.yousef.presentation.dto.request.CreateUpdateProjectRequest
+import jakarta.annotation.security.RolesAllowed
+import jakarta.inject.Inject
+import jakarta.ws.rs.*
+import jakarta.ws.rs.core.MediaType
+import jakarta.ws.rs.core.Response
+import java.util.*
+
+@Path("/admin")
+class AdminResource @Inject constructor(
+    private val templateService: TemplateService,
+    private val getProjectsUseCase: GetProjectsUseCase,
+    private val createProjectUseCase: CreateProjectUseCase,
+    private val updateProjectUseCase: UpdateProjectUseCase,
+    private val deleteProjectUseCase: DeleteProjectUseCase,
+    private val getBlogsUseCase: GetBlogsUseCase,
+    private val createBlogUseCase: CreateBlogUseCase,
+    private val updateBlogUseCase: UpdateBlogUseCase,
+    private val deleteBlogUseCase: DeleteBlogUseCase
+) {
+
+    val projectMapper = ProjectMapper()
+    val blogMapper = BlogPostMapper()
+
+    // Dashboard
+    @GET
+    @Path("/dashboard")
+    @Produces(MediaType.TEXT_HTML)
+    @RolesAllowed("ADMIN")
+    suspend fun getDashboard(): StringBuilder {
+        return templateService.renderAdminDashboard()
+    }
+
+    // Projects list
+    @GET
+    @Path("/projects")
+    @Produces(MediaType.TEXT_HTML)
+    @RolesAllowed("ADMIN")
+    suspend fun getProjects(): StringBuilder {
+        return templateService.renderAdminProjects()
+    }
+
+    // New project form
+    @GET
+    @Path("/projects/new")
+    @Produces(MediaType.TEXT_HTML)
+    @RolesAllowed("ADMIN")
+    suspend fun getNewProjectForm(): StringBuilder {
+        return templateService.renderProjectForm()
+    }
+
+    // Create project
+    @POST
+    @Path("/projects")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("ADMIN")
+    suspend fun createProject(request: CreateUpdateProjectRequest): Response {
+        val projectResponse = createProjectUseCase.execute(request)
+        return Response.ok(mapOf("id" to projectResponse.id, "redirect" to "/admin/projects")).build()
+    }
+
+    // Edit project form
+    @GET
+    @Path("/projects/{id}/edit")
+    @Produces(MediaType.TEXT_HTML)
+    @RolesAllowed("ADMIN")
+    suspend fun getEditProjectForm(@PathParam("id") id: UUID): Response {
+        val project = getProjectsUseCase.getProjectById(id)
+        return if (project != null) {
+            Response.ok(templateService.renderProjectForm(projectMapper.toEntity(project))).build()
+        } else {
+            Response.status(Response.Status.NOT_FOUND).entity("Project not found").build()
+        }
+    }
+
+    // Update project
+    @PUT
+    @Path("/projects/{id}")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("ADMIN")
+    suspend fun updateProject(@PathParam("id") id: UUID, request: CreateUpdateProjectRequest): Response {
+        val projectResponse = updateProjectUseCase.execute(id, request)
+        return if (projectResponse != null) {
+            Response.ok(mapOf("id" to projectResponse.id, "redirect" to "/admin/projects")).build()
+        } else {
+            Response.status(Response.Status.NOT_FOUND).entity("Project not found").build()
+        }
+    }
+
+    // Delete project
+    @DELETE
+    @Path("/projects/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("ADMIN")
+    suspend fun deleteProject(@PathParam("id") id: UUID): Response {
+        val success = deleteProjectUseCase.execute(id)
+        return if (success) {
+            Response.ok(mapOf("success" to true)).build()
+        } else {
+            Response.status(Response.Status.NOT_FOUND).entity(mapOf("success" to false)).build()
+        }
+    }
+
+    // Blog posts list
+    @GET
+    @Path("/blog")
+    @Produces(MediaType.TEXT_HTML)
+    @RolesAllowed("ADMIN")
+    suspend fun getBlogPosts(): StringBuilder {
+        return templateService.renderAdminBlogPosts()
+    }
+
+    // New blog post form
+    @GET
+    @Path("/blog/new")
+    @Produces(MediaType.TEXT_HTML)
+    @RolesAllowed("ADMIN")
+    suspend fun getNewBlogPostForm(): StringBuilder {
+        return templateService.renderBlogPostForm()
+    }
+
+    // Create blog post
+    @POST
+    @Path("/blog")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("ADMIN")
+    suspend fun createBlogPost(request: CreateUpdateBlogRequest): Response {
+        val blogResponse = createBlogUseCase.execute(request)
+        return Response.ok(mapOf("id" to blogResponse.id, "redirect" to "/admin/blog")).build()
+    }
+
+    // Edit blog post form
+    @GET
+    @Path("/blog/{id}/edit")
+    @Produces(MediaType.TEXT_HTML)
+    @RolesAllowed("ADMIN")
+    suspend fun getEditBlogPostForm(@PathParam("id") id: UUID): Response {
+        val blog = getBlogsUseCase.getBlogById(id)
+        return if (blog != null) {
+            Response.ok(templateService.renderBlogPostForm(blogMapper.toEntityFromResponse(blog))).build()
+        } else {
+            Response.status(Response.Status.NOT_FOUND).entity("Blog post not found").build()
+        }
+    }
+
+    // Update blog post
+    @PUT
+    @Path("/blog/{id}")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("ADMIN")
+    suspend fun updateBlogPost(@PathParam("id") id: UUID, request: CreateUpdateBlogRequest): Response {
+        val blogResponse = updateBlogUseCase.execute(id, request)
+        return if (blogResponse != null) {
+            Response.ok(mapOf("id" to blogResponse.id, "redirect" to "/admin/blog")).build()
+        } else {
+            Response.status(Response.Status.NOT_FOUND).entity("Blog post not found").build()
+        }
+    }
+
+    // Delete blog post
+    @DELETE
+    @Path("/blog/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("ADMIN")
+    suspend fun deleteBlogPost(@PathParam("id") id: UUID): Response {
+        val success = deleteBlogUseCase.execute(id)
+        return if (success) {
+            Response.ok(mapOf("success" to true)).build()
+        } else {
+            Response.status(Response.Status.NOT_FOUND).entity(mapOf("success" to false)).build()
+        }
+    }
+}

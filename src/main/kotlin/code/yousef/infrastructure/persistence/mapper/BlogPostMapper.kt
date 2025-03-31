@@ -104,4 +104,42 @@ class BlogPostMapper {
             readingTime = blog.getReadingTime()
         )
     }
+
+    /**
+     * Convert BlogResponse to BlogPost domain model
+     */
+    fun toDomainFromResponse(response: BlogResponse): BlogPost {
+        return BlogPost(
+            id = response.id,
+            title = response.title,
+            summary = response.summary,
+            content = response.content,
+            imageUrl = response.imageUrl,
+            tags = response.tags,
+            publishDate = LocalDateTime.parse(response.publishDate, dateFormatter),
+            createdAt = LocalDateTime.parse(response.createdAt, dateFormatter),
+            updatedAt = LocalDateTime.parse(response.updatedAt, dateFormatter),
+            published = response.published,
+            slug = response.slug
+        )
+    }
+
+    /**
+     * Convert BlogResponse to BlogPostEntity
+     */
+    fun toEntityFromResponse(response: BlogResponse): BlogPostEntity {
+        val entity = BlogPostEntity()
+        entity.id = response.id
+        entity.title = response.title
+        entity.summary = response.summary
+        entity.content = response.content
+        entity.imageUrl = response.imageUrl
+        entity.tags = response.tags
+        entity.publishDate = LocalDateTime.parse(response.publishDate, dateFormatter)
+        entity.createdAt = LocalDateTime.parse(response.createdAt, dateFormatter)
+        entity.updatedAt = LocalDateTime.parse(response.updatedAt, dateFormatter)
+        entity.published = response.published
+        entity.slug = response.slug
+        return entity
+    }
 }
