@@ -32,6 +32,7 @@
 
 body.admin,
 body {
+  padding-top: 30px;
   background-color: var(--deep-space-blue);
   margin: 0;
   font-family: 'Space Grotesk', sans-serif;
@@ -161,9 +162,36 @@ body {
   font-size: 0.9rem;
 }
 
+.admin-btn,
+.primary-btn,
+.secondary-btn,
+.delete-btn,
+.table-actions .admin-btn {
+  height: 36px !important;
+  line-height: 36px !important;
+  padding: 0 16px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: auto;
+}
+
 .primary-btn {
-  background-color: var(--primary);
-  color: var(--deep-space-blue);
+  background-color: rgba(0, 195, 201, 0.9) !important;
+  color: #0a0a14 !important;
+  font-weight: 600 !important;
+}
+
+.secondary-btn {
+  background-color: rgba(0, 195, 201, 0.15) !important;
+  color: rgba(0, 195, 201, 1) !important;
+  font-weight: 600 !important;
+}
+
+.delete-btn {
+  background-color: rgba(206, 60, 74, 0.15) !important;
+  color: rgba(206, 60, 74, 1) !important;
+  font-weight: 600 !important;
 }
 
 .primary-btn:hover {
@@ -171,24 +199,8 @@ body {
   transform: translateY(-1px);
 }
 
-.secondary-btn {
-  background-color: transparent;
-  color: var(--primary);
-  border: 1px solid var(--primary);
-}
-
 .secondary-btn:hover {
   background-color: var(--hover-bg);
-}
-
-.delete-btn {
-  background-color: rgba(206, 60, 74, 0.1);
-  color: var(--danger);
-  border: 1px solid var(--danger);
-  font-weight: 500;
-  padding: 8px 16px;
-  min-width: 80px;
-  text-align: center;
 }
 
 .delete-btn:hover {
@@ -298,19 +310,14 @@ body {
   margin-top: 20px;
 }
 
-.table th,
-.table td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid var(--border-color);
+.table td,
+.table th {
+  color: rgba(240, 240, 240, 0.9) !important;
 }
 
 .table th {
-  color: var(--primary);
-  font-weight: 600;
-  font-size: 0.9rem;
-  letter-spacing: 0.5px;
-  background-color: var(--hover-bg);
+  color: rgba(0, 195, 201, 1) !important;
+  font-weight: 600 !important;
 }
 
 .table tbody tr:hover {
@@ -324,20 +331,20 @@ body {
 
 /* Status Badge */
 .status-badge {
-  padding: 3px 8px;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  font-weight: 500;
+  padding: 4px 10px !important;
+  border-radius: 4px !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
 }
 
 .status-badge.published {
-  background-color: rgba(var(--primary-rgb), 0.1);
-  color: var(--primary);
+  background-color: rgba(0, 195, 201, 0.2) !important;
+  color: rgba(0, 195, 201, 1) !important;
 }
 
 .status-badge.draft {
-  background-color: rgba(240, 240, 240, 0.1);
-  color: var(--text-muted);
+  background-color: rgba(240, 240, 240, 0.15) !important;
+  color: rgba(240, 240, 240, 0.9) !important;
 }
 
 /* Dashboard Grid */
@@ -375,7 +382,7 @@ body {
 }
 
 .content-area {
-  padding: 15px 0;
+  padding: 15px 15px;
 }
 
 /* Fix SimpleMDE colors */

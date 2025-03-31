@@ -129,7 +129,7 @@ class AdminTemplates {
                                     +(if (post.published) "Published" else "Draft")
                                 }
                             }
-                            td { +post.publishDate.toString() }
+                            td { +formatDate(post.publishDate) }
                             td(classes = "table-actions") {
                                 a(href = "/admin/blog/${post.id}/edit", classes = "admin-btn secondary-btn small") {
                                     +"Edit"
@@ -144,6 +144,11 @@ class AdminTemplates {
                 }
             }
         }.toString()
+    }
+
+    private fun formatDate(dateTime: LocalDateTime): String {
+        val formatter = java.time.format.DateTimeFormatter.ofPattern("MMM d, yyyy h:mm a")
+        return dateTime.format(formatter)
     }
 
     fun buildProjectForm(projectEntity: ProjectEntity?): String? {
@@ -256,6 +261,7 @@ class AdminTemplates {
                         id = "technologies"
                         name = "technologies"
                         value = project.technologies.joinToString(", ")
+                        placeholder = "Kotlin, JavaScript, React, etc."
                     }
                 }
 
