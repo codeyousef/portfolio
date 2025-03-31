@@ -239,7 +239,7 @@ class PortfolioTemplates {
                                         div(classes = "skill-card-bg-circle") {}
                                     }
                                     img(
-                                        src = "https://play-lh.googleusercontent.com/jf-wUvZHEVzkyRSiCQiv1IxGsQ4bi0FeKYpVAb5hqkgIIGJqRTGSQ87Q_hbuCJgTsIQ",
+                                        src = "https://kotlinlang.org/docs/images/kotlin-logo.png",
                                         alt = "Kotlin",
                                         classes = "skill-logo"
                                     ) {}
@@ -266,8 +266,8 @@ class PortfolioTemplates {
                                         div(classes = "skill-card-bg-circle") {}
                                     }
                                     img(
-                                        src = "https://developer.android.com/static/images/jetpack/compose-tutorial/compose-logo.svg",
-                                        alt = "Compose Multiplatform",
+                                        src = "https://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg",
+                                        alt = "Android",
                                         classes = "skill-logo"
                                     ) {}
                                     h3(classes = "skill-title") { +"Compose" }
@@ -341,7 +341,7 @@ class PortfolioTemplates {
                                         attributes["style"] =
                                             "display: flex; justify-content: center; align-items: center; width: 100px; height: 100px; margin-bottom: 20px;"
                                         img(
-                                            src = "https://developer.android.com/static/images/brand/Android_Robot.svg",
+                                            src = "https://upload.wikimedia.org/wikipedia/commons/d/d7/Android_robot.svg",
                                             alt = "Android",
                                             classes = "skill-logo"
                                         ) {
@@ -568,71 +568,71 @@ class PortfolioTemplates {
                     }
                 }
             }
-}
-                return writer.toString()
-            }
+        }
+        return writer.toString()
+    }
 
-            /**
-             * Builds the projects section using Kotlin HTML DSL
-             */
-            fun buildProjectsSection(
-                projectEntities: List<ProjectEntity>
-            ): String {
-                val writer =
-                    StringWriter()
-                writer.appendHTML()
-                    .div {
-                        attributes["class"] =
-                            "projects-grid"
+    /**
+     * Builds the projects section using Kotlin HTML DSL
+     */
+    fun buildProjectsSection(
+        projectEntities: List<ProjectEntity>
+    ): String {
+        val writer =
+            StringWriter()
+        writer.appendHTML()
+            .div {
+                attributes["class"] =
+                    "projects-grid"
 
-                        projectEntities.forEachIndexed { index, project ->
-                            div(classes = "project-card") {
-                                // Project image
-                                div(classes = "project-image") {
-                                    // Use different colors based on index
-                                    val colors =
-                                        listOf(
-                                            "00f7ff",
-                                            "ff2a6d",
-                                            "05ffa1",
-                                            "b967ff",
-                                            "0162ff"
-                                        )
-                                    val color =
-                                        colors[index % colors.size]
-                                    img(
-                                        src = "https://placehold.co/600x400/020024/$color?text=${project.title}",
-                                        alt = project.title
-                                    ) { }
+                projectEntities.forEachIndexed { index, project ->
+                    div(classes = "project-card") {
+                        // Project image
+                        div(classes = "project-image") {
+                            // Use different colors based on index
+                            val colors =
+                                listOf(
+                                    "00f7ff",
+                                    "ff2a6d",
+                                    "05ffa1",
+                                    "b967ff",
+                                    "0162ff"
+                                )
+                            val color =
+                                colors[index % colors.size]
+                            img(
+                                src = "https://placehold.co/600x400/020024/$color?text=${project.title}",
+                                alt = project.title
+                            ) { }
+                        }
+
+                        // Project content
+                        div(classes = "project-content") {
+                            h3(classes = "project-title") { +project.title }
+                            p(classes = "project-desc") { +project.description }
+                            div(classes = "project-tags") {
+                                project.technologies.forEach { tech ->
+                                    span(
+                                        classes = "project-tag"
+                                    ) { +tech }
                                 }
-
-                                // Project content
-                                div(classes = "project-content") {
-                                    h3(classes = "project-title") { +project.title }
-                                    p(classes = "project-desc") { +project.description }
-                                    div(classes = "project-tags") {
-                                        project.technologies.forEach { tech ->
-                                            span(
-                                                classes = "project-tag"
-                                            ) { +tech }
-                                        }
-                                    }
-                                    div(classes = "project-links") {
-                                        a(
-                                            href = project.demoUrl,
-                                            target = "_blank",
-                                            classes = "project-link"
-                                        ) { +"Live Demo" }
-                                        a(
-                                            href = project.githubUrl,
-                                            target = "_blank",
-                                            classes = "project-link"
-                                        ) { +"Github" }
-                                    }
-                                }
+                            }
+                            div(classes = "project-links") {
+                                a(
+                                    href = project.demoUrl,
+                                    target = "_blank",
+                                    classes = "project-link"
+                                ) { +"Live Demo" }
+                                a(
+                                    href = project.githubUrl,
+                                    target = "_blank",
+                                    classes = "project-link"
+                                ) { +"Github" }
                             }
                         }
                     }
-                return writer.toString()
+                }
             }
-        }
+        return writer.toString()
+    }
+}

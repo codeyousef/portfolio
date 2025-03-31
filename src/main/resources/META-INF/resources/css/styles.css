@@ -928,15 +928,17 @@ height: 100%;
 
 .skill-cards-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 30px;
   position: relative;
   z-index: 2;
 }
 
 .skill-card {
-  perspective: 1000px;
-  height: 280px;
+    perspective: 1000px;
+    height: 300px;  /* Increased height */
+    width: 300px;   /* Same as height for square cards */
+    margin: 0 auto; /* Center cards in their grid cells */
 }
 
 .skill-card-inner {
@@ -964,7 +966,7 @@ height: 100%;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 30px;
   background: rgba(16, 16, 30, 0.7);
   background: linear-gradient(135deg,
     rgba(16, 16, 30, 0.7) 0%,
@@ -997,6 +999,11 @@ height: 100%;
 
 .skill-card:hover .skill-logo {
   filter: drop-shadow(0 0 15px rgba(var(--primary-rgb), 1));
+}
+
+.skill-card:hover .skill-card-front * {
+    opacity: 0;
+    transition: opacity 0.15s ease-out;
 }
 
 .skill-title {
