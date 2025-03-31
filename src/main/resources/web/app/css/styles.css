@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Main Portfolio Styles */
 
 /* Root variables */
@@ -332,12 +336,6 @@ div[style*="display: flex; justify-content: center; align-items: center"] {
 div[style*="display: flex; justify-content: center; align-items: center"] img {
   max-height: 70px;
   width: auto;
-}
-height: 100%;
-  background: radial-gradient(circle at top right, rgba(1, 98, 255, 0.15), transparent 60%),
-              radial-gradient(circle at bottom left, rgba(255, 42, 109, 0.15), transparent 60%);
-  z-index: -1;
-  pointer-events: none;
 }
 
 /* Grid lines */
@@ -1230,3 +1228,4 @@ height: 100%;
 .form-input,
 .form-textarea {
   width: 100%;
+}

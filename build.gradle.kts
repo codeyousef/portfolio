@@ -7,6 +7,7 @@ plugins {
 repositories {
     mavenCentral()
     mavenLocal()
+    maven { url = uri("https://repo.mvnpm.org/maven2") }
 }
 
 val quarkusPlatformGroupId: String by project
@@ -27,8 +28,12 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.12.0")
     implementation("at.favre.lib:bcrypt:0.10.2")
     implementation("io.quarkus:quarkus-arc")
+    implementation("io.quarkiverse.web-bundler:quarkus-web-bundler:1.8.1")
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
+
+    runtimeOnly("org.webjars.npm:three:0.169.0")
+
 }
 
 group = "code.yousef"

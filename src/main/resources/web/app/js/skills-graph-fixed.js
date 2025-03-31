@@ -23,7 +23,7 @@ function createSkillsMatrix() {
   console.log('Creating fallback skills matrix');
   
   // Get the skills matrix container
-  const container = document.querySelector('.skills-matrix');
+  let container = document.querySelector('.skills-matrix');
   if (!container) {
     console.error('Skills matrix container not found');
     return;
