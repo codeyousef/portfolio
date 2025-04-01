@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TECHWAVE Portfolio</title>
+    <title>Yousef's Portfolio</title>
     {#bundle /}
 
     <link rel="stylesheet"
@@ -18,14 +18,12 @@
 <div class="grid-lines"></div>
 
 <header>
-    <a href="/" class="logo">TECHWAVE<span></span></a>
+    <a href="/" class="logo">YOUSEF<span></span></a>
 
     <ul class="nav-links">
-        <li><a href="#hero">Home</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li><a href="/">Home</a></li>
         <li><a href="/blog">Blog</a></li>
+        <li><a href="/services">Services</a></li>
     </ul>
 
     <div class="actions">
@@ -47,9 +45,16 @@
     {/if}
 </main>
 
+<div class="nav-pill">
+    <a href="#hero" class="nav-pill-item">Hero</a>
+    <a href="#projects" class="nav-pill-item homepage-only">Projects</a>
+    <a href="#skills" class="nav-pill-item homepage-only">Skills</a>
+    <a href="#contact" class="nav-pill-item homepage-only">Contact</a>
+</div>
+
 <footer>
     <div class="footer-content">
-        <a href="/" class="footer-logo">TECHWAVE</a>
+        <a href="/" class="footer-logo">YOUSEF</a>
 
         <div class="footer-links">
             <a href="#hero" class="footer-link">Home</a>
@@ -82,6 +87,18 @@
         © 2025 TECHWAVE. All rights reserved.
     </div>
 </footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add page identifier class
+      document.body.classList.add(window.location.pathname === '/' ? 'is-homepage' : 'not-homepage');
+
+      // Hide homepage-only items on other pages
+      if (window.location.pathname !== '/') {
+        document.querySelectorAll('.homepage-only').forEach(item => item.style.display = 'none');
+      }
+    });
+</script>
 
 <script>
     // Theme toggle functionality (Copied from target example)

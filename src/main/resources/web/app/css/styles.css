@@ -1305,3 +1305,61 @@ footer {
   color: var(--primary);
   text-shadow: 0 0 10px rgba(var(--primary-rgb), 0.4);
 }
+
+/* Pill Navigation */
+.nav-pill {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10, 10, 20, 0.7);
+  backdrop-filter: blur(12px);
+  border-radius: 50px;
+  padding: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 1000;
+  box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.3),
+              inset 0 0 5px rgba(var(--primary-rgb), 0.2);
+  border: 1px solid rgba(var(--primary-rgb), 0.3);
+  max-width: 90%;
+  overflow-x: auto;
+}
+
+.nav-pill-item {
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.nav-pill-item:hover, .nav-pill-item.active {
+  background: rgba(var(--primary-rgb), 0.2);
+  color: var(--primary);
+  text-shadow: 0 0 5px rgba(var(--primary-rgb), 0.5);
+}
+
+.nav-pill-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  background: var(--primary);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--primary);
+}
+
+/* Different pill position for homepage vs other pages */
+body.is-homepage .nav-pill {
+  bottom: 2rem;
+}
+
+body:not(.is-homepage) .nav-pill {
+  top: 2rem;
+  bottom: auto;
+}
