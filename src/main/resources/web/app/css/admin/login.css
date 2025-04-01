@@ -1,12 +1,6 @@
-/* Define color variables if not defined globally in styles.css
-:root {
-  --deep-space-blue: #0a0a14; /* Example value */
-  --cyber-cyan: #00f7ff;    /* Example value */
-  --neon-pink: #ff00ff;     /* Example value */
-}
-
-body {
-  background-color: var(--deep-space-blue);
+/* Admin Login Styles - Scoped to prevent conflicts */
+body.admin-login {
+  background-color: var(--deep-space-blue, #0a0a14);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,7 +10,8 @@ body {
   color: white;
 }
 
-.login-container {
+/* All styles scoped to admin-login to prevent conflicts */
+.admin-login .login-container {
   width: 100%;
   max-width: 400px;
   padding: 30px;
@@ -27,31 +22,31 @@ body {
   box-shadow: 0 0 20px rgba(0, 247, 255, 0.2);
 }
 
-.login-header {
+.admin-login .login-header {
   text-align: center;
   margin-bottom: 30px;
 }
 
-.login-header h1 {
+.admin-login .login-header h1 {
   margin: 0;
   color: white;
   font-size: 2rem;
-  text-shadow: 0 0 12px var(--cyber-cyan);
+  text-shadow: 0 0 12px var(--cyber-cyan, #00f7ff);
 }
 
-.form-group {
+.admin-login .form-group {
   margin-bottom: 20px;
 }
 
-.form-group label {
+.admin-login .form-group label {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
   letter-spacing: 1px;
-  text-transform: uppercase; /* Match admin style */
+  text-transform: uppercase;
 }
 
-.form-group input {
+.admin-login .form-group input {
   width: 100%;
   padding: 12px;
   border: 1px solid rgba(0, 247, 255, 0.3);
@@ -59,24 +54,24 @@ body {
   border-radius: 5px;
   color: white;
   font-family: 'Space Grotesk', sans-serif;
-  box-sizing: border-box; /* Add box-sizing */
-  transition: all 0.3s ease; /* Add transition */
+  box-sizing: border-box;
+  transition: all 0.3s ease;
 }
 
-.form-group input:focus {
-  border-color: var(--cyber-cyan);
+.admin-login .form-group input:focus {
+  border-color: var(--cyber-cyan, #00f7ff);
   outline: none;
   box-shadow: 0 0 10px rgba(0, 247, 255, 0.5);
 }
 
-.error-message {
-  color: var(--neon-pink);
+.admin-login .error-message {
+  color: var(--neon-pink, #ff00ff);
   margin-bottom: 20px;
   text-align: center;
   font-weight: 500;
 }
 
-button {
+.admin-login button {
   width: 100%;
   padding: 12px;
   background: linear-gradient(45deg, #090979, #00f7ff);
@@ -88,26 +83,26 @@ button {
   cursor: pointer;
   transition: all 0.3s ease;
   margin-top: 10px;
-  text-transform: uppercase; /* Match admin style */
+  text-transform: uppercase;
 }
 
-button:hover {
+.admin-login button:hover {
   box-shadow: 0 0 15px rgba(0, 247, 255, 0.7);
   transform: translateY(-2px);
 }
 
-.login-footer {
+.admin-login .login-footer {
   text-align: center;
   margin-top: 20px;
 }
 
-.login-footer a {
-  color: var(--cyber-cyan);
+.admin-login .login-footer a {
+  color: var(--cyber-cyan, #00f7ff);
   text-decoration: none;
   transition: all 0.3s ease;
-  font-size: 0.9em; /* Adjust size */
+  font-size: 0.9em;
 }
 
-.login-footer a:hover {
-  text-shadow: 0 0 8px var(--cyber-cyan);
+.admin-login .login-footer a:hover {
+  text-shadow: 0 0 8px var(--cyber-cyan, #00f7ff);
 }
