@@ -1,4 +1,4 @@
-/* Define color variables if not defined globally in styles.css */
+/* Define color variables if not defined globally in styles.css
 :root {
   --deep-space-blue: #0a0a14; /* Example value */
   --cyber-cyan: #00f7ff;    /* Example value */
@@ -110,4 +110,4 @@ button:hover {
 
 .login-footer a:hover {
   text-shadow: 0 0 8px var(--cyber-cyan);
-} 
+}
