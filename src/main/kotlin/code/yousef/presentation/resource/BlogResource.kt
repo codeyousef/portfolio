@@ -40,8 +40,13 @@ class BlogResource {
         @QueryParam("page") @DefaultValue("0") page: Int,
         @QueryParam("size") @DefaultValue("10") size: Int
     ): String? {
-        val blogs = getBlogsUseCase.getPublishedBlogs(page, size).blogs
-        return blogTemplates.buildBlogPage(blogs, page, size).render()
+        val blogListResponse = getBlogsUseCase.getPublishedBlogs(page, size)
+        val blogs = blogListResponse.blogs
+        // Calculate total pages based on total count and size
+        val totalCount = blogListResponse.totalCount ?: blogs.size
+        val totalPages = (totalCount + size - 1) / size // Ceiling division
+        
+        return blogTemplates.buildBlogPage(blogs, page, size, totalPages).render()
     }
 
     @GET

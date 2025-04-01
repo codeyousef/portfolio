@@ -38,8 +38,12 @@ class TemplateService @Inject constructor(
     suspend fun renderBlogPage(page: Int = 0, size: Int = 9): TemplateInstance {
         val blogPosts = blogService.getPublishedBlogs(page, size)
         val blogResponse = blogPosts.map { blogPost -> blogPostMapper.toResponse(blogPost) }
-
-        return blogTemplates.buildBlogPage(blogResponse, page, size)
+        
+        // Calculate total pages - if you have a way to get total count
+        // This is an approximation - modify as needed based on your pagination implementation
+        val totalPages = (blogPosts.size + size - 1) / size // If blogPosts.size is the total count
+        
+        return blogTemplates.buildBlogPage(blogResponse, page, size, totalPages)
     }
 
     suspend fun renderBlogPostPage(slug: String): TemplateInstance {
