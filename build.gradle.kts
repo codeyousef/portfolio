@@ -32,6 +32,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.12.0")
     implementation(kotlinWrappers.css)
+    implementation(kotlinWrappers.js)
     implementation("com.soywiz.korge:korge:5.4.0")
 
     testImplementation("io.quarkus:quarkus-junit5")
