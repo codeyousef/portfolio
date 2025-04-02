@@ -29,6 +29,11 @@ dependencies {
     implementation("at.favre.lib:bcrypt:0.10.2")
     implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkiverse.web-bundler:quarkus-web-bundler:1.8.1")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.12.0")
+    implementation(kotlinWrappers.css)
+    implementation("com.soywiz.korge:korge:5.4.0")
+
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
 

@@ -1,11 +1,10 @@
 package code.yousef.infrastructure.template
 
-// Assuming ProjectEntity is defined in this package or imported correctly
 import code.yousef.infrastructure.persistence.entity.ProjectEntity
 import io.quarkus.qute.Location
+import io.quarkus.qute.RawString
 import io.quarkus.qute.Template
 import io.quarkus.qute.TemplateInstance
-import io.quarkus.qute.RawString // Import RawString
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import kotlinx.html.*
@@ -26,9 +25,6 @@ private data class ContactInfo(
     val phone: String?,
     val githubUsername: String?
 )
-
-
-// --- PortfolioTemplates Class (Structure matches user-provided code) ---
 
 @ApplicationScoped
 class PortfolioTemplates {
@@ -66,7 +62,6 @@ class PortfolioTemplates {
     ): String {
         val writer = StringWriter()
 
-        // --- Static Placeholder Data (defined inside the method) ---
         val skillsPlaceholder: List<SkillData> = listOf(
             SkillData(
                 "Kotlin",
@@ -141,10 +136,8 @@ class PortfolioTemplates {
             phone = "+1 (555) 123-4567",
             githubUsername = "yourusername"
         )
-        // --- End Static Placeholder Data ---
 
 
-        // Use appendHTML().div { ... } structure
         writer.appendHTML().div {
             // --- Hero Section ---
             section(classes = "hero") {
