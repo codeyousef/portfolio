@@ -1,138 +1,106 @@
-# Portfolio - Quarkus Kotlin with Azure Infrastructure
+# Portfolio Application
 
-This project is a modern portfolio website built with Quarkus and Kotlin, deployed to Azure with a multi-environment setup (development, test, production).
+A modular portfolio application built with Kotlin, Kotlin/JS, and Quarkus.
 
-## Azure Infrastructure Setup
+## Project Structure
 
-This project uses Terraform to provision and manage the following Azure resources:
+This project is structured as a modular Gradle project with the following modules:
 
-- **App Services**: Hosting the Quarkus application on `yousef.code` (production), `test.yousef.code` (test), and `dev.yousef.code` (development)
-- **PostgreSQL Servers**: Database for each environment
-- **Key Vaults**: Managing secrets and JWT certificates
-- **Storage Accounts**: For storing assets and blobs
+- **backend**: Quarkus backend that serves the API and the frontend static files
+- **frontend**: Kotlin/JS frontend application that gets compiled to JavaScript
+- **shared**: Shared Kotlin multiplatform module with common code used by both frontend and backend
 
-### Setting Up Azure Environment
+## Prerequisites
 
-Before deploying to Azure, you need to:
+- JDK 17 or higher
+- Gradle 8.5 or higher
+- PostgreSQL database
 
-1. Configure your Azure CLI:
-   ```shell
-   az login
-   az account set --subscription "Your-Subscription-ID"
-   ```
+## How to Run
 
-2. Navigate to the Terraform directory and initialize:
-   ```shell
-   cd terraform
-   terraform init
-   ```
-
-3. Apply the Terraform configuration:
-   ```shell
-   terraform plan -out=tfplan
-   terraform apply tfplan
-   ```
-
-4. Set up JWT certificates for each environment:
-   ```shell
-   ./jwt-setup.sh dev
-   ./jwt-setup.sh test
-   ./jwt-setup.sh prod
-   ```
-
-## CI/CD Pipeline
-
-The project includes an Azure DevOps pipeline configuration in `azure-pipelines.yml` which:
-
-- Builds the application
-- Runs tests
-- Deploys to the appropriate environment based on the branch
-- Configures custom domains and SSL
-
-## Local Development
-
-### Running in Dev Mode
-
-For local development, a Docker Compose setup is provided:
+### Development Mode
 
 1. Start the PostgreSQL database:
-   ```shell
+   ```
    docker-compose up -d
    ```
 
-2. Generate JWT certificates for development:
-   ```shell
-   docker-compose --profile setup up jwt-generator
+2. Run the application in development mode:
    ```
-
-3. Run the application in dev mode:
-   ```shell
-   ./gradlew quarkusDev
+   ./gradlew :backend:quarkusDev
    ```
+   
+   This will:
+   - Compile the shared module
+   - Build the frontend module and output the JS assets
+   - Copy the frontend assets to the backend resources directory
+   - Start the Quarkus application in dev mode
 
-The application will be available at <http://localhost:8080/> with a Dev UI at <http://localhost:8080/q/dev/>.
+3. Access the application at http://localhost:8080
+   - Main portfolio application: http://localhost:8080
+   - Kotlin/JS frontend: http://localhost:8080/app
+   - API endpoints: http://localhost:8080/api/v1/projects, /api/v1/services, etc.
 
-### Database Management
+### Production Build
 
-An optional pgAdmin interface is available:
+To build the application for production:
 
-```shell
-docker-compose --profile dev-tools up -d
 ```
-
-Access pgAdmin at <http://localhost:5050/> with:
-- Email: admin@admin.com
-- Password: admin
-
-## Packaging and Deployment
-
-### Creating a JAR
-
-```shell
 ./gradlew build
 ```
 
-This produces the `quarkus-run.jar` file in the `build/quarkus-app/` directory.
+This will produce an uber-jar in the `backend/build/quarkus-app` directory.
 
-### Building an Über-JAR
+To run the production jar:
 
-```shell
-./gradlew build -Dquarkus.package.jar.type=uber-jar
+```
+java -jar backend/build/quarkus-app/quarkus-run.jar
 ```
 
-### Creating a Native Executable
+## Project Architecture
 
-```shell
-./gradlew build -Dquarkus.native.enabled=true
-```
+### Shared Module
 
-Or using a container:
+The shared module contains:
+- Common data models that can be used on both frontend and backend
+- Models: Project, Service, BlogPost, User
+- Shared utility functions and constants
 
-```shell
-./gradlew build -Dquarkus.native.enabled=true -Dquarkus.native.container-build=true
-```
+### Frontend Module
 
-## Azure Extensions Used
+The frontend module is a Kotlin/JS application that:
+- Uses Kotlin HTML DSL for building the UI
+- Communicates with the backend API endpoints
+- Gets compiled to JavaScript and static assets
+- Is served by the Quarkus backend
 
-- **Quarkus Azure Key Vault**: Manages JWT certificates and secrets
-- **Quarkus Azure App Configuration**: Centralized configuration management
-- **Quarkus Azure Storage Blob**: Storage for portfolio assets
+### Backend Module
 
-## Security
+The backend module is a Quarkus application that:
+- Provides REST API endpoints that return the shared models as JSON
+- Serves the compiled frontend static assets
+- Connects to a PostgreSQL database
+- Handles authentication and authorization
 
-- JWT Authentication for admin access
-- SSL/TLS for all environments
-- Managed identities for secure Azure service access
+## Technology Stack
 
-## Related Guides
+- **Backend**:
+  - Quarkus
+  - Kotlin
+  - Hibernate Reactive with Panache
+  - PostgreSQL
+  - Jakarta RESTful Web Services (JAX-RS)
 
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-- Quarkus Support Azure Key Vault ([guide](https://docs.quarkiverse.io/quarkus-azure-services/dev/quarkus-azure-key-vault.html)): Manage secrets in Azure Key Vault Service
-- Security Jakarta Persistence Reactive ([guide](https://quarkus.io/guides/security-getting-started)): Secure your applications with username/password stored in a database via Jakarta Persistence
-- REST Jackson ([guide](https://quarkus.io/guides/rest#json-serialisation)): Jackson serialization support for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it
-- Quarkus Azure App Configuration ([guide](https://docs.quarkiverse.io/quarkus-azure-services/dev/quarkus-azure-app-configuration.html)): Quarkus Azure App Configuration
-- Kotlin ([guide](https://quarkus.io/guides/kotlin)): Write your services in Kotlin
-- OpenID Connect ([guide](https://quarkus.io/guides/security-openid-connect)): Verify Bearer access tokens and authenticate users with Authorization Code Flow
-- WebSockets ([guide](https://quarkus.io/guides/websockets)): WebSocket communication channel support
-- SmallRye JWT ([guide](https://quarkus.io/guides/security-jwt)): Secure your applications with JSON Web Token
-- Quarkus Support Azure Storage Blob ([guide](https://docs.quarkiverse.io/quarkus-azure-services/dev/quarkus-azure-storage-blob.html)): Quarkus Support for Azure Storage Blob
+- **Frontend**:
+  - Kotlin/JS
+  - Kotlin HTML DSL
+  - CSS
+  - Kotlin Coroutines
+
+- **Shared**:
+  - Kotlin Multiplatform
+  - Kotlinx Serialization
+
+## License
+
+[MIT License](LICENSE)
