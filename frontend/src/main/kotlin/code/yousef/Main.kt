@@ -1,70 +1,69 @@
 package code.yousef
 
+import code.yousef.components.*
+import code.yousef.routes.Router
+import code.yousef.styles.AppStyles
 import kotlinx.browser.document
 import kotlinx.browser.window
-import kotlinx.html.div
+import kotlinx.css.*
 import kotlinx.html.dom.append
-import kotlinx.html.h1
-import kotlinx.html.h2
+import kotlinx.html.div
 import kotlinx.html.id
-import kotlinx.html.p
-import kotlinx.html.section
-import kotlinx.html.style
-import code.yousef.model.Project
+import kotlinx.html.js.onClickFunction
+import org.w3c.dom.HTMLElement
+import org.w3c.dom.get
 
 fun main() {
     window.onload = {
+        // Initialize styles
+        AppStyles.init()
+
+        // If server-side rendered content exists, remove it
+        document.getElementById("seo-content")?.let { seoContent ->
+            // We don't immediately remove the SSR content to avoid flicker
+            // It will be replaced by the client-side rendering
+        }
+
+        // Get the root element
         val root = document.getElementById("root") ?: document.body!!
-        
+
+        // Clear existing content if any
+        root.innerHTML = ""
+
+        // Initialize the router
+        val router = Router()
+
+        // Append the app shell
         root.append {
-            section {
-                style = "padding: 20px; max-width: 1200px; margin: 0 auto;"
-                
-                div {
-                    id = "header"
-                    style = "background-color: #333; color: white; padding: 20px; border-radius: 5px; margin-bottom: 20px;"
-                    
-                    h1 {
-                        +"Portfolio Frontend (Kotlin/JS)"
-                    }
-                    
-                    p {
-                        +"This is the Kotlin/JS frontend module that loads data from the Quarkus backend"
-                    }
-                }
-                
-                div {
-                    id = "projects"
-                    style = "margin-top: 30px;"
-                    
-                    h2 {
-                        +"Projects"
-                    }
-                    
-                    // Create a sample project to demonstrate the shared model
-                    val project = Project(
-                        id = "sample-1",
-                        title = "Sample Project",
-                        description = "This is a sample project to demonstrate shared models",
-                        imageUrl = "/images/sample.jpg",
-                        technologies = listOf("Kotlin", "Quarkus", "Kotlin/JS")
-                    )
-                    
-                    // Display the project information
-                    div {
-                        style = "background-color: #f5f5f5; padding: 16px; border-radius: 4px; margin-top: 16px;"
-                        h2 { +project.title }
-                        p { +project.description }
-                        if (project.technologies.isNotEmpty()) {
-                            p { +"Technologies: ${project.technologies.joinToString(", ")}" }
+            div {
+                id = "app"
+
+                // Render the app header
+                appHeader {
+                    // Router navigation handler for links
+                    onClickFunction = { event ->
+                        val target = event.target
+                        if (target is HTMLElement && target.tagName.toLowerCase() == "a") {
+                            event.preventDefault()
+                            val href = target.getAttribute("href")
+                            if (href != null) {
+                                router.navigateTo(href)
+                            }
                         }
                     }
-                    
-                    p {
-                        +"In a real app, we would fetch projects from the API endpoint /api/v1/projects"
-                    }
                 }
+
+                // Main content area that will be managed by the router
+                div {
+                    id = "content"
+                }
+
+                // Render the app footer
+                appFooter()
             }
         }
+
+        // Initialize router with the content element
+        router.initialize(document.getElementById("content")!!)
     }
-} 
+}

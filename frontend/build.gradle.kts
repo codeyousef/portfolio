@@ -1,5 +1,8 @@
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+
 plugins {
     kotlin("multiplatform")
+    kotlin("plugin.serialization") version "2.0.21"
 }
 
 kotlin {
@@ -9,31 +12,50 @@ kotlin {
                 cssSupport {
                     enabled.set(true)
                 }
+                // Enable source maps for debugging
+                sourceMaps = true
             }
             binaries.executable()
-            // Enable development mode for continuous compilation
-            // Using proper webpack dev server configuration
+
+            // Development configuration
             webpackTask {
-                devServer = org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.DevServer(
+                devServerProperty = KotlinWebpackConfig.DevServer(
                     open = false,
-                    port = 3000
+                    port = 3000,
+                    proxy = mutableListOf(
+                        KotlinWebpackConfig.DevServer.Proxy(
+                            mutableListOf(
+                                "/api",
+                                "/blog",
+                                "/projects",
+                                "/services",
+                                "/about",
+                                "/contact"
+                            ), "http://localhost:8080"
+                        ),
+                    ),
+                    static = mutableListOf("${layout.buildDirectory}/distributions")
                 )
-                // We'll integrate with Quarkus directly through copy rather than proxying
             }
         }
     }
-    
+
     sourceSets {
         val jsMain by getting {
             dependencies {
                 implementation(project(":shared"))
-                
-                // Basic Kotlin dependencies
+
+                // Kotlin dependencies
                 implementation(kotlin("stdlib-js"))
                 implementation("org.jetbrains.kotlinx:kotlinx-html-js:0.8.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.7.3")
-                
-                // Add Three.js
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+
+                // Kotlin CSS
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-css:1.0.0-pre.630")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-css-js:1.0.0-pre.630")
+
+                // Add Three.js for 3D effects (optional)
                 implementation(npm("three", "0.169.0"))
             }
         }
@@ -70,10 +92,10 @@ tasks.register("ensureMetaInfResourcesDir") {
 // Add a task to copy the compiled JS output to the Quarkus META-INF/resources directory
 tasks.register<Copy>("copyJsToQuarkus") {
     dependsOn("jsBrowserProductionWebpack", "ensureMetaInfResourcesDir")
-    
+
     from(layout.buildDirectory.dir("kotlin-webpack/js/productionExecutable"))
     into(rootProject.layout.projectDirectory.dir("backend/src/main/resources/META-INF/resources"))
-    
+
     // Clean up before copying
     doFirst {
         delete(fileTree(rootProject.layout.projectDirectory.dir("backend/src/main/resources/META-INF/resources")) {
@@ -86,10 +108,10 @@ tasks.register<Copy>("copyJsToQuarkus") {
 // Add a development version of copyJsToQuarkus that uses the development build instead
 tasks.register<Copy>("copyJsDevToQuarkus") {
     dependsOn("jsBrowserDevelopmentWebpack", "ensureMetaInfResourcesDir")
-    
+
     from(layout.buildDirectory.dir("kotlin-webpack/js/developmentExecutable"))
     into(rootProject.layout.projectDirectory.dir("backend/src/main/resources/META-INF/resources"))
-    
+
     // Clean up before copying
     doFirst {
         delete(fileTree(rootProject.layout.projectDirectory.dir("backend/src/main/resources/META-INF/resources")) {
@@ -104,11 +126,11 @@ tasks.register("watchFrontend") {
     dependsOn("copyJsDevToQuarkus")
     group = "application"
     description = "Watches for frontend changes and automatically copies to Quarkus"
-    
+
     doLast {
         println("Watching for changes in frontend...")
     }
-    
+
     // Set up file watching using Gradle's built-in file watching
     inputs.files(fileTree("src") {
         include("**/*.kt")
@@ -116,10 +138,10 @@ tasks.register("watchFrontend") {
         include("**/*.css")
         include("**/*.html")
     }).withPathSensitivity(PathSensitivity.RELATIVE)
-    
+
     // When changes are detected, trigger the copy task
     outputs.dir(rootProject.layout.projectDirectory.dir("backend/src/main/resources/META-INF/resources"))
-    
+
     // This is needed to make this task always run, even if no changes
     outputs.upToDateWhen { false }
 }
