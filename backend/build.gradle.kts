@@ -79,4 +79,9 @@ kotlin {
 // Make sure the shared module is built before backend
 tasks.named("compileKotlin") {
     dependsOn(":shared:compileKotlinJvm")
+}
+
+// Make quarkusDev depend on the frontend's copyJsToQuarkus task
+tasks.named("quarkusDev") {
+    dependsOn(":frontend:copyJsToQuarkus")
 } 
