@@ -91,7 +91,7 @@ tasks.register("ensureMetaInfResourcesDir") {
 
 // Add a task to copy the compiled JS output to the Quarkus META-INF/resources directory
 tasks.register<Copy>("copyJsToQuarkus") {
-    dependsOn("jsBrowserProductionWebpack", "ensureMetaInfResourcesDir")
+    mustRunAfter("jsBrowserProductionWebpack", "ensureMetaInfResourcesDir")
 
     from(layout.buildDirectory.dir("kotlin-webpack/js/productionExecutable"))
     into(rootProject.layout.projectDirectory.dir("backend/src/main/resources/META-INF/resources"))
@@ -148,7 +148,7 @@ tasks.register("watchFrontend") {
 
 // Make sure KotlinJS compilation happens before the copyJsToQuarkus task
 tasks.named("jsBrowserProductionWebpack") {
-    dependsOn("compileKotlinJs")
+    dependsOn("jsDevelopmentExecutableCompileSync")
 }
 
 tasks.named("compileKotlinJs") {
