@@ -15,5 +15,6 @@ data class ServiceResponse(
     val displayOrder: Int,
     val featured: Boolean,
     val createdAt: String,
-    val updatedAt: String
+    val updatedAt: String,
+    val detailsLink: String
 )

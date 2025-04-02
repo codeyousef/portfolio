@@ -27,7 +27,8 @@ class ServiceMapper {
             displayOrder = entity.displayOrder,
             featured = entity.featured,
             createdAt = entity.createdAt,
-            updatedAt = entity.updatedAt
+            updatedAt = entity.updatedAt,
+            detailsLink = entity.detailsLink
         )
     }
 
@@ -46,6 +47,7 @@ class ServiceMapper {
         entity.featured = service.featured
         entity.createdAt = service.createdAt
         entity.updatedAt = service.updatedAt
+        entity.detailsLink = service.detailsLink
         return entity
     }
 
@@ -61,11 +63,13 @@ class ServiceMapper {
         entity.displayOrder = service.displayOrder
         entity.featured = service.featured
         entity.updatedAt = LocalDateTime.now()
+        entity.detailsLink = service.detailsLink
         return entity
     }
 
     fun toDomain(request: CreateUpdateServiceRequest, existingService: Service? = null): Service {
         val now = LocalDateTime.now()
+        val effectiveDetailsLink = request.detailsLink ?: existingService?.detailsLink ?: ""
         return Service(
             id = existingService?.id,
             title = request.title ?: existingService?.title ?: "",
@@ -79,7 +83,8 @@ class ServiceMapper {
             displayOrder = request.displayOrder ?: existingService?.displayOrder ?: 0,
             featured = request.featured ?: existingService?.featured ?: false,
             createdAt = existingService?.createdAt ?: now,
-            updatedAt = now
+            updatedAt = now,
+            detailsLink = effectiveDetailsLink
         )
     }
 
@@ -97,7 +102,8 @@ class ServiceMapper {
             displayOrder = service.displayOrder,
             featured = service.featured,
             createdAt = service.createdAt.format(dateFormatter),
-            updatedAt = service.updatedAt.format(dateFormatter)
+            updatedAt = service.updatedAt.format(dateFormatter),
+            detailsLink = service.detailsLink
         )
     }
 }

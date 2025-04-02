@@ -8,7 +8,6 @@ import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
-import java.io.StringWriter
 
 @ApplicationScoped
 class ServiceTemplates {
@@ -57,11 +56,11 @@ class ServiceTemplates {
                             }
                             h3(classes = "service-title") { +service.title }
                             p(classes = "service-desc") { +service.shortDescription }
-                            
+
                             if (service.price != null) {
                                 div(classes = "service-price") { +service.price }
                             }
-                            
+
                             if (service.features.isNotEmpty()) {
                                 ul(classes = "service-features") {
                                     service.features.forEach { feature ->
@@ -69,8 +68,8 @@ class ServiceTemplates {
                                     }
                                 }
                             }
-                            
-                            a(href = service.ctaLink, classes = "cta-button") { +service.ctaText }
+
+                            a(href = service.detailsLink, classes = "cta-button") { +"Details" }
                         }
                     }
                 }
@@ -113,15 +112,15 @@ class ServiceTemplates {
                     div(classes = "hero-content fade-in") {
                         h1 { +service.title }
                         p { +service.shortDescription }
-                        
+
                         if (service.price != null) {
-                            div(classes = "service-price-tag") { 
+                            div(classes = "service-price-tag") {
                                 +"Starting at "
                                 span { +service.price }
                             }
                         }
-                        
-                        a(href = "#contact", classes = "cta-button") { +service.ctaText }
+
+                        a(href = "#service-content-section", classes = "cta-button") { +service.ctaText }
                     }
                     
                     div(classes = "hero-glow") { }
@@ -130,6 +129,7 @@ class ServiceTemplates {
                 // Main content section
                 section(classes = "section service-content-section") {
                     div(classes = "service-content") {
+                        id = "service-content-section"
                         // Service icon
                         div(classes = "service-icon-large") {
                             i(classes = service.iconClass) { }
@@ -167,7 +167,7 @@ class ServiceTemplates {
                             p { +"Get in touch to discuss how this service can benefit your business." }
                         }
                         div(classes = "cta-actions") {
-                            a(href = service.ctaLink, classes = "cta-button") { +service.ctaText }
+                            a(href = service.ctaLink, classes = "cta-button") { +"Contact" }
                         }
                     }
                 }

@@ -317,6 +317,35 @@ class PortfolioTemplates {
                                 }
                                 div(classes = "form-group") {
                                     label(classes = "form-label") {
+                                        attributes["for"] = "mobile"; +"Mobile Number"
+                                    }
+                                    input(type = InputType.tel, classes = "form-input", name = "mobile") {
+                                        id = "mobile"
+                                        // Making it optional, remove if you want it required
+                                    }
+                                }
+                                div(classes = "form-group") {
+                                    label(classes = "form-label") {
+                                        attributes["for"] = "service"
+                                        +"Service"
+                                    }
+                                    select(classes = "form-input") {
+                                        id = "service"
+                                        name = "service"
+                                        option { value = ""; +"Select a service" }
+                                        option { value = "Consultation"; +"Consultation" }
+                                        option { value = "WebDesign"; +"Web Design" }
+                                        option { value = "WebDevelopment"; +"Website Development" }
+                                        option { value = "MobileDevelopment"; +"Mobile App Development" }
+                                        option { value = "WebScraping"; +"Web Scraping" }
+                                        option { value = "Automation"; +"Automation" }
+                                        option { value = "Chatbot"; +"AI Chatbot Development" }
+                                        option { value = "Agent"; +"AI Agent Development" }
+                                        option { value = "SharePoint"; +"SharePoint Development" }
+                                    }
+                                }
+                                div(classes = "form-group") {
+                                    label(classes = "form-label") {
                                         attributes["for"] = "subject"; +"Subject"
                                     }; input(type = InputType.text, classes = "form-input", name = "subject") {
                                     id = "subject"; required = true
@@ -333,6 +362,38 @@ class PortfolioTemplates {
                             }
                         }
                     }
+                }
+            }
+
+            script(type = "text/javascript") {
+                unsafe {
+                    +"""
+        document.addEventListener('DOMContentLoaded', function() {
+            // Parse URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const serviceParam = urlParams.get('service');
+            
+            // If service parameter exists, set the dropdown value
+            if (serviceParam) {
+                const serviceSelect = document.getElementById('service');
+                if (serviceSelect) {
+                    // Try to find and select the option
+                    for(let i = 0; i < serviceSelect.options.length; i++) {
+                        if(serviceSelect.options[i].value === serviceParam) {
+                            serviceSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+                }
+                
+                // Scroll to contact section
+                const contactSection = document.getElementById('contact');
+                if (contactSection) {
+                    contactSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+        """
                 }
             }
         }

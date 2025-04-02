@@ -7,7 +7,6 @@ import code.yousef.application.usecase.service.UpdateServiceUseCase
 import code.yousef.infrastructure.template.ServiceTemplates
 import code.yousef.presentation.dto.request.CreateUpdateServiceRequest
 import code.yousef.presentation.dto.response.ServiceListResponse
-import io.quarkus.qute.TemplateInstance
 import jakarta.annotation.security.RolesAllowed
 import jakarta.inject.Inject
 import jakarta.ws.rs.*
@@ -75,9 +74,14 @@ class ServiceResource {
     @RolesAllowed("ADMIN")
     suspend fun createService(request: CreateUpdateServiceRequest): Response {
         val serviceResponse = createServiceUseCase.execute(request)
-        return Response.created(URI.create("/api/services/${serviceResponse.id}"))
-            .entity(serviceResponse)
-            .build()
+        return if (serviceResponse != null) {
+            Response.created(URI.create("/api/services/${serviceResponse.id}"))
+                .entity(serviceResponse)
+                .build()
+        } else {
+            Response.status(Response.Status.BAD_REQUEST).build()
+        }
+
     }
 
     @PUT

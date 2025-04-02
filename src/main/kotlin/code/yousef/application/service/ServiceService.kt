@@ -3,6 +3,7 @@ package code.yousef.application.service
 import code.yousef.domain.model.Service
 import code.yousef.domain.repository.ServiceRepo
 import code.yousef.infrastructure.persistence.mapper.ServiceMapper
+import code.yousef.infrastructure.persistence.repository.ServiceRepoImpl
 import code.yousef.presentation.dto.request.CreateUpdateServiceRequest
 import code.yousef.presentation.dto.response.ServiceResponse
 import jakarta.enterprise.context.ApplicationScoped
@@ -11,7 +12,7 @@ import java.util.*
 
 @ApplicationScoped
 class ServiceService @Inject constructor(
-    private val serviceRepo: ServiceRepo,
+    private val serviceRepo: ServiceRepoImpl,
     private val serviceMapper: ServiceMapper
 ) {
     suspend fun getAllServices(): List<Service> {
@@ -34,7 +35,7 @@ class ServiceService @Inject constructor(
     suspend fun updateService(id: UUID, request: CreateUpdateServiceRequest): Service? {
         val existingService = serviceRepo.findServiceById(id) ?: return null
         val updatedService = serviceMapper.toDomain(request, existingService)
-        return serviceRepo.saveService(updatedService)
+        return serviceRepo.updateService(updatedService)
     }
 
     suspend fun deleteService(id: UUID): Boolean {

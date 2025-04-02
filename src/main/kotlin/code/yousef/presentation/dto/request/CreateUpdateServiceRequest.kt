@@ -8,7 +8,8 @@ data class CreateUpdateServiceRequest(
     val price: String? = null,
     val features: List<String>? = null,
     val ctaText: String? = null,
-    val ctaLink: String? = null,
+    val ctaLink: String? = null,     // Autopopulating contact form link
+    val detailsLink: String? = null, // Link to the service details page
     val displayOrder: Int? = null,
     val featured: Boolean? = null
 )

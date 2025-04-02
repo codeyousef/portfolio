@@ -32,18 +32,28 @@ class ServiceRepoImpl @Inject constructor(
     }
 
     override suspend fun saveService(service: Service): Service {
-        val entity = if (service.id != null) {
-            val existingEntity = sessionFactory.withSession {
-                findById(service.id)
-            }.awaitSuspending()
-            serviceMapper.updateEntity(existingEntity, service)
-        } else {
-            serviceMapper.toEntity(service)
-        }
-
+        val entity = serviceMapper.toEntity(service)
         val savedService = sessionFactory.withSession { session ->
             session.withTransaction {
                 persistAndFlush(entity)
+            }
+        }.awaitSuspending()
+        return serviceMapper.toDomain(savedService)
+    }
+
+    override suspend fun updateService(service: Service): Service {
+        if (service.id == null) {
+            throw IllegalArgumentException("Cannot update a service without an ID")
+        }
+
+        val existingEntity = sessionFactory.withSession {
+            findById(service.id)
+        }.awaitSuspending() ?: throw IllegalArgumentException("Service with ID ${service.id} not found")
+
+        val updatedEntity = serviceMapper.updateEntity(existingEntity, service)
+        val savedService = sessionFactory.withSession { session ->
+            session.withTransaction {
+                session.merge(updatedEntity)
             }
         }.awaitSuspending()
         return serviceMapper.toDomain(savedService)

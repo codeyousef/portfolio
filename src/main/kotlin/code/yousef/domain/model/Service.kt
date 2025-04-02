@@ -16,7 +16,8 @@ class Service(
     val displayOrder: Int = 0,
     val featured: Boolean = false,
     val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime
+    val updatedAt: LocalDateTime,
+    val detailsLink: String
 ) {
     fun withUpdatedFields(
         title: String = this.title,
@@ -28,7 +29,8 @@ class Service(
         ctaText: String = this.ctaText,
         ctaLink: String = this.ctaLink,
         displayOrder: Int = this.displayOrder,
-        featured: Boolean = this.featured
+        featured: Boolean = this.featured,
+        detailsLink: String = this.detailsLink.toString()
     ): Service {
         return Service(
             id = this.id,
@@ -43,7 +45,8 @@ class Service(
             displayOrder = displayOrder,
             featured = featured,
             createdAt = this.createdAt,
-            updatedAt = LocalDateTime.now()
+            updatedAt = LocalDateTime.now(),
+            detailsLink = detailsLink
         )
     }
 }

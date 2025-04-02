@@ -89,6 +89,21 @@
 </footer>
 
 <script>
+    // Add this script to hide nav-pill on services page
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check if the current path starts with /services
+        if (window.location.pathname.startsWith('/services')) {
+            // Find the nav-pill element and hide it
+            const navPill = document.querySelector('.nav-pill');
+            if (navPill) {
+                navPill.style.display = 'none';
+            }
+        }
+    });
+</script>
+
+
+<script>
     document.addEventListener('DOMContentLoaded', function() {
       // Add page identifier class
       document.body.classList.add(window.location.pathname === '/' ? 'is-homepage' : 'not-homepage');

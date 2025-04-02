@@ -35,6 +35,8 @@ class ServiceEntity : PanacheEntityBase {
     var displayOrder: Int = 0
     
     var featured: Boolean = false
+
+    var detailsLink: String = ""
     
     @Column(name = "created_at")
     lateinit var createdAt: LocalDateTime
