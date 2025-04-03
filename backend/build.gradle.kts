@@ -1,7 +1,7 @@
 plugins {
-    kotlin("jvm")
-    kotlin("plugin.allopen")
-    id("io.quarkus")
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.allopen)
+    alias(libs.plugins.quarkus)
 }
 
 val quarkusPlatformGroupId: String by project
@@ -45,8 +45,8 @@ dependencies {
     implementation("io.quarkus:quarkus-qute")
     implementation("io.vertx:vertx-lang-kotlin-coroutines")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.12.0")
-    implementation("at.favre.lib:bcrypt:0.10.2")
+    implementation(libs.kotlinx.html.jvm)
+    implementation(libs.bcrypt)
     implementation("io.quarkus:quarkus-arc")
     
     testImplementation("io.quarkus:quarkus-junit5")

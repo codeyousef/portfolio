@@ -1,9 +1,10 @@
 package code.yousef.routes
 
-import code.yousef.pages.*
+import code.yousef.pages.homePage
 import kotlinx.browser.document
 import kotlinx.browser.window
-import org.w3c.dom.HTMLElement
+import org.w3c.dom.Element
+import org.w3c.dom.asList
 import org.w3c.dom.events.Event
 import org.w3c.dom.get
 
@@ -11,17 +12,17 @@ import org.w3c.dom.get
  * Client-side router for handling navigation
  */
 class Router {
-    private lateinit var contentElement: HTMLElement
+    private lateinit var contentElement: Element
     private var currentPath = window.location.pathname
 
     /**
      * Initialize the router with the content element
      */
-    fun initialize(contentElement: HTMLElement) {
+    fun initialize(contentElement: Element) {
         this.contentElement = contentElement
 
         // Handle browser back/forward navigation
-        window.onpopstate = { event ->
+        window.onpopstate = { event: Event? ->
             event?.let {
                 val path = window.location.pathname
                 renderPage(path)
@@ -61,7 +62,12 @@ class Router {
 
         // Route to the appropriate page
         when {
-            path == "/" -> HomePage(contentElement)
+            path == "/" -> {
+                val element = homePage()
+                contentElement.appendChild(element)
+            }
+            // Comment out or remove routes for pages that don't exist yet
+            /*
             path == "/projects" -> ProjectsPage(contentElement)
             path.startsWith("/projects/") -> {
                 val id = path.substringAfterLast("/")
@@ -84,6 +90,12 @@ class Router {
             path == "/about" -> AboutPage(contentElement)
             path == "/contact" -> ContactPage(contentElement)
             else -> NotFoundPage(contentElement)
+            */
+            // Add a basic fallback for now
+            else -> {
+                // Optionally create a simple NotFoundPage function/component later
+                contentElement.textContent = "Page not found: $path"
+            }
         }
 
         // Scroll to top on page change
@@ -95,19 +107,24 @@ class Router {
      */
     private fun updateActiveNavLink(path: String) {
         // Remove active class from all nav links
-        document.querySelectorAll(".nav-link").forEach { element ->
-            element.classList.remove("active")
+        document.querySelectorAll(".nav-link").asList().forEach { node ->
+            if (node is Element) {
+                node.classList.remove("active")
+            }
         }
 
         // Add active class to the current nav link
         val navLinks = document.querySelectorAll(".nav-link")
         for (i in 0 until navLinks.length) {
-            val link = navLinks[i] as HTMLElement
-            val href = link.getAttribute("href") ?: ""
+            val link = navLinks[i]
+            if (link is Element) {
+                val href = link.getAttribute("href") ?: ""
 
-            if ((path == "/" && href == "/") ||
-                (path != "/" && path.startsWith(href) && href != "/")) {
-                link.classList.add("active")
+                if ((path == "/" && href == "/") ||
+                    (path != "/" && href != "/" && path.startsWith(href))
+                ) {
+                    link.classList.add("active")
+                }
             }
         }
     }

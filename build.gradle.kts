@@ -1,19 +1,10 @@
 plugins {
-    kotlin("jvm") version "2.0.21" apply false
-    kotlin("plugin.allopen") version "2.0.21" apply false
-    kotlin("js") version "2.0.21" apply false
-    kotlin("multiplatform") version "2.0.21" apply false
-    kotlin("plugin.serialization") version "2.0.21" apply false
-    id("io.quarkus") apply false
-}
-
-allprojects {
-    repositories {
-        mavenCentral()
-        mavenLocal()
-        maven { url = uri("https://repo.mvnpm.org/maven2") }
-        maven { url = uri("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven") }
-    }
+    alias(libs.plugins.kotlin.jvm) apply false
+    alias(libs.plugins.kotlin.allopen) apply false
+    alias(libs.plugins.kotlin.js) apply false
+    alias(libs.plugins.kotlin.multiplatform) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.quarkus) apply false
 }
 
 group = "code.yousef"

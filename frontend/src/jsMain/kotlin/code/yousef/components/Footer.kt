@@ -1,9 +1,9 @@
 package code.yousef.components
 
-import kotlinx.html.*
-import kotlinx.html.dom.create
-import kotlinx.browser.document
-import org.w3c.dom.HTMLElement
+import kotlinx.html.DIV
+import kotlinx.html.a
+import kotlinx.html.div
+import kotlinx.html.footer
 
 /**
  * App footer component

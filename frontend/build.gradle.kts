@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
-    kotlin("multiplatform")
-    kotlin("plugin.serialization") version "2.0.21"
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -40,44 +40,55 @@ kotlin {
         }
     }
 
+    // Add repositories
     sourceSets {
+        all {
+            languageSettings.apply {
+                optIn("kotlin.RequiresOptIn")
+            }
+        }
+    
         val jsMain by getting {
             dependencies {
                 implementation(project(":shared"))
 
                 // Kotlin dependencies
                 implementation(kotlin("stdlib-js"))
-                implementation("org.jetbrains.kotlinx:kotlinx-html-js:0.8.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.7.3")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+                implementation(libs.kotlinx.html.js)
+                implementation(libs.kotlinx.coroutines.core.js)
+                // Use a direct dependency with a version known to work
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
-                // Kotlin CSS
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-css:1.0.0-pre.630")
-                implementation("org.jetbrains.kotlin-wrappers:kotlin-css-js:1.0.0-pre.630")
+                // Use very basic wrappers directly (not using the catalog)
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-react:18.2.0-pre.535")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-react-dom:18.2.0-pre.535")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-css:1.0.0-pre.535")
+                // implementation("org.jetbrains.kotlin-wrappers:kotlin-styled:5.3.5-pre.493")
+                implementation("org.jetbrains.kotlin-wrappers:kotlin-extensions:1.0.1-pre.535")
+                
+                // Use NPM libraries instead
+                implementation(npm("styled-components", "5.3.5"))
+                implementation(npm("@emotion/react", "11.9.3"))
+                implementation(npm("@emotion/styled", "11.9.3"))
+
+                // Ktor Client dependencies with direct versions
+                implementation("io.ktor:ktor-client-core:2.3.12") {
+                    exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-serialization-json")
+                }
+                implementation("io.ktor:ktor-client-js:2.3.12") {
+                    exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-serialization-json")
+                }
+                implementation("io.ktor:ktor-client-content-negotiation:2.3.12") {
+                    exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-serialization-json")
+                }
+                implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.12") {
+                    exclude(group = "org.jetbrains.kotlinx", module = "kotlinx-serialization-json")
+                }
 
                 // Add Three.js for 3D effects (optional)
-                implementation(npm("three", "0.169.0"))
+                implementation(npm("three", libs.versions.npm.three.get()))
             }
         }
-    }
-}
-
-// Create proper directory structure if needed
-tasks.register<Copy>("setupSourceDirs") {
-    from("src/main/kotlin")
-    into("src/jsMain/kotlin")
-    // Only copy if source exists and destination doesn't
-    onlyIf {
-        file("src/main/kotlin").exists() && !file("src/jsMain/kotlin").exists()
-    }
-}
-
-tasks.register<Copy>("setupResourceDirs") {
-    from("src/main/resources")
-    into("src/jsMain/resources")
-    // Only copy if source exists and destination doesn't
-    onlyIf {
-        file("src/main/resources").exists() && !file("src/jsMain/resources").exists()
     }
 }
 
@@ -151,6 +162,7 @@ tasks.named("jsBrowserProductionWebpack") {
     dependsOn("jsDevelopmentExecutableCompileSync")
 }
 
-tasks.named("compileKotlinJs") {
-    dependsOn("setupSourceDirs", "setupResourceDirs")
+tasks.named("compileKotlinJs") { 
+    // Remove the dependency on the setup tasks
+    // dependsOn("setupSourceDirs", "setupResourceDirs")
 } 

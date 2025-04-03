@@ -1,46 +1,54 @@
 package code.yousef.components
 
-import kotlinx.html.FlowContent
-import kotlinx.html.div
-import kotlinx.html.header
-import kotlinx.html.h2
-import kotlinx.html.nav
-import kotlinx.html.a
-import kotlinx.html.style
+import kotlinx.browser.window
+import kotlinx.html.*
+import kotlinx.html.js.onClickFunction
 
-fun FlowContent.header() {
-    header {
-        style = "background-color: #333; color: white; padding: 1rem 0; display: flex; justify-content: space-between; align-items: center; padding: 0 2rem;"
-        
-        div {
-            style = "font-size: 1.5rem; font-weight: bold;"
-            h2 {
-                +"Portfolio"
+/**
+ * App header component with navigation
+ */
+fun DIV.appHeader(block: HeaderContext.() -> Unit = {}) {
+    val headerContext = HeaderContext().apply(block)
+
+    header(classes = "header") {
+        div(classes = "container header-content") {
+            // Logo
+            a(href = "/", classes = "logo") {
+                +"Yousef.Codes"
             }
-        }
-        
-        nav {
-            style = "display: flex; gap: 1.5rem;"
-            a {
-                style = "color: white; text-decoration: none;"
-                href = "/"
-                +"Home"
+
+            // Navigation links
+            nav(classes = "nav") {
+                div(classes = "nav-links") {
+                    val currentPath = window.location.pathname
+
+                    navLink("/", "Home", isActive = currentPath == "/")
+                    navLink("/projects", "Projects", isActive = currentPath.startsWith("/projects"))
+                    navLink("/blog", "Blog", isActive = currentPath.startsWith("/blog"))
+                    navLink("/services", "Services", isActive = currentPath.startsWith("/services"))
+                    navLink("/about", "About", isActive = currentPath == "/about")
+                    navLink("/contact", "Contact", isActive = currentPath == "/contact")
+                }
             }
-            a {
-                style = "color: white; text-decoration: none;"
-                href = "/projects"
-                +"Projects"
-            }
-            a {
-                style = "color: white; text-decoration: none;"
-                href = "/about"
-                +"About"
-            }
-            a {
-                style = "color: white; text-decoration: none;"
-                href = "/contact"
-                +"Contact"
-            }
+
+            // Apply the click handler to all links
+            onClickFunction = headerContext.onClickFunction
         }
     }
-} 
+}
+
+/**
+ * Helper function to create a navigation link
+ */
+private fun DIV.navLink(href: String, text: String, isActive: Boolean = false) {
+    a(href = href, classes = "nav-link${if (isActive) " active" else ""}") {
+        +text
+    }
+}
+
+/**
+ * Header context class for configuring the header
+ */
+class HeaderContext {
+    var onClickFunction: (dynamic) -> Unit = {}
+}
