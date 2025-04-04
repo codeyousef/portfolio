@@ -32,8 +32,8 @@ tasks.withType<ProcessResources> {
 }
 
 dependencies {
-    // Add dependency on the shared module - explicitly defining JVM variant
-    implementation(project(":shared", "jvmRuntimeElements"))
+    // Removing shared module dependency
+    // implementation(project(":shared", "jvmRuntimeElements"))
     
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
     implementation("io.quarkus:quarkus-rest")
@@ -43,6 +43,10 @@ dependencies {
     implementation("io.quarkus:quarkus-hibernate-reactive-panache-kotlin")
     implementation("io.quarkus:quarkus-reactive-pg-client")
     implementation("io.quarkus:quarkus-qute")
+    
+    // Add the Quarkus Web Bundler extension
+    implementation("io.quarkus:quarkus-web-bundler")
+
     implementation("io.vertx:vertx-lang-kotlin-coroutines")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation(libs.kotlinx.html.jvm)
@@ -76,12 +80,62 @@ kotlin {
     }
 }
 
-// Make sure the shared module is built before backend
-tasks.named("compileKotlin") {
-    dependsOn(":shared:compileKotlinJvm")
+// Removing shared module dependency
+// tasks.named("compileKotlin") {
+//     dependsOn(":shared:compileKotlinJvm")
+// }
+
+// Removing frontend task dependency
+// tasks.named("quarkusDev") {
+//     dependsOn(":frontend:copyJsToQuarkus")
+// }
+
+// Custom Vue.js dev server task
+tasks.register<Exec>("vueDevServer") {
+    description = "Runs the Vue.js dev server separately for optimal hot reloading"
+    group = "application"
+    
+    dependsOn("quarkusGenerateCode")
+    
+    // Set working directory to the Vue project
+    workingDir = file("${projectDir}/src/main/resources/web")
+    
+    // Define the command to run
+    if (org.gradle.internal.os.OperatingSystem.current().isWindows) {
+        commandLine("cmd", "/c", "yarn", "dev")
+    } else {
+        commandLine("yarn", "dev")
+    }
+    
+    // Better error output
+    standardOutput = System.out
+    errorOutput = System.err
+    
+    doFirst {
+        println("Starting Vue.js dev server...")
+        println("Access the frontend at http://localhost:5173")
+        println("Changes to Vue files will be hot-reloaded automatically")
+        println("API calls will be proxied to the Quarkus server")
+    }
 }
 
-// Make quarkusDev depend on the frontend's copyJsToQuarkus task
-tasks.named("quarkusDev") {
-    dependsOn(":frontend:copyJsToQuarkus")
+// Custom Quarkus dev task for API only (better for dual server setup)
+tasks.register("quarkusDevHotApi") {
+    description = "Runs Quarkus in dev mode with API focus (pair with vueDevServer)"
+    group = "application"
+    
+    // Set system properties to disable web bundler auto-start
+    val quarkusDevTask = tasks.named("quarkusDev")
+    
+    // Configure the quarkusDev task
+    quarkusDevTask.configure {
+        doFirst {
+            println("Starting Quarkus in API-focused dev mode...")
+            println("Backend API available at http://localhost:8080")
+            println("This task is optimized to work with the separate Vue dev server")
+        }
+    }
+    
+    // Depend on the quarkusDev task
+    dependsOn(quarkusDevTask)
 } 

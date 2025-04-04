@@ -1,5 +1,11 @@
 rootProject.name = "portfolio"
 
+include("backend")
+// Removing the shared module
+// include("shared")
+// Removing the frontend module (will be replaced by Vue.js)
+// include("frontend")
+
 pluginManagement {
     repositories {
         mavenCentral()
@@ -103,20 +109,10 @@ dependencyResolutionManagement {
         
         // Define kotlinWrappers catalog with a very stable version
         create("kotlinWrappers") {
-            version("wrappers", "pre.535")
-            library("react", "org.jetbrains.kotlin-wrappers", "kotlin-react").versionRef("wrappers")
-            library("reactDom", "org.jetbrains.kotlin-wrappers", "kotlin-react-dom").versionRef("wrappers")
-            library("emotion", "org.jetbrains.kotlin-wrappers", "kotlin-emotion").versionRef("wrappers")
-            library("reactRouterDom", "org.jetbrains.kotlin-wrappers", "kotlin-react-router-dom").versionRef("wrappers")
-            // Additional wrappers needed by your project
-            library("browser", "org.jetbrains.kotlin-wrappers", "kotlin-browser").versionRef("wrappers")
-            library("reactCore", "org.jetbrains.kotlin-wrappers", "kotlin-react-core").versionRef("wrappers")
+            val wrappersVersion = "2025.4.2"
+            from("org.jetbrains.kotlin-wrappers:kotlin-wrappers-catalog:$wrappersVersion")
         }
     }
 }
 
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-
-include(":backend")
-include(":shared")
-include(":frontend") 
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS") 

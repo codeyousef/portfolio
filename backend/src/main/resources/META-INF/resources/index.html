@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="root">
+        <header class="header">
+            <div class="container header-content">
+                <a href="/" class="logo">Portfolio</a>
+                <nav class="nav-links">
+                    <a href="/" class="nav-link active">Home</a>
+                    <a href="#projects" class="nav-link">Projects</a>
+                    <a href="#skills" class="nav-link">Skills</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                </nav>
+            </div>
+        </header>
+        
+        <main id="content">
+            <!-- Hero Section -->
+            <section class="hero-section">
+                <div class="container">
+                    <h1>Welcome to My Portfolio</h1>
+                    <p>Full-stack developer specializing in Kotlin and modern web technologies.</p>
+                    <a href="#projects" class="cta-button">View My Work</a>
+                </div>
+            </section>
+            
+            <!-- Projects Section -->
+            <section class="projects-section" id="projects">
+                <div class="container">
+                    <div class="section-header">
+                        <h2 class="section-title">My Projects</h2>
+                        <p class="section-desc">Here are some of my recent projects.</p>
+                    </div>
+                    
+                    <div class="projects-grid">
+                        <!-- Project 1 -->
+                        <div class="project-card">
+                            <div class="project-content">
+                                <h3>Portfolio Website</h3>
+                                <p>A modern portfolio website showcasing my work and skills.</p>
+                                <div class="project-tags">
+                                    <span class="tag">Kotlin</span>
+                                    <span class="tag">Quarkus</span>
+                                    <span class="tag">React</span>
+                                </div>
+                                <div class="project-links">
+                                    <a href="#" class="project-link">
+                                        <i class="fas fa-external-link-alt"></i> View Demo
+                                    </a>
+                                    <a href="#" class="project-link">
+                                        <i class="fab fa-github"></i> View Code
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Project 2 -->
+                        <div class="project-card">
+                            <div class="project-content">
+                                <h3>Task Manager</h3>
+                                <p>A full-stack task management application.</p>
+                                <div class="project-tags">
+                                    <span class="tag">Kotlin</span>
+                                    <span class="tag">Spring Boot</span>
+                                    <span class="tag">React</span>
+                                </div>
+                                <div class="project-links">
+                                    <a href="#" class="project-link">
+                                        <i class="fas fa-external-link-alt"></i> View Demo
+                                    </a>
+                                    <a href="#" class="project-link">
+                                        <i class="fab fa-github"></i> View Code
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Skills Section -->
+            <section class="skills-section" id="skills">
+                <div class="container">
+                    <div class="section-header">
+                        <h2 class="section-title">My Skills</h2>
+                        <p class="section-desc">Technologies and skills I work with.</p>
+                    </div>
+                    
+                    <div class="skills-grid">
+                        <!-- Skill 1 -->
+                        <div class="skill-card">
+                            <div class="skill-content">
+                                <h3>Frontend Development</h3>
+                                <p>Creating beautiful user interfaces</p>
+                                <ul class="skill-list">
+                                    <li>HTML/CSS</li>
+                                    <li>JavaScript</li>
+                                    <li>Kotlin</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- Skill 2 -->
+                        <div class="skill-card">
+                            <div class="skill-content">
+                                <h3>Backend Development</h3>
+                                <p>Building robust server-side applications</p>
+                                <ul class="skill-list">
+                                    <li>Kotlin</li>
+                                    <li>Java</li>
+                                    <li>Quarkus</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Contact Section -->
+            <section class="contact-section" id="contact">
+                <div class="container">
+                    <div class="section-header">
+                        <h2 class="section-title">Get In Touch</h2>
+                        <p class="section-desc">Interested in working together? Let's talk!</p>
+                    </div>
+                    
+                    <div class="contact-form">
+                        <button class="cta-button" onclick="window.location.href='mailto:contact@example.com'">
+                            Contact Me
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="footer">
+            <div class="container footer-content">
+                <div class="copyright">&copy; 2023 Portfolio. All rights reserved.</div>
+                <div class="social-links">
+                    <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="frontend.js"></script>
+</body>
+</html>

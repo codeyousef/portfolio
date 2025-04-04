@@ -1,0 +1,34 @@
+<svg width="800px" height="600px" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="800" height="600" fill="#f0f9ff" />
+  
+  <!-- Background elements -->
+  <circle cx="700" cy="100" r="50" fill="#bae6fd" opacity="0.5" />
+  <circle cx="100" cy="500" r="80" fill="#bae6fd" opacity="0.5" />
+  
+  <!-- Laptop outline -->
+  <rect x="200" y="150" width="400" height="250" rx="10" ry="10" fill="#0ea5e9" />
+  <rect x="210" y="160" width="380" height="220" rx="5" ry="5" fill="#f8fafc" />
+  
+  <!-- Laptop base -->
+  <path d="M150 400 L650 400 L680 500 L120 500 Z" fill="#0369a1" />
+  
+  <!-- Code on screen -->
+  <rect x="230" y="180" width="340" height="20" rx="2" ry="2" fill="#cbd5e1" />
+  <rect x="230" y="210" width="200" height="20" rx="2" ry="2" fill="#cbd5e1" />
+  <rect x="230" y="240" width="250" height="20" rx="2" ry="2" fill="#cbd5e1" />
+  <rect x="230" y="270" width="180" height="20" rx="2" ry="2" fill="#cbd5e1" />
+  <rect x="230" y="300" width="300" height="20" rx="2" ry="2" fill="#cbd5e1" />
+  <rect x="230" y="330" width="220" height="20" rx="2" ry="2" fill="#cbd5e1" />
+  
+  <!-- Abstract code blocks floating -->
+  <rect x="100" y="100" width="80" height="40" rx="5" ry="5" fill="#0ea5e9" opacity="0.7" />
+  <rect x="120" y="150" width="60" height="30" rx="5" ry="5" fill="#0ea5e9" opacity="0.5" />
+  <rect x="620" y="200" width="100" height="50" rx="5" ry="5" fill="#0ea5e9" opacity="0.7" />
+  <rect x="650" y="280" width="70" height="35" rx="5" ry="5" fill="#0ea5e9" opacity="0.5" />
+  
+  <!-- Abstract lines connecting elements -->
+  <line x1="180" y1="120" x2="300" y2="180" stroke="#0ea5e9" stroke-width="2" opacity="0.5" />
+  <line x1="150" y1="165" x2="250" y2="210" stroke="#0ea5e9" stroke-width="2" opacity="0.5" />
+  <line x1="620" y1="225" x2="500" y2="270" stroke="#0ea5e9" stroke-width="2" opacity="0.5" />
+  <line x1="650" y1="297" x2="550" y2="300" stroke="#0ea5e9" stroke-width="2" opacity="0.5" />
+</svg> 

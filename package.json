@@ -1,0 +1,16 @@
+{
+  "name": "portfolio",
+  "version": "1.0.0",
+  "description": "Portfolio project with Quarkus and Vue.js",
+  "scripts": {
+    "dev": "gradlew.bat devWithFrontend",
+    "dev:hot": "gradlew.bat devHot",
+    "dev:api": "gradlew.bat :backend:quarkusDevHotApi",
+    "dev:ui": "gradlew.bat :backend:vueDevServer",
+    "build": "gradlew.bat build -Dquarkus.package.type=uber-jar",
+    "test": "gradlew.bat test"
+  },
+  "private": true,
+  "author": "Yousef",
+  "license": "MIT"
+} 
