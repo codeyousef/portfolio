@@ -13,8 +13,8 @@ echo "This script will display instructions for running the application in hot r
 echo "You'll need to open two terminal windows to run both servers."
 echo ""
 echo "Instructions:"
-echo "1. In the first terminal, run: ./gradlew :backend:quarkusDevHotApi"
-echo "2. In the second terminal, run: ./gradlew :backend:vueDevServer"
+echo "1. In the first terminal, run: ./gradlew quarkusDev"
+echo "2. In the second terminal, run: ./gradlew vueDevServer"
 echo ""
 echo "Then access:"
 echo "- Frontend (Vue.js): http://localhost:5173"
@@ -29,7 +29,7 @@ case "$choice" in
   y|Y ) 
     echo "Starting API server..."
     echo "You'll need to open another terminal to run the Vue.js dev server."
-    ./gradlew :backend:quarkusDevHotApi
+    ./gradlew quarkusDev
     ;;
   * ) 
     echo "Exiting. Run the commands manually when you're ready."

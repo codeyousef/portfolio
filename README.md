@@ -73,10 +73,10 @@ Open two terminal windows:
 
 ```bash
 # Terminal 1 - Run the backend API server
-./gradlew :backend:quarkusDevHotApi
+./gradlew quarkusDev
 
 # Terminal 2 - Run the Vue.js dev server
-./gradlew :backend:vueDevServer
+./gradlew vueDevServer
 ```
 
 #### Option 2: Using npm scripts (Windows)
@@ -111,21 +111,20 @@ To build the project for production:
 ./gradlew build -Dquarkus.package.type=uber-jar
 ```
 
-The resulting jar will be in `backend/build/quarkus-app/`.
+The resulting jar will be in `build/quarkus-app/`.
 
 ## Project Structure
 
 ```
 portfolio/
-├── backend/               # Backend module
-│   ├── src/
-│   │   ├── main/
-│   │   │   ├── kotlin/    # Kotlin source code
-│   │   │   ├── resources/ # Configuration and static resources
-│   │   │   │   └── web/   # Vue.js frontend source
-│   │   ├── test/          # Test sources
-├── build.gradle.kts       # Root build script
-└── settings.gradle.kts    # Gradle settings
+├── src/
+│   ├── main/
+│   │   ├── kotlin/    # Kotlin source code
+│   │   ├── resources/ # Configuration and static resources
+│   │   │   └── web/   # Vue.js frontend source
+│   ├── test/          # Test sources
+├── build.gradle.kts   # Gradle build script
+└── settings.gradle.kts # Gradle settings
 ```
 
 ## API Documentation
