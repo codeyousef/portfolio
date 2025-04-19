@@ -9,11 +9,8 @@ import io.smallrye.mutiny.coroutines.awaitSuspending
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import org.hibernate.reactive.mutiny.Mutiny.SessionFactory
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 import java.util.UUID
 
-@OptIn(ExperimentalUuidApi::class)
 @ApplicationScoped
 class ProjectRepoImpl @Inject constructor(
     private val sessionFactory: SessionFactory,

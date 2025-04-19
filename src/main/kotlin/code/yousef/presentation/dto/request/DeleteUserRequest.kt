@@ -1,9 +1,7 @@
 package code.yousef.presentation.dto.request
 
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
+import java.util.UUID
 
-@OptIn(ExperimentalUuidApi::class)
 data class DeleteUserRequest(
-    val id: Uuid
+    val id: UUID
 )

@@ -1,22 +1,16 @@
 package code.yousef.infrastructure.persistence.mapper
 
+import code.yousef.infrastructure.persistence.entity.UserEntity
 import code.yousef.model.User
 import code.yousef.model.UserRole
-import code.yousef.infrastructure.persistence.entity.UserEntity
-import code.yousef.infrastructure.persistence.entity.UserRole as EntityUserRole
 import code.yousef.presentation.dto.request.CreateUpdateUserRequest
 import code.yousef.presentation.dto.response.UserResponse
 import jakarta.enterprise.context.ApplicationScoped
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
-import java.util.UUID
+import java.util.*
+import code.yousef.infrastructure.persistence.entity.UserRole as EntityUserRole
 
-/**
- * Mapper for converting between User-related classes
- */
-@OptIn(ExperimentalUuidApi::class)
 @ApplicationScoped
 class UserMapper {
 
@@ -105,14 +99,14 @@ class UserMapper {
     fun toResponse(user: User): UserResponse {
         val uuid = if (user.id.isNotEmpty()) {
             try {
-                Uuid.parse(user.id)
+                UUID.fromString(user.id)
             } catch (e: Exception) {
                 null
             }
         } else {
             null
         }
-        
+
         return UserResponse(
             id = uuid,
             username = user.username,

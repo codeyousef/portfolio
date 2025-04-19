@@ -8,11 +8,9 @@ import code.yousef.presentation.dto.response.ProjectResponse
 import jakarta.enterprise.context.ApplicationScoped
 import java.time.Instant
 import java.time.LocalDateTime
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 import java.util.UUID
 
-@OptIn(ExperimentalUuidApi::class)
+
 @ApplicationScoped
 class ProjectMapper {
 

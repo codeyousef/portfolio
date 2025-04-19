@@ -12,9 +12,7 @@ import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import org.jboss.logging.Logger
 import java.time.LocalDateTime
-import java.util.UUID
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
+import java.util.*
 
 @ApplicationScoped
 class UserService @Inject constructor(

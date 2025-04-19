@@ -4,9 +4,7 @@ import io.quarkus.hibernate.reactive.panache.kotlin.PanacheEntityBase
 import jakarta.persistence.*
 import java.time.LocalDateTime
 import java.util.*
-import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalUuidApi::class)
 @Entity
 @Table(name = "users")
 class UserEntity : PanacheEntityBase {

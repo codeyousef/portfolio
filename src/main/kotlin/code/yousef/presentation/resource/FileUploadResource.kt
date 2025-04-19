@@ -12,10 +12,8 @@ import org.jboss.resteasy.reactive.multipart.FileUpload
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
+import java.util.*
 
-@OptIn(ExperimentalUuidApi::class)
 @Path("/upload")
 class FileUploadResource {
 
@@ -39,7 +37,7 @@ class FileUploadResource {
                 Files.createDirectories(uploadPath)
             }
 
-            val fileName = "${Uuid.random()}_${form.file.fileName()}"
+            val fileName = "${UUID.randomUUID()}_${form.file.fileName()}"
             val targetPath = uploadPath.resolve(fileName)
 
             // Copy the file to the target location
@@ -77,7 +75,7 @@ class FileUploadResource {
                 Files.createDirectories(uploadPath)
             }
 
-            val fileName = "${Uuid.random()}_${form.file.fileName()}"
+            val fileName = "${UUID.randomUUID()}_${form.file.fileName()}"
             val targetPath = uploadPath.resolve(fileName)
 
             // Copy the file to the target location

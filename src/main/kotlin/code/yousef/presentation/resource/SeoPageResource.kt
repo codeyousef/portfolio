@@ -4,6 +4,14 @@ import code.yousef.api.ApiRoutes
 import code.yousef.application.service.BlogService
 import code.yousef.application.service.ProjectService
 import code.yousef.application.service.ServiceService
+import code.yousef.infrastructure.persistence.mapper.ProjectMapper
+import code.yousef.infrastructure.qute.QuteComponents
+import code.yousef.infrastructure.summon.SummonRenderer
+import code.yousef.ui.AppRoot
+import code.yousef.ui.HomePage
+import io.quarkus.qute.Template
+import io.quarkus.qute.Location
+import java.util.UUID
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import jakarta.ws.rs.*
@@ -13,15 +21,18 @@ import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
 import org.jboss.logging.Logger
 import java.util.*
-import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalUuidApi::class)
-@Path("/")
+@Path("/seo")
 @ApplicationScoped
 class SeoPageResource @Inject constructor(
     private val projectService: ProjectService,
     private val blogService: BlogService,
-    private val serviceService: ServiceService
+    private val serviceService: ServiceService,
+    private val summonRenderer: SummonRenderer,
+    private val quteComponents: QuteComponents,
+    private val projectMapper: ProjectMapper,
+    @Location("index.html")
+    private val indexTemplate: Template
 ) {
     private val logger = Logger.getLogger(SeoPageResource::class.java)
 
@@ -139,64 +150,50 @@ class SeoPageResource @Inject constructor(
     }
 
     /**
-     * Home page route - server-side rendered with SEO metadata
+     * Home page route - server-side rendered with Qute templates
      */
     @GET
     @Path(ApiRoutes.Pages.HOME)
     @Produces(MediaType.TEXT_HTML)
     suspend fun getHomePage(): Response {
-        logger.info("Rendering home page for SEO")
+        println("SeoPageResource.getHomePage() called - rendering home page with Qute templates")
+        println("QuteComponents instance: ${quteComponents.javaClass.name}")
+        println("IndexTemplate instance: ${indexTemplate.javaClass.name}")
 
         try {
-            val featuredProjects = projectService.getFeaturedProjects()
+            println("Rendering index.html template with Qute")
 
-            // Generate initial page HTML
-            val initialContent = buildString {
-                appendHTML().div {
-                    id = "seo-content"
-                    // Hero Section
-                    section(classes = "hero") {
-                        div(classes = "hero-content") {
-                            h1 { +"Crafting Digital Experiences With Cutting-Edge Tech" }
-                            p { +"Software developer specializing in Kotlin, Quarkus, and modern web technologies." }
-                        }
-                    }
+            // Get featured projects for the projects section
+            val projects = projectService.getFeaturedProjects()
+            println("Retrieved ${projects.size} featured projects")
 
-                    // Projects Section
-                    section(classes = "section") {
-                        id = "projects"
-                        div(classes = "section-header") {
-                            h2 { +"Featured Projects" }
-                        }
-                        div(classes = "projects-grid") {
-                            featuredProjects.forEach { project ->
-                                article(classes = "project-card") {
-                                    h3 { +project.title }
-                                    p { +project.description }
-                                    div(classes = "technologies") {
-                                        project.technologies.forEach { tech ->
-                                            span { +tech }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            // Convert projects to entities for the template
+            val projectEntities = projects.map { project -> projectMapper.toEntity(project) }
+            println("Converted ${projectEntities.size} projects to entities")
 
-            val html = renderHtmlShell(
-                title = "Yousef's Portfolio - Modern Software Development",
-                description = "Showcasing software development projects and services specializing in Kotlin, Quarkus, and modern web technologies.",
-                canonicalUrl = "https://yousef.code/",
-                ogImage = "/images/og-image.jpg",
-                bodyContent = initialContent
-            )
+            // Render the index.html template with the data
+            val html = indexTemplate.data(
+                "title", "Yousef's Portfolio - Modern Software Development",
+                "description", "Showcasing software development projects and services specializing in Kotlin, Quarkus, and modern web technologies.",
+                "projects", projectEntities
+            ).render()
 
+            println("SeoPageResource.getHomePage() completed successfully, result length: ${html.length}")
+            println("First 100 chars of HTML: ${html.take(100)}")
+
+            println("Building Response object with HTML content")
             return Response.ok(html).build()
         } catch (e: Exception) {
-            logger.error("Error rendering home page", e)
-            return Response.serverError().build()
+            println("Error rendering home page with Qute: ${e}")
+            println("Exception type: ${e.javaClass.name}")
+            println("Exception message: ${e.message}")
+            println("Stack trace: ${e.stackTraceToString()}")
+
+            println("Building server error Response")
+            return Response.serverError()
+                .entity("<h1>Error rendering home page</h1><p>${e.message}</p><pre>${e.stackTraceToString()}</pre>")
+                .type(MediaType.TEXT_HTML)
+                .build()
         }
     }
 

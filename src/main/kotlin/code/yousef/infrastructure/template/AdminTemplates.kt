@@ -12,10 +12,7 @@ import kotlinx.html.stream.appendHTML
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.TimeZone
-import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalUuidApi::class)
 @ApplicationScoped
 class AdminTemplates {
 

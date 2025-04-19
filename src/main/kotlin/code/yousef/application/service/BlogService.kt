@@ -8,11 +8,8 @@ import code.yousef.presentation.dto.request.CreateUpdateBlogRequest
 import code.yousef.presentation.dto.response.BlogResponse
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
-import java.util.UUID
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
+import java.util.*
 
-@OptIn(ExperimentalUuidApi::class)
 @ApplicationScoped
 class BlogService @Inject constructor(
     private val blogRepo: BlogRepoImpl,

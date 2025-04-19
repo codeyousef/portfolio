@@ -1,23 +1,17 @@
 package code.yousef.presentation.resource
 
+import code.yousef.application.service.BlogService
 import code.yousef.application.service.ProjectService
 import code.yousef.application.service.ServiceService
-import code.yousef.application.service.BlogService
-import code.yousef.model.Project
 import code.yousef.model.BlogPost
+import code.yousef.model.Project
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.Path
 import jakarta.ws.rs.Produces
 import jakarta.ws.rs.core.MediaType
-import kotlin.uuid.ExperimentalUuidApi
 
-/**
- * This resource provides APIs that return data using the shared models,
- * which can be consumed by the Kotlin/JS frontend
- */
-@OptIn(ExperimentalUuidApi::class)
 @Path("/api/v1")
 @ApplicationScoped
 class ApiResource @Inject constructor(
@@ -25,14 +19,14 @@ class ApiResource @Inject constructor(
     private val serviceService: ServiceService,
     private val blogService: BlogService
 ) {
-    
+
     @GET
     @Path("/projects")
     @Produces(MediaType.APPLICATION_JSON)
     suspend fun getProjects(): List<Project> {
         // Get projects from the database using the existing service
         val domainProjects = projectService.getAllProjects()
-        
+
         // Convert domain models to shared models
         return domainProjects.map { project ->
             Project(
@@ -50,14 +44,14 @@ class ApiResource @Inject constructor(
             )
         }
     }
-    
+
     @GET
     @Path("/projects/featured")
     @Produces(MediaType.APPLICATION_JSON)
     suspend fun getFeaturedProjects(): List<Project> {
         // Get featured projects from the database
         val domainProjects = projectService.getFeaturedProjects()
-        
+
         // Convert domain models to shared models
         return domainProjects.map { project ->
             Project(
@@ -75,7 +69,7 @@ class ApiResource @Inject constructor(
             )
         }
     }
-    
+
     @GET
     @Path("/services")
     @Produces(MediaType.APPLICATION_JSON)
@@ -83,7 +77,7 @@ class ApiResource @Inject constructor(
         // Get services directly as shared models
         return serviceService.getAllServices()
     }
-    
+
     @GET
     @Path("/blog")
     @Produces(MediaType.APPLICATION_JSON)

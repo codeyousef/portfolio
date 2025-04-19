@@ -7,8 +7,7 @@ import code.yousef.presentation.dto.response.ProjectResponse
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import java.util.UUID
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
+
 
 @ApplicationScoped
 class GetProjectsUseCase @Inject constructor(

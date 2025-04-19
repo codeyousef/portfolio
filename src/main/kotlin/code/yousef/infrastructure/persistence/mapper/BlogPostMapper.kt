@@ -10,10 +10,7 @@ import jakarta.enterprise.context.ApplicationScoped
 import java.time.Instant
 import java.time.LocalDateTime
 import java.util.*
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 @ApplicationScoped
 class BlogPostMapper {
 

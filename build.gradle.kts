@@ -1,8 +1,8 @@
 plugins {
-    kotlin("jvm") version "2.0.21"
-    kotlin("plugin.allopen") version "2.0.21"
-    id("io.quarkus") version "3.21.0"
-    kotlin("plugin.serialization") version "2.0.21"
+    kotlin("jvm") version "2.1.20"
+    kotlin("plugin.allopen") version "2.1.20"
+    id("io.quarkus") version "3.6.5"
+    kotlin("plugin.serialization") version "2.1.20"
 }
 
 group = "code.yousef"
@@ -37,36 +37,43 @@ tasks.withType<ProcessResources> {
 
 repositories {
     mavenCentral()
+    mavenLocal() // For summon dependencies
 }
 
 dependencies {
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
-    
+
     // Core Quarkus dependencies
     implementation("io.quarkus:quarkus-kotlin")
     implementation("io.quarkus:quarkus-arc")
-    implementation("io.quarkus:quarkus-rest")
-    implementation("io.quarkus:quarkus-rest-jackson")
+    implementation("io.quarkus:quarkus-resteasy-reactive")
+    implementation("io.quarkus:quarkus-resteasy-reactive-jackson")
+    implementation("io.quarkus:quarkus-undertow") // Add undertow for servlet support
+    implementation("io.quarkus:quarkus-websockets") // Add websockets support
+    implementation("io.quarkus:quarkus-security") // Add security support
 
     // Database
     implementation("io.quarkus:quarkus-hibernate-reactive-panache-kotlin")
     implementation("io.quarkus:quarkus-reactive-pg-client")
-    
+
     // Security
     implementation("io.quarkus:quarkus-security-jpa-reactive")
-    
+
     // Templates
     implementation("io.quarkus:quarkus-qute")
-    
-    // Web Bundler for Vue.js integration
-    implementation("io.quarkiverse.web-bundler:quarkus-web-bundler:1.8.1")
-    
+
+    implementation("code.yousef:summon:0.2.3.0")
+    implementation("code.yousef:summon-jvm:0.2.3.0")
+
     // Kotlin libraries
     implementation("io.vertx:vertx-lang-kotlin-coroutines")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.8.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.12.0")
     implementation("at.favre.lib:bcrypt:0.9.0")
-    
+
+    // Jakarta Servlet API
+    implementation("jakarta.servlet:jakarta.servlet-api:6.0.0")
+
     // Testing
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
@@ -85,6 +92,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
         javaParameters = true
+        freeCompilerArgs = listOf("-Xskip-metadata-version-check")
     }
 }
 
@@ -93,100 +101,5 @@ allOpen {
     annotation("jakarta.enterprise.context.ApplicationScoped")
     annotation("jakarta.persistence.Entity")
     annotation("io.quarkus.test.junit.QuarkusTest")
-}
-
-// Initialize yarn lock before running development tasks
-tasks.register("initializeYarnLock") {
-    description = "Initialize and upgrade yarn lock to avoid lock file issues"
-    group = "application"
-    
-    doFirst {
-        logger.lifecycle("Initializing yarn lock...")
-    }
-    
-    dependsOn("quarkusGenerateCode")
-}
-
-// Convenience task to build and run the full application
-tasks.register("devWithFrontend") {
-    dependsOn("initializeYarnLock", "quarkusDev")
-    description = "Runs the application with Quarkus dev mode and web bundler"
-    group = "application"
-}
-
-// Continuous development task that watches for frontend changes while running Quarkus
-tasks.register("devWatch") {
-    dependsOn("initializeYarnLock", "quarkusDev")
-    description = "Runs the application with Quarkus dev mode and web bundler"
-    group = "application"
-    
-    doFirst {
-        println("Starting continuous development mode...")
-        println("Frontend will be automatically compiled and served by Quarkus Web Bundler")
-        println("Access the application at http://localhost:8080")
-        println("Ctrl+C to stop")
-    }
-}
-
-// Custom Vue.js dev server task
-tasks.register<Exec>("vueDevServer") {
-    description = "Runs the Vue.js dev server separately for optimal hot reloading"
-    group = "application"
-    
-    dependsOn("quarkusGenerateCode")
-    
-    // Set working directory to the Vue project
-    workingDir = file("${projectDir}/src/main/resources/web")
-    
-    // Define the command to run
-    if (org.gradle.internal.os.OperatingSystem.current().isWindows) {
-        commandLine("cmd", "/c", "yarn", "dev")
-    } else {
-        commandLine("yarn", "dev")
-    }
-    
-    // Better error output
-    standardOutput = System.out
-    errorOutput = System.err
-    
-    doFirst {
-        println("Starting Vue.js dev server...")
-        println("Access the frontend at http://localhost:5173")
-        println("Changes to Vue files will be hot-reloaded automatically")
-        println("API calls will be proxied to the Quarkus server")
-    }
-}
-
-// Advanced development task that runs both Quarkus dev mode and Vue's dev server separately
-// This provides the best hot reload experience for both backend and frontend
-tasks.register("devHot") {
-    description = "Runs both Quarkus dev mode and a separate Vue dev server with hot reloading for both"
-    group = "application"
-    
-    doFirst {
-        println("Starting advanced development mode with separate servers...")
-        println("This requires two terminal windows:")
-        println("1. Backend: Quarkus running on http://localhost:8080")
-        println("2. Frontend: Vue dev server running on http://localhost:5173")
-        println("")
-        println("Use the Vue dev server URL during development for the best hot-reload experience")
-        println("The backend API will be proxied automatically from the Vue dev server")
-        println("")
-        println("Note: To run this task properly, open two terminals and run:")
-        println("Terminal 1: ./gradlew quarkusDev")
-        println("Terminal 2: ./gradlew vueDevServer")
-        println("")
-        println("Or use npm scripts in two separate terminals:")
-        println("Terminal 1: npm run dev:api")
-        println("Terminal 2: npm run dev:ui")
-    }
-}
-
-// Define the quarkusDevHotApi task 
-tasks.register("quarkusDevHotApi") {
-    description = "Runs Quarkus in dev mode with API focus (pair with vueDevServer)"
-    group = "application"
-    
-    // Depend on the quarkusDev task
-    dependsOn("quarkusDev")
+    annotation("io.quarkus.qute.TemplateExtension")
 }

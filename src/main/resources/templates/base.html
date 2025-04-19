@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{#if title}{title}{#else}Portfolio - Yousef{/if}</title>
+    <meta name="description" content="{#if description}{description}{#else}Professional portfolio showcasing projects, services, and blog{/if}">
+    <link rel="stylesheet" href="/styles.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Yousef's Portfolio</h1>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <a href="/">Home</a>
+            <a href="/portfolio">Portfolio</a>
+            <a href="/blog">Blog</a>
+            <a href="/services">Services</a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            {#insert content}
+            <!-- Page content goes here -->
+            {/insert}
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 Yousef's Portfolio - Built with Summon and Quarkus</p>
+        </div>
+    </footer>
+
+    <!-- Mount point for Summon components -->
+    <div id="app"></div>
+</body>
+</html>

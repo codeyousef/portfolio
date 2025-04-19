@@ -5,9 +5,7 @@ import io.quarkus.hibernate.reactive.panache.kotlin.PanacheEntityBase
 import jakarta.persistence.*
 import java.time.Instant
 import java.util.*
-import kotlin.uuid.ExperimentalUuidApi
 
-@OptIn(ExperimentalUuidApi::class)
 @Entity
 class ProjectEntity : PanacheEntityBase {
 

@@ -1,29 +1,22 @@
 package code.yousef.infrastructure.persistence.repository
 
-import code.yousef.model.BlogPost
-import code.yousef.repository.BlogRepo
 import code.yousef.infrastructure.persistence.entity.BlogPostEntity
 import code.yousef.infrastructure.persistence.mapper.BlogPostMapper
+import code.yousef.model.BlogPost
+import code.yousef.repository.BlogRepo
 import io.quarkus.hibernate.reactive.panache.kotlin.PanacheRepositoryBase
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import org.hibernate.reactive.mutiny.Mutiny.SessionFactory
 import java.util.*
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
-import java.util.UUID
 
-@OptIn(ExperimentalUuidApi::class)
 @ApplicationScoped
 class BlogRepoImpl @Inject constructor(
     private val sessionFactory: SessionFactory,
     private val blogPostMapper: BlogPostMapper
 ) : PanacheRepositoryBase<BlogPostEntity, UUID>, BlogRepo {
 
-    private fun Uuid.toJavaUUID(): UUID {
-        return UUID.fromString(this.toString())
-    }
 
     override suspend fun findBlogById(id: UUID): BlogPost? {
         val entity = sessionFactory.withSession {

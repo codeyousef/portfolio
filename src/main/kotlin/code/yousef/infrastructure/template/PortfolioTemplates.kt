@@ -139,9 +139,38 @@ class PortfolioTemplates {
 
 
         writer.appendHTML().div {
+            // --- Navigation ---
+            nav(classes = "navbar") {
+                a(href = "#", classes = "logo") {
+                    +"TECHWAVE"
+                    span {}
+                }
+
+                ul(classes = "nav-links") {
+                    li { a(href = "#home") { +"Home" } }
+                    li { a(href = "#projects") { +"Projects" } }
+                    li { a(href = "#skills") { +"Skills" } }
+                    li { a(href = "#contact") { +"Contact" } }
+                    li { a(href = "/blog") { +"Blog" } }
+                }
+
+                div(classes = "actions") {
+                    button(classes = "theme-toggle") {
+                        attributes["aria-label"] = "Toggle theme"
+                        unsafe {
+                            +"""
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0 c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2 c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1S11,19.45,11,20z M5.99,4.58 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0 c0.39-0.39,0.39-1.03,0-1.41L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0 l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"/>
+                            </svg>
+                            """
+                        }
+                    }
+                }
+            }
+
             // --- Hero Section ---
             section(classes = "hero") {
-                id = "hero"
+                id = "home"
                 div(classes = "hero-content fade-in") {
                     h1 { +"Crafting Digital Experiences With Cutting-Edge Tech" }
                     p { +"Software developer specializing in Kotlin, Quarkus, and modern web technologies. Let's build the future together." }
@@ -358,6 +387,67 @@ class PortfolioTemplates {
                 }
             }
 
+            // --- Footer ---
+            footer(classes = "footer") {
+                div(classes = "footer-content") {
+                    a(href = "#", classes = "footer-logo") { +"TECHWAVE" }
+
+                    div(classes = "footer-links") {
+                        a(href = "#", classes = "footer-link") { +"Home" }
+                        a(href = "#projects", classes = "footer-link") { +"Projects" }
+                        a(href = "#skills", classes = "footer-link") { +"Skills" }
+                        a(href = "#contact", classes = "footer-link") { +"Contact" }
+                        a(href = "/blog", classes = "footer-link") { +"Blog" }
+                    }
+
+                    div(classes = "footer-social") {
+                        a(href = "#", classes = "social-icon") {
+                            unsafe {
+                                +"""
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z"/>
+                                </svg>
+                                """
+                            }
+                        }
+
+                        a(href = "#", classes = "social-icon") {
+                            unsafe {
+                                +"""
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M19,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3z M17.4,8.2h-1.5c-0.5,0-0.9,0.4-0.9,0.9v1.5h2.4l-0.3,2.4h-2.1V19h-2.4v-6.1H11V10.5h1.5V9c0-1.7,1.3-3,3-3h1.9V8.2z"/>
+                                </svg>
+                                """
+                            }
+                        }
+
+                        a(href = "#", classes = "social-icon") {
+                            unsafe {
+                                +"""
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2C22,19.4 19.4,22 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8C2,4.6 4.6,2 7.8,2M7.6,4C5.6,4 4,5.6 4,7.6V16.4C4,18.4 5.6,20 7.6,20H16.4C18.4,20 20,18.4 20,16.4V7.6C20,5.6 18.4,4 16.4,4H7.6M17.25,5.5C17.94,5.5 18.5,6.06 18.5,6.75C18.5,7.44 17.94,8 17.25,8C16.56,8 16,7.44 16,6.75C16,6.06 16.56,5.5 17.25,5.5M12,7C14.76,7 17,9.24 17,12C17,14.76 14.76,17 12,17C9.24,17 7,14.76 7,12C7,9.24 9.24,7 12,7M12,9C10.34,9 9,10.34 9,12C9,13.66 10.34,15 12,15C13.66,15 15,13.66 15,12C15,10.34 13.66,9 12,9Z"/>
+                                </svg>
+                                """
+                            }
+                        }
+
+                        a(href = "#", classes = "social-icon") {
+                            unsafe {
+                                +"""
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M22.46,6C21.69,6.35 20.86,6.58 20,6.69C20.88,6.16 21.56,5.32 21.88,4.31C21.05,4.81 20.13,5.16 19.16,5.36C18.37,4.5 17.26,4 16,4C13.65,4 11.73,5.92 11.73,8.29C11.73,8.63 11.77,8.96 11.84,9.27C8.28,9.09 5.11,7.38 3,4.79C2.63,5.42 2.42,6.16 2.42,6.94C2.42,8.43 3.17,9.75 4.33,10.5C3.62,10.5 2.96,10.3 2.38,10C2.38,10 2.38,10 2.38,10.03C2.38,12.11 3.86,13.85 5.82,14.24C5.46,14.34 5.08,14.39 4.69,14.39C4.42,14.39 4.15,14.36 3.89,14.31C4.43,16 6,17.26 7.89,17.29C6.43,18.45 4.58,19.13 2.56,19.13C2.22,19.13 1.88,19.11 1.54,19.07C3.44,20.29 5.7,21 8.12,21C16,21 20.33,14.46 20.33,8.79C20.33,8.6 20.33,8.42 20.32,8.23C21.16,7.63 21.88,6.87 22.46,6Z"/>
+                                </svg>
+                                """
+                            }
+                        }
+                    }
+                }
+
+                div(classes = "copyright") {
+                    +"© 2025 TECHWAVE. All rights reserved."
+                }
+            }
+
             script(type = "text/javascript") {
                 unsafe {
                     +"""
@@ -365,7 +455,7 @@ class PortfolioTemplates {
             // Parse URL parameters
             const urlParams = new URLSearchParams(window.location.search);
             const serviceParam = urlParams.get('service');
-            
+
             // If service parameter exists, set the dropdown value
             if (serviceParam) {
                 const serviceSelect = document.getElementById('service');
@@ -378,12 +468,33 @@ class PortfolioTemplates {
                         }
                     }
                 }
-                
+
                 // Scroll to contact section
                 const contactSection = document.getElementById('contact');
                 if (contactSection) {
                     contactSection.scrollIntoView({ behavior: 'smooth' });
                 }
+            }
+
+            // Theme toggle functionality
+            const themeToggle = document.querySelector('.theme-toggle');
+            const body = document.body;
+
+            // Check saved theme
+            if (localStorage.getItem('theme') === 'light') {
+                body.setAttribute('data-theme', 'light');
+            }
+
+            if (themeToggle) {
+                themeToggle.addEventListener('click', function() {
+                    if (body.getAttribute('data-theme') === 'light') {
+                        body.removeAttribute('data-theme');
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        body.setAttribute('data-theme', 'light');
+                        localStorage.setItem('theme', 'light');
+                    }
+                });
             }
         });
         """

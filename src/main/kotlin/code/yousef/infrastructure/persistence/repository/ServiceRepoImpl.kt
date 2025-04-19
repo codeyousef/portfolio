@@ -1,25 +1,21 @@
 package code.yousef.infrastructure.persistence.repository
 
-import code.yousef.model.Service
-import code.yousef.repository.ServiceRepo
 import code.yousef.infrastructure.persistence.entity.ServiceEntity
 import code.yousef.infrastructure.persistence.mapper.ServiceMapper
+import code.yousef.model.Service
+import code.yousef.repository.ServiceRepo
 import io.quarkus.hibernate.reactive.panache.kotlin.PanacheRepositoryBase
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
 import org.hibernate.reactive.mutiny.Mutiny
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
-import java.util.UUID
-import kotlin.uuid.toKotlinUuid
+import java.util.*
 
 @ApplicationScoped
 class ServiceRepoImpl @Inject constructor(
     private val sessionFactory: Mutiny.SessionFactory,
     private val serviceMapper: ServiceMapper
 ) : PanacheRepositoryBase<ServiceEntity, UUID>, ServiceRepo {
-
 
 
     override suspend fun findServiceById(id: UUID): Service? {

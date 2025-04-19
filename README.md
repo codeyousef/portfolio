@@ -1,13 +1,13 @@
 # Portfolio Project
 
-A modern portfolio website built with Quarkus backend and Vue.js frontend.
+A modern portfolio website built with Quarkus backend and @summon UI framework.
 
 ## Architecture
 
 This project follows clean architecture principles with a clear separation of concerns:
 
 - **Backend**: Quarkus-based REST API with reactive programming
-- **Frontend**: Vue.js with TypeScript and Tailwind CSS
+- **Frontend**: @summon UI framework for Kotlin-based web development
 - **Database**: PostgreSQL for data persistence
 
 ## Features
@@ -15,7 +15,7 @@ This project follows clean architecture principles with a clear separation of co
 - Portfolio showcase with projects, services, and blog
 - Admin panel for content management
 - Reactive API endpoints
-- Responsive design with Tailwind CSS
+- Responsive design with @summon's CSS utilities
 - SEO-friendly pages
 
 ## Tech Stack
@@ -28,18 +28,17 @@ This project follows clean architecture principles with a clear separation of co
   - JWT for authentication
 
 - **Frontend**:
-  - Vue.js 3 with Composition API
-  - TypeScript
-  - Tailwind CSS for styling
-  - Pinia for state management
-  - Vue Router for navigation
+  - @summon UI framework
+  - 100% Kotlin-based frontend
+  - Type-safe UI components
+  - Reactive state management
 
 ## Prerequisites
 
 - JDK 17 or later
 - Gradle 7.5+
-- Node.js 16+ and Yarn (installed automatically by Quarkus Web Bundler)
 - PostgreSQL database
+- @summon JAR in your local Maven repository
 
 ## Getting Started
 
@@ -58,50 +57,10 @@ This project follows clean architecture principles with a clear separation of co
 
 3. Run the application in development mode:
    ```
-   ./gradlew devWithFrontend
+   ./gradlew quarkusDev
    ```
 
-This will start the Quarkus backend with the Vue.js frontend in development mode. The application will be available at http://localhost:8080.
-
-### Development with Advanced Hot Reloading
-
-For the best developer experience with hot module reloading for both backend and frontend:
-
-#### Option 1: Using Gradle tasks
-
-Open two terminal windows:
-
-```bash
-# Terminal 1 - Run the backend API server
-./gradlew quarkusDev
-
-# Terminal 2 - Run the Vue.js dev server
-./gradlew vueDevServer
-```
-
-#### Option 2: Using npm scripts (Windows)
-
-Open two terminal windows:
-
-```bash
-# Terminal 1 - Run the backend API server
-npm run dev:api
-
-# Terminal 2 - Run the Vue.js dev server
-npm run dev:ui
-```
-
-#### Option 3: Using the helper script (Unix/Linux/Mac)
-
-```bash
-./start-hot.sh
-```
-
-Then access:
-- Frontend: http://localhost:5173 (for development)
-- Backend API: http://localhost:8080
-
-The Vue.js dev server will automatically proxy API requests to the Quarkus backend.
+This will start the Quarkus backend with the @summon frontend in development mode. The application will be available at http://localhost:8080.
 
 ### Building for Production
 
@@ -119,12 +78,16 @@ The resulting jar will be in `build/quarkus-app/`.
 portfolio/
 ├── src/
 │   ├── main/
-│   │   ├── kotlin/    # Kotlin source code
-│   │   ├── resources/ # Configuration and static resources
-│   │   │   └── web/   # Vue.js frontend source
-│   ├── test/          # Test sources
-├── build.gradle.kts   # Gradle build script
-└── settings.gradle.kts # Gradle settings
+│   │   ├── kotlin/          # Kotlin source code
+│   │   │   └── code/yousef/
+│   │   │       ├── api/     # REST API endpoints
+│   │   │       ├── model/   # Domain models
+│   │   │       ├── ui/      # @summon UI components
+│   │   │       ├── repository/ # Data repositories
+│   │   ├── resources/       # Configuration and static resources
+│   ├── test/                # Test sources
+├── build.gradle.kts         # Gradle build script
+└── settings.gradle.kts      # Gradle settings
 ```
 
 ## API Documentation

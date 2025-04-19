@@ -50,3 +50,4 @@ nb-configuration.xml
 /docker-compose.yml
 /.kotlin/*
 /.cursor/rules/css.mdc
+/summon-docs/
